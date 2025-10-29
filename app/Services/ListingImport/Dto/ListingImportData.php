@@ -37,14 +37,28 @@ class ListingImportData
 
     public static function fromArray(array $payload): self
     {
-        $title = Normalizer::sanitizeString($payload['ufCrm13TitleWebsite'] ?? $payload['title'] ?? null);
+        $title = Normalizer::sanitizeString(
+            $payload['ufCrm13TitleWebsite']
+            ?? $payload['ufCrm13TitleEn']
+            ?? $payload['title']
+            ?? null
+        );
 
         if ($title === null) {
             throw new InvalidArgumentException('Listings require a title.');
         }
 
-        $status = Normalizer::sanitizeStatus($payload['ufCrm13Status'] ?? $payload['status'] ?? null);
-        $description = Normalizer::sanitizeMultiline($payload['ufCrm13DescriptionWebsite'] ?? $payload['description'] ?? null);
+        $status = Normalizer::sanitizeStatus(
+            $payload['ufCrm13Status']
+            ?? $payload['status']
+            ?? null
+        );
+        $description = Normalizer::sanitizeMultiline(
+            $payload['ufCrm13DescriptionWebsite']
+            ?? $payload['ufCrm13DescriptionEn']
+            ?? $payload['description']
+            ?? null
+        );
         $price = Normalizer::sanitizeFloat($payload['ufCrm13Price'] ?? $payload['price'] ?? null);
 
         $geoPoints = self::resolveGeoPoints($payload);
@@ -153,8 +167,8 @@ class ListingImportData
             return GeoPoint::fromArray($coordinatePayload);
         }
 
-        $lat = $payload['latitude'] ?? null;
-        $lng = $payload['longitude'] ?? null;
+        $lat = $payload['latitude'] ?? $payload['ufCrm13Latitude'] ?? null;
+        $lng = $payload['longitude'] ?? $payload['ufCrm13Longitude'] ?? null;
 
         if ($lat === null && $lng === null) {
             return $geoPoints[0] ?? null;
@@ -227,6 +241,14 @@ class ListingImportData
 
                 $appendPoint($parts[0], $parts[1]);
             }
+        }
+
+        if ($payload['ufCrm13Latitude'] ?? $payload['ufCrm13Longitude'] ?? null) {
+            $appendPoint($payload['ufCrm13Latitude'] ?? null, $payload['ufCrm13Longitude'] ?? null);
+        }
+
+        if ($payload['latitude'] ?? $payload['longitude'] ?? null) {
+            $appendPoint($payload['latitude'] ?? null, $payload['longitude'] ?? null);
         }
 
         return $geoPoints;
@@ -310,8 +332,10 @@ class ListingImportData
             }
         }
 
+        $sizeCandidate = $payload['ufCrm13PropertySize'] ?? $payload['ufCrm13Size'] ?? $payload['size'] ?? null;
+
         try {
-            $metrics['property_size'] = Normalizer::sanitizeFloat($payload['ufCrm13PropertySize'] ?? null);
+            $metrics['property_size'] = Normalizer::sanitizeFloat($sizeCandidate);
         } catch (InvalidArgumentException) {
             $metrics['property_size'] = null;
         }

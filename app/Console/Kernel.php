@@ -22,8 +22,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('import:fetch-json')
-            ->everyTenMinutes()
+        $schedule->command('import:fetch-json --sync')
+            ->daily()
             ->withoutOverlapping()
             ->onOneServer()
             ->runInBackground()

@@ -110,4 +110,39 @@ class ListingImportDataTest extends TestCase
             ],
         ]);
     }
+
+    public function test_it_falls_back_to_alternative_title_and_description_fields(): void
+    {
+        $dto = ListingImportData::fromArray([
+            'ufCrm13TitleWebsite' => null,
+            'ufCrm13TitleEn' => '  Skyline apartment  ',
+            'ufCrm13Status' => 'published',
+            'ufCrm13DescriptionWebsite' => null,
+            'ufCrm13DescriptionEn' => "  Freshly renovated unit. \nReady to move in. ",
+            'ufCrm13Geopoints' => '25.000000,55.000000',
+        ]);
+
+        $this->assertSame('Skyline apartment', $dto->title);
+        $this->assertSame("Freshly renovated unit.\nReady to move in.", $dto->description);
+    }
+
+    public function test_it_uses_alternative_size_key_for_property_features(): void
+    {
+        $dto = ListingImportData::fromArray([
+            'ufCrm13TitleWebsite' => 'Size test listing',
+            'ufCrm13Status' => 'published',
+            'ufCrm13Geopoints' => '25.000000,55.000000',
+            'ufCrm13Size' => '761',
+        ]);
+
+        $attributes = $dto->toStatamicAttributes();
+
+        $this->assertArrayHasKey('property_features', $attributes);
+        $feature = collect($attributes['property_features'])
+            ->firstWhere('type', 'property_size');
+
+        $this->assertNotNull($feature);
+        $this->assertSame('Property Size', $feature['title']);
+        $this->assertSame('761', $feature['description']);
+    }
 }

@@ -42,10 +42,16 @@ return [
         'backoff' => env('IMPORT_JSON_BACKOFF', 2),
         'store' => env('IMPORT_JSON_STORE', 'imports'),
         'collection' => env('IMPORT_JSON_COLLECTION'),
+        'collection_handle' => env('IMPORT_JSON_COLLECTION_HANDLE', 'properties'),
         'id_key' => env('IMPORT_JSON_ID_KEY', 'id'),
         'required_fields' => array_filter(array_map('trim', explode(',', env('IMPORT_JSON_REQUIRED_FIELDS', '')))),
         'status_key' => env('IMPORT_JSON_STATUS_KEY'),
         'active_statuses' => array_filter(array_map('trim', explode(',', env('IMPORT_JSON_ACTIVE_STATUSES', '')))),
+        'website_enabled_key' => env('IMPORT_JSON_WEBSITE_ENABLE_KEY'),
+        'website_enabled_values' => array_filter(array_map(
+            static fn ($value) => strtolower(trim((string) $value)),
+            explode(',', env('IMPORT_JSON_WEBSITE_ENABLE_ON_VALUES', 'Y'))
+        )),
     ],
 
 ];

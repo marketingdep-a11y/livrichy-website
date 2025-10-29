@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Services\ListingImport\ListingImporter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -26,7 +27,8 @@ class FetchRemoteJson extends Command
         {--id-key= : Dot-notation path to the unique identifier within each listing}
         {--required=* : Dot-notation keys that must be present for a listing to be considered ready}
         {--status-key= : Dot-notation path to the status attribute within each listing}
-        {--active-status=* : Status values that should be treated as active listings}';
+        {--active-status=* : Status values that should be treated as active listings}
+        {--sync : Process the payload and synchronise listings into Statamic}';
 
     /**
      * The console command description.
@@ -35,9 +37,11 @@ class FetchRemoteJson extends Command
      */
     protected $description = 'Fetch JSON from a remote endpoint and store the raw response for debugging.';
 
-    /**
-     * Execute the console command.
-     */
+    public function __construct(private readonly ListingImporter $importer)
+    {
+        parent::__construct();
+    }
+
     public function handle(): int
     {
         $url = $this->argument('url') ?? config('services.import_json.url');
@@ -89,8 +93,9 @@ class FetchRemoteJson extends Command
         }
 
         $payload = $response->body();
+        $isJson = $this->isJson($payload);
 
-        if (! $this->isJson($payload)) {
+        if (! $isJson) {
             Log::warning('JSON import response did not contain valid JSON.', [
                 'url' => $url,
                 'body' => $payload,
@@ -110,9 +115,18 @@ class FetchRemoteJson extends Command
 
         $disk->put($path, $payload);
 
-        $summary = $this->summarisePayload(
-            payload: $payload,
-            collectionKey: $collectionKey,
+        $records = collect();
+
+        if ($isJson) {
+            $decoded = json_decode($payload, true);
+
+            if (is_array($decoded)) {
+                $records = $this->extractCollection($decoded, $collectionKey);
+            }
+        }
+
+        $summary = $this->summariseRecords(
+            records: $records,
             identifierKey: $identifierKey,
             requiredFields: $requiredFields,
             statusKey: $statusKey,
@@ -134,6 +148,24 @@ class FetchRemoteJson extends Command
                     ->map(fn ($value, $key) => [ucwords(str_replace('_', ' ', $key)), is_array($value) ? implode(', ', $value) : $value])
                     ->all()
             );
+        }
+
+        if ($this->option('sync')) {
+            if (! $isJson) {
+                $this->error('Skipping sync because the response was not valid JSON.');
+            } elseif ($records->isEmpty()) {
+                $this->comment('No listings found in the payload. Nothing to sync.');
+            } else {
+                $report = $this->importer->sync($records->values()->all());
+
+                $this->newLine();
+                $this->table(
+                    ['Metric', 'Value'],
+                    collect($report)
+                        ->map(fn ($value, $key) => [ucwords(str_replace('_', ' ', $key)), $value])
+                        ->all()
+                );
+            }
         }
 
         return self::SUCCESS;
@@ -173,6 +205,26 @@ class FetchRemoteJson extends Command
 
         $records = $this->extractCollection($decoded, $collectionKey);
 
+        return $this->summariseRecords(
+            records: $records,
+            identifierKey: $identifierKey,
+            requiredFields: $requiredFields,
+            statusKey: $statusKey,
+            activeStatuses: $activeStatuses,
+        );
+    }
+
+    /**
+     * @param  Collection<int, array<string, mixed>>  $records
+     * @return array<string, mixed>
+     */
+    private function summariseRecords(
+        Collection $records,
+        string $identifierKey,
+        array $requiredFields,
+        ?string $statusKey,
+        array $activeStatuses
+    ): array {
         if ($records->isEmpty()) {
             return [
                 'records_total' => 0,
