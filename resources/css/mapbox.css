@@ -789,7 +789,7 @@ a.mapboxgl-ctrl-logo.mapboxgl-compact {
     width: 100%;
 }
 .marker {
-    background-color: #0f68ff;
+    background-color: #C5AC62;
     padding: 8px 16px;
     border-radius: 8px;
     font-weight: 700;
@@ -803,7 +803,7 @@ a.mapboxgl-ctrl-logo.mapboxgl-compact {
     border-radius: 16px;
 }
 .mapboxgl-popup-close-button {
-    background-color: #e7f0ff;
+    background-color: #FBF7EB;
     padding: 0px 7px 2px 7px;
     border-radius: 50%;
     top: 12px;

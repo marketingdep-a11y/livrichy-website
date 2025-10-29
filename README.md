@@ -24,6 +24,17 @@ Our meticulous attention to detail makes Real Estate an **intuitive and dynamic*
 
 
 ## Installation
+Before running the frontend tooling, make sure Node.js and npm are available on your machine. The starter kit targets the active LTS release of Node.js (or newer). You can download an installer from [nodejs.org](https://nodejs.org/) or install via a version manager such as [nvm](https://github.com/nvm-sh/nvm) or [asdf](https://asdf-vm.com/).
+
+Verify the tooling is ready by running:
+
+```bash
+node -v
+npm -v
+```
+
+If the commands above report "command not found", install Node.js/npm before attempting `npm run dev` or `npm run build`.
+
 To set up Real Estate, refer to the [Starter Kit installation instructions](https://statamic.dev/starter-kits/installing-a-starter-kit). Ensure you're running **Statamic 4.x** for compatibility.
 
 ### Installing into an existing site
