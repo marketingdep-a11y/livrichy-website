@@ -295,7 +295,7 @@ tabs:
                       bedrooms: Bedrooms
                       bathrooms: Bathrooms
                       property_size: 'Property Size'
-                      style: Style
+                      parking: Parking
                     taggable: false
                     push_tags: false
                     multiple: false
@@ -333,6 +333,186 @@ tabs:
               instructions_position: above
               visibility: visible
               hide_display: false
+          -
+            handle: listing_status
+            field:
+              options:
+                published: Published
+                unpublished: Unpublished
+                draft: Draft
+                archived: Archived
+                active: Active
+                pending: Pending
+                sold: Sold
+                off_market: 'Off Market'
+              placeholder: 'Select status'
+              multiple: false
+              clearable: true
+              searchable: true
+              taggable: false
+              push_tags: false
+              cast_booleans: false
+              default: null
+              display: 'Listing Status'
+              type: select
+              icon: select
+              width: 50
+              listable: hidden
+              instructions: 'Normalized listing status imported from external feeds (e.g. published, unpublished, draft, archived).'
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              hide_display: false
+          -
+            handle: listing_description
+            field:
+              antlers: false
+              display: 'Listing Description'
+              type: textarea
+              icon: textarea
+              listable: hidden
+              instructions: 'Long-form description imported from external feeds. Content editors can override it as needed.'
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              hide_display: false
+          -
+            handle: developer
+            field:
+              input_type: text
+              antlers: false
+              display: Developer
+              type: text
+              icon: text
+              width: 50
+              listable: hidden
+              instructions: 'Builder/developer name received from the CRM feed.'
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              hide_display: false
+          -
+            handle: geo_points
+            field:
+              mode: stacked
+              add_row: 'Add Geo Point'
+              reorderable: true
+              display: 'Geo Points'
+              type: grid
+              icon: grid
+              listable: hidden
+              instructions: 'Optional collection of coordinates describing polygons, boundaries or additional map markers.'
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              hide_display: false
+              fields:
+                -
+                  handle: label
+                  field:
+                    input_type: text
+                    antlers: false
+                    display: Label
+                    type: text
+                    icon: text
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    always_save: false
+                    hide_display: false
+                -
+                  handle: latitude
+                  field:
+                    input_type: text
+                    antlers: false
+                    display: Latitude
+                    type: text
+                    icon: text
+                    width: 50
+                    listable: hidden
+                    instructions: 'Decimal latitude in WGS84 format.'
+                    instructions_position: above
+                    visibility: visible
+                    always_save: false
+                    hide_display: false
+                    validate:
+                      - numeric
+                -
+                  handle: longitude
+                  field:
+                    input_type: text
+                    antlers: false
+                    display: Longitude
+                    type: text
+                    icon: text
+                    width: 50
+                    listable: hidden
+                    instructions: 'Decimal longitude in WGS84 format.'
+                    instructions_position: above
+                    visibility: visible
+                    always_save: false
+                    hide_display: false
+                    validate:
+                      - numeric
+          -
+            handle: photo_links
+            field:
+              display: 'External Photo Links'
+              type: list
+              icon: list
+              listable: hidden
+              instructions: 'Persisted URLs to remote photo assets supplied by external feeds.'
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              hide_display: false
+          -
+            handle: external_agent_id
+            field:
+              input_type: text
+              antlers: false
+              display: 'External Agent ID'
+              type: text
+              icon: text
+              width: 50
+              listable: hidden
+              instructions: 'Identifier of the agent record in the source system.'
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              hide_display: false
+          -
+            handle: external_id
+            field:
+              input_type: text
+              antlers: false
+              display: 'External Listing ID'
+              type: text
+              icon: text
+              width: 50
+              listable: hidden
+              instructions: 'Primary identifier received from the feed for this listing.'
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              hide_display: false
+          -
+            handle: source_url
+            field:
+              input_type: url
+              antlers: false
+              display: 'Source URL'
+              type: text
+              icon: text
+              listable: hidden
+              instructions: 'Canonical URL to the listing on the source website.'
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              hide_display: false
+              validate:
+                - url
+                - sometimes
   gallery:
     display: Gallery
     sections:
@@ -385,6 +565,20 @@ tabs:
               icon: text
               width: 50
               listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+          -
+            handle: community
+            field:
+              input_type: text
+              antlers: false
+              type: text
+              display: Community
+              icon: text
+              width: 50
+              listable: hidden
+              instructions: 'Community/area label provided by the feed.'
               instructions_position: above
               visibility: visible
               hide_display: false
