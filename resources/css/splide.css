@@ -10,27 +10,27 @@
 }
 
 #testimonial-carousel-v3 .splide__pagination__page.is-active {
-    background-color: #0f68ff !important;
+    background-color: #C5AC62 !important;
 }
 #testimonial-carousel-v3 .splide__pagination__page:not(.is-active) {
-    background-color: #e7f0ff !important;
+    background-color: #FBF7EB !important;
 }
 #testimonial-carousel-v3 .splide__pagination {
     transform: translateY(3.5rem) !important;
 }
 
 #testimonial-carousel-v4 .splide__pagination__page.is-active {
-    background-color: #0f68ff !important;
+    background-color: #C5AC62 !important;
 }
 
 /* Team */
 #team-carousel .splide__pagination__page.is-active {
-    background: #0f68ff;
+    background: #C5AC62;
     opacity: 100%;
     margin: 0 12px;
 }
 #team-carousel .splide__pagination__page {
-    background: #e7f0ff;
+    background: #FBF7EB;
     opacity: 100%;
 }
 #team-carousel .splide__pagination,
@@ -48,7 +48,7 @@
     height: 64px !important;
     position: absolute !important;
     transform: rotate(45deg) !important;
-    border: 4px solid #0f68ff !important;
+    border: 4px solid #C5AC62 !important;
     border-radius: 50% !important;
     animation: spin 5200ms infinite linear !important;
 }
