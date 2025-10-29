@@ -43,4 +43,17 @@
             {{ /if }}
         {{ /asset }}
     </picture>
+{{ elseif fallback_url }}
+    <img
+        {{ if cover }}
+            class="object-cover w-full h-full {{ lazy ?= 'lazy' }} {{ class }}"
+        {{ else }}
+            class="{{ lazy ?= 'lazy' }} {{ class }}"
+        {{ /if }}
+        src="{{ fallback_url }}"
+        alt="{{ alt }}"
+        {{ if lazy }}
+            loading="lazy"
+        {{ /if }}
+    >
 {{ /if }}

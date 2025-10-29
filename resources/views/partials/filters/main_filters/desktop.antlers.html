@@ -44,6 +44,8 @@
                     {{ /collection:cities }}
                 {{ /partial:components/inputs/select }}
 
+                {{ partial:components/inputs/text placeholder="Community" name="community" :value="get:community" style="primary" onInput="$refs.filter_form.submit()" }}
+
                 {{ partial:components/inputs/select name="bedrooms" onChange="$refs.filter_form.submit()" }}
                     <option value="{{ get:bedrooms }}" disabled selected hidden>
                         {{ get:bedrooms ?? 'Bedrooms' }}
@@ -54,7 +56,6 @@
                         </option>
                     {{ /loop }}
                 {{ /partial:components/inputs/select }}
-
                 {{ partial:components/inputs/select name="bathrooms" onChange="$refs.filter_form.submit()" }}
                     <option value="{{ get:bathrooms }}" disabled selected hidden>
                         {{ get:bathrooms ?? 'Bathrooms' }}

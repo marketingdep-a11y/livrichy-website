@@ -13,11 +13,21 @@
                     <x-heading size="3" color="gray">
                         {{ title }}
                     </x-heading>
-                    {{ if street_number_1 or region or zip }}
+                    {{ if street_number_1 or community or region or zip }}
                         <x-text size="xl" weight="300" color="light" class="mt-2">
-                            {{ street_number_1 }},
-                            {{ region }},
-                            {{ zip }}
+                            {{ if street_number_1 }}
+                                {{ street_number_1 }}
+                                {{ if community or region or zip }}, {{ /if }}
+                            {{ /if }}
+                            {{ if community }}
+                                {{ community }}
+                                {{ if region or zip }}, {{ /if }}
+                            {{ /if }}
+                            {{ if region }}
+                                {{ region }}
+                                {{ if zip }}, {{ /if }}
+                            {{ /if }}
+                            {{ if zip }}{{ zip }}{{ /if }}
                         </x-text>
                     {{ /if }}
                     {{ if street_number_2 }}

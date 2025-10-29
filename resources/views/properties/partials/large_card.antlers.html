@@ -1,7 +1,7 @@
 <x-card ring="gray" class="relative flex-col items-stretch p-0 lg:flex-row">
     <a href="{{ url }}" aria-label="{{ title }}"
         class="relative overflow-hidden shrink-0 max-lg:rounded-t-2xl lg:rounded-l-2xl w-full lg:max-w-[400px] xl:max-w-[500px]">
-        {{ partial:components/picture :image="featured_image" cover="true" }}
+        {{ partial:components/picture :image="featured_image" :fallback_url="photo_links | first" cover="true" :alt="title" }}
         {{ if show_status }}
             {{ partial:properties/partials/status_badge position="top-right" }}
         {{ /if }}
@@ -29,12 +29,22 @@
                 <x-heading size="4" as="p">
                     {{ title }}
                 </x-heading>
-                {{ if street_number_1 or region or zip }}
+                {{ if street_number_1 or community or region or zip }}
                     <x-text weight="300" color="light" class="mt-2 flex">
                         {{ svg src="location" class="w-6 h-6 mr-2 stroke-dark-950 shrink-0" }}
-                        {{ street_number_1 }},
-                        {{ region }},
-                        {{ zip }}
+                        {{ if street_number_1 }}
+                            {{ street_number_1 }}
+                            {{ if community or region or zip }}, {{ /if }}
+                        {{ /if }}
+                        {{ if community }}
+                            {{ community }}
+                            {{ if region or zip }}, {{ /if }}
+                        {{ /if }}
+                        {{ if region }}
+                            {{ region }}
+                            {{ if zip }}, {{ /if }}
+                        {{ /if }}
+                        {{ if zip }}{{ zip }}{{ /if }}
                     </x-text>
                 {{ /if }}
                 {{ if street_number_2 }}

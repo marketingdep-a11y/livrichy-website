@@ -30,6 +30,10 @@ class PropertyFilters extends Scope
             $query->where('city', $city->id);
         }
 
+        if (request()->filled('community')) {
+            $query->where('community', 'like', '%' . request()->query('community') . '%');
+        }
+
         if (request()->has('floor_area')) {
             $query->where('property_features->0->property_size', '>=', request()->query('floor_area'));
         }

@@ -5,7 +5,7 @@
     {{ /if }}
     
     <div class="w-full h-full overflow-hidden max-w-[230px] rounded-l-2xl">
-        {{ partial:components/picture :image="featured_image" cover="true" }}
+        {{ partial:components/picture :image="featured_image" :fallback_url="photo_links | first" cover="true" :alt="title" }}
     </div>
 
     <div class="flex flex-col justify-between w-full h-full p-6">
@@ -24,11 +24,21 @@
             <x-heading size="5" as="p">
                 {{ title }}
             </x-heading>
-            {{ if street_number_1 or region or zip }}
+            {{ if street_number_1 or community or region or zip }}
                 <x-text weight="300" color="light" class="mt-2">
-                    {{ street_number_1 }},
-                    {{ region }},
-                    {{ zip }}
+                    {{ if street_number_1 }}
+                        {{ street_number_1 }}
+                        {{ if community or region or zip }}, {{ /if }}
+                    {{ /if }}
+                    {{ if community }}
+                        {{ community }}
+                        {{ if region or zip }}, {{ /if }}
+                    {{ /if }}
+                    {{ if region }}
+                        {{ region }}
+                        {{ if zip }}, {{ /if }}
+                    {{ /if }}
+                    {{ if zip }}{{ zip }}{{ /if }}
                 </x-text>
             {{ /if }}
             {{ if street_number_2 }}

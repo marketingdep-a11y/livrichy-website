@@ -2,7 +2,7 @@
     <div class="lg:flex lg:gap-x-8 lg:mt-10">
         <div class="lg:w-2/3">
             <div class="h-full max-h-[500px] w-full overflow-hidden shrink-0 rounded-2xl">
-                {{ partial:components/picture :image="featured_image" cover="true" }}
+                {{ partial:components/picture :image="featured_image" :fallback_url="photo_links | first" cover="true" :alt="title" }}
             </div>
         </div>
 
@@ -17,6 +17,14 @@
 
                     {{# Image Lightbox Slider for Desktop #}}
                     {{ partial:partials/lightbox_slider }}
+                </div>
+            {{ elseif photo_links }}
+                <div class="relative">
+                    {{ photo_links offset="1" limit="2" }}
+                        <div class="overflow-hidden mt-7 lg:first:mt-0 max-h-[235px] h-full w-full shrink-0 rounded-2xl">
+                            {{ partial:components/picture :fallback_url="value" cover="true" :alt="title" }}
+                        </div>
+                    {{ /photo_links }}
                 </div>
             {{ /if }}
         </div>
@@ -41,6 +49,20 @@
                             </div>
                         </div>
                     {{ /gallery }}
+                {{ elseif photo_links }}
+                    {{ photo_links }}
+                        <div class="splide__slide">
+                            <div class="max-h-[275px] h-full mt-8 overflow-hidden lg:mt-10 shrink-0 rounded-2xl">
+                                {{ partial:components/picture :fallback_url="value" cover="true" :alt="title" }}
+                            </div>
+                            <div
+                                class="absolute px-3 py-1 text-sm font-medium text-white bg-black/50 rounded-2xl bottom-4 right-4">
+                                <span>{{ count }}</span>
+                                <span>/</span>
+                                <span>{{ total_results }}</span>
+                            </div>
+                        </div>
+                    {{ /photo_links }}
                 {{ /if }}
             </div>
         </div>
