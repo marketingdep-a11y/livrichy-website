@@ -35,4 +35,17 @@ return [
         ],
     ],
 
+    'import_json' => [
+        'url' => env('IMPORT_JSON_URL'),
+        'timeout' => env('IMPORT_JSON_TIMEOUT', 10),
+        'retries' => env('IMPORT_JSON_RETRIES', 3),
+        'backoff' => env('IMPORT_JSON_BACKOFF', 2),
+        'store' => env('IMPORT_JSON_STORE', 'imports'),
+        'collection' => env('IMPORT_JSON_COLLECTION'),
+        'id_key' => env('IMPORT_JSON_ID_KEY', 'id'),
+        'required_fields' => array_filter(array_map('trim', explode(',', env('IMPORT_JSON_REQUIRED_FIELDS', '')))),
+        'status_key' => env('IMPORT_JSON_STATUS_KEY'),
+        'active_statuses' => array_filter(array_map('trim', explode(',', env('IMPORT_JSON_ACTIVE_STATUSES', '')))),
+    ],
+
 ];
