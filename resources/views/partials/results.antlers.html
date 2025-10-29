@@ -1,0 +1,17 @@
+{{ $totalProperties = properties | count }}
+<x-heading size="5" as="p" class="mb-8">
+    Showing {{ totalProperties }} {{ 'result' | plural({totalProperties}) }} out of {{ paginate:total_items }} total
+</x-heading>
+
+<div class="grid gap-8"
+    :class="'{{ theme:map_variant }}' === 'side_map' ? (! open ? 'md:grid-cols-2 xl:grid-flow-row xl:auto-rows-[minmax(0,_3fr)]' : 'md:grid-cols-2 xl:grid-cols-1') : 'md:grid-cols-2 lg:grid-cols-3'">
+    {{ properties }}
+        <template x-if="! isMobile && '{{ theme:map_variant }}' == 'side_map'">
+            {{ partial:properties/partials/small_card }}
+        </template>
+        
+        <template x-if="isMobile || '{{ theme:has_map }}' == false || '{{ theme:map_variant }}' == 'modal'">
+            {{ partial:properties/partials/medium_card }}
+        </template>
+    {{ /properties }}
+</div>

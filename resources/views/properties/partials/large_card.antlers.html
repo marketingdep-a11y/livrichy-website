@@ -1,0 +1,56 @@
+<x-card ring="gray" class="relative flex-col items-stretch p-0 lg:flex-row">
+    <a href="{{ url }}" aria-label="{{ title }}"
+        class="relative overflow-hidden shrink-0 max-lg:rounded-t-2xl lg:rounded-l-2xl w-full lg:max-w-[400px] xl:max-w-[500px]">
+        {{ partial:components/picture :image="featured_image" cover="true" }}
+        {{ if show_status }}
+            {{ partial:properties/partials/status_badge position="top-right" }}
+        {{ /if }}
+    </a>
+    {{ if show_featured_badge }}
+        <div class="absolute -left-2 top-4">
+            {{ svg src="featured_badge" class="w-32 h-auto shrink-0" }}
+        </div>
+    {{ /if }}
+    <div class="px-6 py-6 bg-white lg:px-8 rounded-2xl">
+        <div class="flex flex-col gap-y-4 lg:gap-y-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <x-heading size="3" as="p" color="brand" class="order-last md:order-first max-md:mt-4">
+                    {{ theme:currency }}
+                    {{ price | format_number(0, ',') }}
+                </x-heading>
+                {{ if agent }}
+                    {{ agent }}
+                        {{ partial:agent/partials/small_card }}
+                    {{ /agent }}
+                {{ /if }}
+            </div>
+
+            <a href="{{ url }}" aria-label="{{ title }}">
+                <x-heading size="4" as="p">
+                    {{ title }}
+                </x-heading>
+                {{ if street_number_1 or region or zip }}
+                    <x-text weight="300" color="light" class="mt-2 flex">
+                        {{ svg src="location" class="w-6 h-6 mr-2 stroke-dark-950 shrink-0" }}
+                        {{ street_number_1 }},
+                        {{ region }},
+                        {{ zip }}
+                    </x-text>
+                {{ /if }}
+                {{ if street_number_2 }}
+                    <x-text size="xl" weight="300" color="light" class="mt-2">
+                        {{ street_number_2 }}
+                    </x-text>
+                {{ /if }}
+            </a>
+            {{ if content }}
+                <div class="text-dark-800">
+                    {{ excerpt :value="content" }}
+                </div>
+            {{ /if }}
+        </div>
+        {{ if property_features }}
+            {{ partial:properties/partials/property_features/large_variant features_limit="4" class="p-5" }}
+        {{ /if }}
+    </div>
+</x-card>

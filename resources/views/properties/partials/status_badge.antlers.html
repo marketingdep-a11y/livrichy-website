@@ -1,0 +1,12 @@
+{{ positions = switch(
+    (position === 'top-right') => 'right-4 top-4',
+    () => 'bottom-4 left-4'
+)}}
+
+<div class="absolute flex items-center p-2 gap-x-2 rounded-lg bg-brand-200 {{ positions }}">
+    {{ svg :src="property_status === 'sale' ? 'tag' : 'key'" class="w-4 h-4 fill-current shrink-0 text-brand-950" }}
+    
+    <x-text color="brand" weight="700" size="xs" class="mt-0.5 font-heading">
+        {{ property_status === 'sale' ? 'FOR SALE' : 'FOR RENT' }}
+    </x-text>
+</div>

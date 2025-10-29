@@ -1,0 +1,15 @@
+<div class="container pt-14 pb-28">
+    {{ partial:components/search placeholder="Search for agents" }}
+    
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mt-10">
+        {{ search:results index="agents" }}
+            {{ if no_results }}
+                <div class="md:col-span-2 lg:col-span-3">
+                    {{ partial:partials/no_results }}
+                </div>
+            {{ else }}
+                {{ partial:agent/partials/large_card }}
+            {{ /if }}
+        {{ /search:results }}
+    </div>
+</div>

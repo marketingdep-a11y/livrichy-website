@@ -1,0 +1,87 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: first_name
+            field:
+              placeholder: 'First Name'
+              input_type: text
+              antlers: false
+              display: 'First Name'
+              type: text
+              icon: text
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              validate:
+                - required
+              replicator_preview: true
+              hide_display: false
+          -
+            handle: last_name
+            field:
+              placeholder: 'Last Name'
+              input_type: text
+              antlers: false
+              display: 'Last Name'
+              type: text
+              icon: text
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              validate:
+                - required
+          -
+            handle: phone_number
+            field:
+              placeholder: 'Phone Number'
+              input_type: tel
+              antlers: false
+              display: 'Phone Number'
+              type: text
+              icon: text
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+          -
+            handle: email_address
+            field:
+              placeholder: 'Email Address'
+              input_type: email
+              antlers: false
+              display: 'Email Address'
+              type: text
+              icon: text
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              validate:
+                - required
+                - email
+              replicator_preview: true
+              hide_display: false
+          -
+            handle: message
+            field:
+              placeholder: 'How can we help you?'
+              antlers: false
+              display: Message
+              type: textarea
+              icon: textarea
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              hide_display: false
+              validate:
+                - required
+              replicator_preview: true

@@ -1,0 +1,20 @@
+title: 'Featured Categories'
+fields:
+  -
+    import: set_header
+  -
+    handle: categories
+    field:
+      mode: default
+      create: true
+      taxonomies:
+        - categories
+      type: terms
+      display: Categories
+      icon: taxonomy
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+      validate:
+        - required

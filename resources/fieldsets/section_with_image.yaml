@@ -1,0 +1,51 @@
+title: 'Section With Image'
+fields:
+  -
+    handle: image_position
+    field:
+      options:
+        left: Left
+        right: Right
+      default: left
+      type: button_group
+      display: 'Image Position'
+      icon: button_group
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+  -
+    handle: image
+    field:
+      mode: list
+      container: assets
+      restrict: false
+      allow_uploads: true
+      show_filename: true
+      show_set_alt: true
+      type: assets
+      display: Image
+      icon: assets
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+      validate:
+        - required
+      max_files: 1
+  -
+    handle: title
+    field:
+      input_type: text
+      antlers: false
+      type: text
+      display: Title
+      icon: text
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+      validate:
+        - required
+  -
+    import: rich_text

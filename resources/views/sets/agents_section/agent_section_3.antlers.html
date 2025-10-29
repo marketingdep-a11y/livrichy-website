@@ -1,0 +1,28 @@
+<div class="relative">
+    <div class="-z-10 absolute -left-8 xl:top-44 xl:right-0 2xl:right-[12%]">
+        {{ svg src="airplane" class="w-28 h-28 xl:w-40 xl:h-40 shrink-0" }}
+    </div>
+
+    <div class="hidden -z-10 lg:block lg:absolute lg:-bottom-16 lg:right-0">
+        {{ svg src="shapes" class="w-40 h-40 shrink-0" }}
+    </div>
+
+    <div class="container py-24">
+        <div class="mb-16">
+            {{ partial:partials/set_header :href="link" center="true" }}
+        </div>
+
+        <div class="mb-10">
+            {{ partial:components/search url="agents/search" placeholder="Search for agents" }}
+        </div>
+        
+        {{ collection:agents paginate="8" as="agents" }}
+            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {{ agents }}
+                    {{ partial:agent/partials/large_card }}
+                {{ /agents }}
+            </div>
+            {{ partial:partials/paginate }}
+        {{ /collection:agents }}
+    </div>
+</div>

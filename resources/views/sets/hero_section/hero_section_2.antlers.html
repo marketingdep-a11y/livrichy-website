@@ -1,0 +1,35 @@
+<div class="relative z-0 overflow-hidden bg-linear-to-tr from-white via-white to-brand-500/30 {{ theme:menu_background === 'transparent' ?= 'mt-[-100px]' }}">
+    
+    <div class="w-auto max-h-700 h-full absolute top-0 lg:top-[-20%] right-0 -z-50">
+        {{ svg src="ellipse" class="h-full w-auto shrink-0" }}
+    </div>
+
+    <div class="container {{ theme:menu_background === 'transparent' ? 'py-32 md:py-20 lg:pt-40' : 'py-20' }}">
+        <div class="lg:flex lg:justify-between">
+            
+            {{# Left side #}}
+            <div class="flex flex-col justify-center lg:w-7/12 lg:mr-4 xl:mr-8 md:py-20">
+                
+                {{# Header #}}
+                <x-heading size="1" class="mb-6 font-medium">
+                    {{ title }}
+                </x-heading>
+                <x-prose class="max-w-xl prose-p:text-xl">
+                    {{ rich_text }}
+                </x-prose>
+
+                {{# Filters #}}
+                {{ if show_property_filters }}
+                    <form action="/properties">
+                        {{ partial:partials/filters/basic_filters }}
+                    </form>
+                {{ /if }}
+            </div>
+
+            {{# Right side cards #}}
+            <div class="relative w-full max-w-lg mx-auto lg:w-5/12 max-lg:mt-10">
+                {{ partial:partials/hero_cards }}
+            </div>
+        </div>
+    </div>
+</div>

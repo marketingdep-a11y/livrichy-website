@@ -1,0 +1,21 @@
+<div class="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-8 rounded-2xl bg-dark-90 {{ class }}">
+    {{ property_features :limit="features_limit" }}
+        {{ if icon or type or description }}
+            <div>
+                <x-text color="light">{{ type | title | replace('_', ' ') }}</x-text>
+                <div class="flex items-center mt-2">
+                    <div class="w-6 h-6 mr-2 shrink-0">
+                        {{ icon }}
+                    </div>
+
+                    <x-text size="sm" weight="700" color="dark">
+                        {{ description }}
+                        {{ if type == 'property_size' }}
+                            {{ theme:unit_of_measurement }}
+                        {{ /if }}
+                    </x-text>
+                </div>
+            </div>
+        {{ /if }}
+    {{ /property_features }}
+</div>

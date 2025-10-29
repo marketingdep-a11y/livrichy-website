@@ -1,0 +1,20 @@
+<div id="hero-slider" class="splide max-h-[650px] overflow-hidden" aria-label="Hero Listings Slider">
+    {{# BG Gradients #}}
+    <div class="absolute inset-x-0 top-0 z-10 h-10 bg-linear-to-b from-white"></div>
+    <div class="absolute inset-x-0 bottom-0 z-10 h-10 bg-linear-to-t from-white"></div>
+
+    {{# Slider Cards #}}
+    <div class="px-1 splide__track">
+        <div class="splide__list">
+            {{ if properties }}
+                {{ properties }}
+                    {{ partial:properties/partials/medium_card isSlider="true" }}
+                {{ /properties }}
+            {{ else }}
+                {{ collection:properties limit="3" }}
+                    {{ partial:properties/partials/medium_card isSlider="true" }}
+                {{ /collection:properties }}
+            {{ /if }}
+        </div>
+    </div>
+</div>

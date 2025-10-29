@@ -1,0 +1,44 @@
+{{ if latitude and longitude }}
+    {{ once }}
+        {{ push:scripts }}
+            <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+            <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+        {{ /push:scripts }}    
+    {{ once }}
+
+    <div class="{{ container === false ? 'px-0' : 'container' }} pt-16">
+        {{ if theme:map_title }}
+            <x-heading as="h5" size="5" class="mb-4">{{ map_title }}</x-heading>
+        {{ /if }}
+
+        <div class="{{ has_content ?= 'flex flex-col md:flex-row' }}">
+            <div x-data="mapbox({ data:
+                    [
+                        {
+                            url: '{{ url ?? '' }}',
+                            featured_image: '{{ featured_image ?? '' }}',
+                            title: '{{ title ?? '' }}',
+                            price: '{{ price ?? '' }}',
+                            address: {{ if street_number_1 or region or zip }}'{{ street_number_1 }}, {{ region }}, {{ zip }}'{{ else }}''{{ /if }},
+                            property_features: {{ if property_features }}{{ property_features | to_json | entities }}{{ else }}''{{ /if }},
+                            latitude: '{{ latitude ?? '' }}',
+                            longitude: '{{ longitude ?? '' }}',
+                            is_contact_variant: '{{ variants == 'contact' ? true : '' }}',
+                        },
+                    ], type: normalmap })" class="{{ has_content ?= 'md:w-1/2 md:mr-12' }} relative">
+                <div id="normalmap" class="overflow-hidden h-[350px] w-full rounded-2xl"></div>
+
+                {{# Map Styles (Satelite, Light) #}}
+                {{ partial:partials/maps/map_styles }}
+            </div>
+        
+            {{ if has_content }}
+                <div class="relative mt-12 md:mt-0 md:w-1/2">
+                    <x-prose class="prose-p:mb-2 prose-p:mt-0 prose-headings:mt-0 prose-h3:text-3xl md:max-w-sm">
+                        {{ rich_text }}
+                    </x-prose>
+                </div>
+            {{ /if }}
+        </div>
+    </div>
+{{ /if }}

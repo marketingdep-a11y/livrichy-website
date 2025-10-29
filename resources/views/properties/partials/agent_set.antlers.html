@@ -1,0 +1,38 @@
+<x-heading as="h5" size="5" class="mb-4">
+    {{ 'Listing by Agent' | trans }}
+</x-heading>
+
+<x-card color="dark" class="max-md:flex-col max-md:items-start">
+    {{ agent }}
+        <a href="{{ url }}" aria-label="{{ title }}" class="flex items-center">
+            <div class="w-12 h-12 overflow-hidden rounded-full">
+                {{ partial:components/picture cover="true" }}
+            </div>
+            <div class="flex items-center justify-between flex-auto {{ class }}">
+                <div class="ml-3">
+                    <x-text size="lg" weight="700" font="heading">
+                        {{ title }}
+                    </x-text>
+                    <x-text color="light">
+                        {{ position }}
+                    </x-text>
+                </div>
+            </div>
+        </a>
+
+        <div class="max-md:w-full max-md:mt-6 gap-4 flex md:flex-row flex-col">
+            {{ social_media }}
+                {{ if name === 'email' }}
+                    <x-button url="mailto:{link}" variant="outline" class="max-md:w-full">
+                        {{ 'Ask Question' | trans }}
+                    </x-button>
+                {{ /if }}
+                {{ if name === 'telephone' }}
+                    <x-button url="tel:{link}" variant="outline" class="max-md:w-full">
+                        {{ 'Contact Agent' | trans }}
+                    </x-button>
+                {{ /if }}
+            {{ /social_media }}
+        </div>
+    {{ /agent }}
+</x-card>

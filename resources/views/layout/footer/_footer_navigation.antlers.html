@@ -1,0 +1,65 @@
+{{# MUST SAVE THIS FILE WITHOUT FORMATTING #}}
+{{ $hasSocials = theme:social_media }}
+{{ $gridColumns = switch(
+                   (theme:menu | count == '1' && hasSocials) => 'md:grid-cols-2 lg:grid-cols-4',
+                   (theme:menu | count == '1' && !hasSocials) => 'md:grid-cols-2',
+                   (theme:menu | count == '2' && !hasSocials) => 'md:grid-cols-2 lg:grid-cols-4',
+                   (theme:menu | count == '2' && hasSocials) => 'md:grid-cols-3 lg:grid-cols-5',
+                   () => 'md:grid-cols-2 md:grid-cols-3 lg:grid-cols-5') }}
+<div class="container py-12 md:py-16 lg:py-20">
+    <div class="{{ $gridColumns }} grid justify-between gap-8">
+
+        {{# Logo and Footer Description #}}
+        <div class="max-w-xs col-span-full lg:col-span-2">
+            {{ svg :src="theme:logo" class="w-auto h-9 shrink-0" }}
+            {{ if theme:footer_description }}
+                <x-text class="mt-6">
+                    {{ theme:footer_description }}
+                </x-text>
+            {{ /if }}
+        </div>
+
+        {{# Footer Menu #}}
+        {{ if theme:footer_menu }}
+            {{ nav :handle="theme:footer_menu" }}
+                <div class="flex flex-col">
+                    {{ if title }}
+                        <x-text color="light" class="mb-4 lg:mb-6">
+                            {{ title }}
+                        </x-text>
+                    {{ /if }}
+                    {{ if children }}
+                        <ul class="flex flex-col gap-y-4">
+                            {{ children }}
+                                <li
+                                    class="text-lg font-medium duration-200 ease-in-out font-heading hover:text-brand-900 text-dark-950">
+                                    <a href="{{ url }}" aria-label="{{ title }}">
+                                        {{ title }}
+                                    </a>
+                                </li>
+                            {{ /children }}
+                        </ul>
+                    {{ /if }}
+                </div>
+            {{ /nav }}
+        {{ /if }}
+        {{# Socials #}}
+        {{ if theme:social_media }}
+            <div class="flex flex-col">
+                <x-text color="light" class="mb-4 lg:mb-6">
+                    Social Media
+                </x-text>
+                <ul class="flex flex-col gap-y-4">
+                    {{ theme:social_media }}
+                        <li
+                            class="text-lg font-medium capitalize transition-all duration-200 ease-in-out font-heading hover:text-brand-900 text-dark-950">
+                            <a href="{{ link }}" aria-label="{{ name }}" target="_blank" rel="noopener noreferrer">
+                                {{ name }}
+                            </a>
+                        </li>
+                    {{ /theme:social_media }}
+                </ul>
+            </div>
+        {{ /if }}
+    </div>
+</div>

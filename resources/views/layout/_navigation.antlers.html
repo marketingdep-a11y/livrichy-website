@@ -1,0 +1,63 @@
+{{ $isTransparent = theme:menu_background === 'transparent' }}
+
+<div class="{{ !isTransparent ?= 'bg-white' }} sticky top-0 z-50 transition ease-in-out duration-300"
+    {{ if isTransparent }}
+        x-data="{ isTop: $persist(false) }"
+        :class="{ 'bg-white/90 backdrop-blur-sm lg:bg-white/70 lg:backdrop-blur-md': isTop, 'bg-transparent': !isTop }"
+        @scroll.window="isTop = (window.pageYOffset < 50) ? false : true"
+    {{ /if }}>
+    <nav x-data="{ isOpen: false }" aria-labelledby="nav-heading" :aria-expanded="isOpen"
+        class="container flex flex-wrap items-center py-5" :class="{ 'bg-white': isOpen }" @click.away="isOpen = false">
+
+        {{# Logo #}}
+        <a aria-label="logo" href="/">
+            {{ if theme:logo }}
+                <img class="object-cover w-auto h-8" src="{{ theme:logo }}" alt="logo">
+            {{ else }}
+                <span class="text-2xl font-bold text-black">
+                    {{ theme:sitename }}
+                </span>
+            {{ /if }}
+        </a>
+
+        {{# Toggle button (hidden on large screens) #}}
+        <button :aria-expanded="isOpen" aria-controls="nav-list" aria-label="toggle menu" @click="isOpen = !isOpen"
+            type="button" class="block px-2 ml-auto text-dark-900 lg:hidden focus:outline-hidden">
+            <span x-show.transition="!isOpen">
+                {{ svg src="hamburger-toggle" }}
+            </span>
+            <span x-show="isOpen" x-cloak>
+                {{ svg src="x-toggle" }}
+            </span>
+        </button>
+
+        {{# Menu #}}
+        <div class="w-full grow lg:flex lg:items-center lg:w-auto" :class="{ 'block': isOpen, 'hidden': !isOpen }">
+            <ul id="nav-list"
+                class="{{ theme:menu_position === 'left' ? 'justify-start lg:ml-32' : 'justify-center' }} items-center flex-1 pt-3 gap-y-5 lg:gap-y-0 lg:pt-0 list-reset lg:flex lg:gap-x-10">
+                {{ nav:navigation include_home="true" }}
+                    {{ if !toggle_button }}
+                        <li>
+                            <a class="flex flex-col font-heading mx-3 mt-10 text-xl lg:text-base lg:my-0 border-b-2 pb-5 lg:border-0 lg:p-0 {{ theme:text_color }} {{ (is_current or is_parent) ? 'font-bold' : 'font-light' }}"
+                                href="{{ url }}" aria-label="{{ title }}"
+                                :class="isTop && 'text-dark-950!'"
+                                @click="isOpen = false">
+                                {{ title }}
+                            </a>
+                        </li>
+                    {{ /if }}
+                {{ /nav:navigation }}
+            </ul>
+
+            {{ nav:navigation }}
+                {{ if toggle_button }}
+                    <div class="max-lg:ml-3 max-lg:mt-12 max-lg:mb-6">
+                        <x-button :url="url" variant="{button_variant}" target="{target_blank ?= '_blank'}">
+                            {{ title }}
+                        </x-button>
+                    </div>
+                {{ /if }}
+            {{ /nav:navigation }}
+        </div>
+    </nav>
+</div>

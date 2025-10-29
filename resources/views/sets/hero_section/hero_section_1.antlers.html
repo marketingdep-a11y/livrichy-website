@@ -1,0 +1,69 @@
+<div x-data="{ isMobile: false }" x-screen="isMobile = ($width < 1024)" class="relative overflow-hidden">
+
+    {{# BG Gradients #}}
+    <div class="hidden lg:absolute lg:block bottom-[20%] -z-10 left-[55%] xl:bottom-[20%]">
+        <div class="bg-linear-to-r from-brand-950/10 to-[#0FF1FF]/10 w-[430px] h-[380px] blur-3xl"></div>
+    </div>
+    <div class="hidden lg:absolute lg:block bottom-[15%] -z-10 -left-[10%] xl:-left-[5%] xl:bottom-[25%]">
+        <div class="w-[216px] h-[168px] bg-brand-950/10 blur-3xl"></div>
+    </div>
+
+    <div class="container py-12 md:py-14">
+        <div class="lg:flex lg:justify-between">
+            <div class="lg:w-3/5 lg:mr-4 xl:mr-8">
+
+                {{# Header #}}
+                <x-heading size="1" class="mb-8 font-medium">
+                    {{ title }}
+                </x-heading>
+                <x-prose class="max-w-xl
+                    prose-p:text-xl
+                    prose-h2:text-5xl
+                    prose-h2:md:text-6xl
+                    prose-h2:lg:text-7xl">
+                    {{ rich_text }}
+                </x-prose>
+
+                {{# Filters #}}
+                {{ if show_property_filters }}
+                    <form action="/properties">
+                        {{ partial:partials/filters/basic_filters }}
+                    </form>
+                {{ /if }}
+                {{# Stats Part #}}
+                {{ if show_stats }}
+                    <div class="flex items-center mt-20 divide-x">
+                        <div class="px-8 border-l">
+                            <p class="text-5xl font-medium font-heading text-brand-800 md:mr-8">
+                                {{ collection:count in="properties" }}+
+                            </p>
+                            <p class="mt-1 font-light text-dark-950">{{ 'Properties' | trans }}</p>
+                        </div>
+                        <div class="px-8">
+                            <p class="text-5xl font-medium font-heading text-brand-800">
+                                {{ collection:count in="agents" }}+
+                            </p>
+                            <p class="mt-1 font-light text-dark-950">{{ 'Agents' | trans }}</p>
+                        </div>
+                    </div>
+                {{ /if }}
+            </div>
+
+            <div class="mt-10 lg:mt-0 lg:w-2/5 lg:ml-8">
+                {{# Mobile Cards #}}
+                <template x-if="isMobile">
+                    <div class="grid gap-6 py-8 md:grid-cols-2">
+                        {{ properties }}
+                            {{ partial:properties/partials/medium_card }}
+                        {{ /properties }}
+                    </div>
+                </template>
+
+                {{# Desktop Slider #}}
+                <template x-if="! isMobile">
+                    {{ partial:partials/cards_slider }}
+                </template>
+            </div>
+        </div>
+    </div>
+</div>

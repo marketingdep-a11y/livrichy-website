@@ -1,0 +1,138 @@
+title: 'Multiple Features'
+fields:
+  -
+    handle: variant
+    field:
+      options:
+        multiple_features_1: 'Variant 1'
+        multiple_features_2: 'Variant 2'
+        multiple_features_3: 'Variant 3'
+        multiple_features_4: 'Variant 4'
+      default: multiple_features_1
+      display: Variant
+      type: button_group
+      icon: button_group
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+  -
+    import: set_header
+  -
+    handle: image
+    field:
+      mode: list
+      container: assets
+      restrict: false
+      allow_uploads: true
+      show_filename: true
+      max_files: 1
+      display: Image
+      type: assets
+      icon: assets
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      validate:
+        - sometimes
+        - required
+      if:
+        variant: 'contains_any multiple_features_3,multiple_features_4'
+  -
+    handle: testimonial
+    field:
+      max_items: 1
+      mode: default
+      create: true
+      collections:
+        - testimonials
+      display: Testimonial
+      type: entries
+      icon: entries
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      if:
+        variant: 'equals multiple_features_3'
+  -
+    handle: features
+    field:
+      collapse: accordion
+      previews: true
+      sets:
+        main:
+          display: Main
+          instructions: null
+          icon: null
+          sets:
+            feature:
+              display: Feature
+              instructions: null
+              icon: null
+              fields:
+                -
+                  handle: title
+                  field:
+                    input_type: text
+                    antlers: false
+                    display: Title
+                    type: text
+                    icon: text
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    always_save: false
+                    validate:
+                      - required
+                -
+                  handle: icon
+                  field:
+                    directory: resources/svg/multiple_features
+                    type: icon
+                    display: Icon
+                    icon: icon_picker
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    hide_display: false
+                    width: 50
+                -
+                  handle: has_description
+                  field:
+                    default: false
+                    display: 'Has Description'
+                    type: toggle
+                    icon: toggle
+                    width: 50
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    always_save: false
+                -
+                  handle: description
+                  field:
+                    character_limit: '150'
+                    antlers: false
+                    display: Description
+                    type: textarea
+                    icon: textarea
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    always_save: false
+                    validate:
+                      - sometimes
+                    hide_display: false
+                    if:
+                      has_description: 'equals true'
+      display: Features
+      type: replicator
+      icon: replicator
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      fullscreen: true
+      hide_display: false

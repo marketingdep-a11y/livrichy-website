@@ -1,0 +1,27 @@
+<x-card class="justify-start p-0">
+    <a href="{{ url }}" aria-label="{{ title }}">
+        <div class="w-10 h-10 overflow-hidden rounded-full">
+            {{ partial:components/picture cover="true" }}
+        </div>
+    </a>
+
+    <div class="flex items-center justify-between w-full gap-x-8">
+        <a href="{{ url }}" aria-label="{{ title }}" class="ml-3">
+            <x-text size="lg" weight="700" font="heading">
+                {{ title }}
+            </x-text>
+            <x-text color="light">
+                {{ position }}
+            </x-text>
+        </a>
+        {{ if social_media }}
+            {{ social_media }}
+                {{ if name === 'telephone' }}
+                    <a href="tel:{{ link }}" aria-label="Tel" class="p-2 rounded-full bg-dark-900">
+                        {{ svg src="telephone" class="w-5 h-5 text-white fill-current shrink-0" }}
+                    </a>
+                {{ /if }}
+            {{ /social_media }}
+        {{ /if }}
+    </div>
+</x-card>

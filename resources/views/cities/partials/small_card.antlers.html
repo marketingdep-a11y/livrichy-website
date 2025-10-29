@@ -1,0 +1,14 @@
+<x-card ring="gray" as="a" :href="url" :aria-label="title" class="justify-start">
+    <div class="w-16 h-16 mr-4 overflow-hidden shrink-0 rounded-2xl">
+        {{ partial:components/picture :image="featured_image" cover="true" }}
+    </div>
+    <div>
+        <x-heading size="5" class="mb-1">{{ title | truncate(22, '...') }}</x-heading>
+        <div class="flex items-center gap-x-2">
+            {{ svg src="house" class="w-6 h-6 stroke-brand-950 shrink-0" }}
+            <x-text color="dark" size="lg" class="mt-0.5">
+                {{ total_properties :city="id" }}
+            </x-text>
+        </div>
+    </div>
+</x-card>

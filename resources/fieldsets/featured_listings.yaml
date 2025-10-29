@@ -1,0 +1,21 @@
+title: 'Featured Listings'
+fields:
+  -
+    import: set_header
+  -
+    handle: properties
+    field:
+      mode: default
+      create: true
+      collections:
+        - properties
+      display: Properties
+      type: entries
+      icon: entries
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      hide_display: false
+      validate:
+        - required

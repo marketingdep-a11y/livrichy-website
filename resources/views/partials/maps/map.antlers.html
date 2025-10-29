@@ -1,0 +1,40 @@
+{{ if theme:has_map }}
+    {{ once }}
+        {{ push:scripts }}
+            <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+            <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+        {{ /push:scripts }}    
+    {{ once }}
+{{ /if }}
+
+<div x-data="mapbox({ data:
+        [
+            {{ collection:properties query_scope="property_filters" }}
+                {
+                    url: '{{ url }}',
+                    featured_image: '{{ featured_image }}',
+                    title: '{{ title }}',
+                    price: '{{ price }}',
+                    address: {{ if street_number_1 or region or zip }}'{{ street_number_1 }}, {{ region }}, {{ zip }}'{{ else }}''{{ /if }},
+                    property_features: {{ if property_features }}{{ property_features | to_json | entities }}{{ else }}''{{ /if }},
+                    latitude: '{{ latitude }}',
+                    longitude: '{{ longitude }}',
+                },
+            {{ /collection:properties }}
+        ], type: '{{ theme:map_variant }}' == 'side_map' ? 'normalmap' : 'map' })" class="relative">
+
+    <div id="{{ theme:map_variant == 'side_map' ? 'normalmap' : 'map' }}"
+        class=" overflow-hidden rounded-2xl {{ theme:map_variant == 'side_map' ?= 'h-[500px] xl:h-[1080px] w-full' }}">
+    </div>
+
+    {{# Map Styles (Satelite, Light) #}}
+    {{ partial:partials/maps/map_styles }}
+
+    {{# Close Map #}}
+    <div
+        class="absolute z-10 flex items-center justify-center p-2 rounded-full bg-brand-100 top-4 right-4 {{ theme:map_variant == 'modal' ?= 'md:right-20' }}">
+        <button type="button" @click="open = false" aria-label="Close Modal">
+            {{ svg src="x" class="w-6 h-6 fill-current text-dark-950 shrink-0" }}
+        </button>
+    </div>
+</div>

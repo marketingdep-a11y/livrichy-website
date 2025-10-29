@@ -1,0 +1,33 @@
+{{ form:contact_us }}
+    <div class="{{ style == 'primary' ?= 'px-8 py-12 rounded-2xl bg-dark-90' }}">
+        {{ if errors }}
+            {{ partial:forms/partials/error_state class="mb-8" }}
+        {{ /if }}
+
+        {{ if success }}
+            {{ partial:forms/partials/success_state class="mb-8" }}
+        {{ /if }}
+        
+        <div class="{{ style == 'primary' ? 'grid gap-8 md:grid-cols-12' : 'mt-4 flex flex-col gap-y-5' }}">
+            {{ fields }}
+                <div class="{{ width == '25' ?= 'md:col-span-3' }}
+                {{ width == '33' ?= 'md:col-span-4' }}
+                {{ width == '50' ?= 'md:col-span-6' }}
+                {{ width == '66' ?= 'md:col-span-8' }}
+                {{ width == '75' ?= 'md:col-span-9' }}
+                {{ width == '100' ?= 'md:col-span-12' }}">
+                    <div>{{ field }}</div>
+                    {{ if error }}
+                        <p class="text-gray-500">{{ error }}</p>
+                    {{ /if }}
+                </div>
+            {{ /fields }}
+
+            <input type="text" class="hidden" name="{{ honeypot ?? 'honeypot' }}">
+            
+            <x-button type="submit" variant="primary" class="w-full md:col-span-12">
+                Send Message
+            </x-button>
+        </div>
+    </div>
+{{ /form:contact_us }}

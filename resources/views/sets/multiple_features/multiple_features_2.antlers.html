@@ -1,0 +1,13 @@
+<div class="container py-20 md:py-24 lg:py-28">
+    {{# Title with Description #}}
+    {{ partial:partials/set_header width="large" }}
+
+    {{# Grid #}}
+    {{ if features }}
+        <div class="grid gap-8 mt-16 md:grid-cols-2 lg:grid-cols-3 md:gap-12 lg:gap-24">
+            {{ features }}
+                {{ partial:partials/multiple_features/large_card }}
+            {{ /features }}
+        </div>
+    {{ /if }}
+</div>

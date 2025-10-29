@@ -1,0 +1,58 @@
+{{# Save this file without formatting #}}
+<div class="container pt-14 pb-28">
+    <div>
+        {{ partial:components/go_back title="Back To Agents" }}
+        <div class="p-6 mt-10 gap-6 max-md:bg-dark-90 rounded-2xl flex flex-col lg:flex-row">
+            <div class="w-auto md:w-[360px] h-[360px] shrink-0 overflow-hidden rounded-2xl bg-brand-100">
+                {{ partial:components/picture cover="true" }}
+            </div>
+            <div class="w-full">
+                <div class="md:items-center justify-between max-md:gap-y-6 flex flex-col md:flex-row">
+                    <div>
+                        <x-heading size="2" color="gray">
+                            {{ title }}
+                        </x-heading>
+                        <x-text size="xl" weight="300" color="dark-800">
+                            {{ position }}
+                        </x-text>
+                    </div>
+                    <div class="flex gap-x-4">
+                        {{ social_media }}
+                            <a href="{{ name !== 'telephone' && name !== 'email' ?= link }}{{ name == 'telephone' ?= {link | ensure_left('tel:')} }}{{ name == 'email' ?= {link | ensure_left('mailto:')} }}"
+                                {{ if name !== 'telephone' && name !== 'email' }} target="_blank" rel="noopener noreferrer" {{ /if }} aria-label="{{ name }}" class="bg-dark-900 rounded-full p-2">
+                                {{ svg :src="name" class="w-4 h-4 fill-current text-white shrink-0" }}
+                            </a>
+                        {{ /social_media }}
+                    </div>
+                </div>
+                <div class="w-full h-px my-6 bg-brand-200"></div>
+                <x-prose class="prose-p:text-base
+                  [&>p]:prose-li:text-dark-950 [&>p]:prose-li:my-0 [&>p]:prose-li:font-normal [&>p]:prose-li:text-xl [&>p]:prose-li:font-heading
+                    prose-h3:text-dark-950 
+                    prose-h3:text-xl prose-h3:font-bold prose-h3:mb-4
+                    prose-h4:text-lg prose-h4:font-light prose-h4:text-dark-800 prose-h4:font-body prose-h4:mb-2">
+                    {{ content }}
+                </x-prose>
+            </div>
+        </div>
+    </div>
+
+    {{# Agents Listings #}}
+    {{ if {collection:count in="properties" :agent:is="id"} !== 0 }}
+        <div class="mt-16">
+            <div class="md:flex md:items-center md:justify-between">
+                <p class="text-4xl font-bold max-md:mb-6">
+                    <span class="font-sans italic font-medium">{{ title | explode: | first }}'s</span> Listings
+                </p>
+                <p class="text-lg font-light leading-7 text-dark-900">
+                    {{ total_properties :agent="id" }}
+                </p>
+            </div>
+            <div class="grid gap-8 mt-10 md:grid-cols-2 lg:grid-cols-3">
+                {{ collection:properties :agent:is="id" }}
+                    {{ partial:properties/partials/medium_card }}
+                {{ /collection:properties }}
+            </div>
+        </div>
+    {{ /if }}
+</div>

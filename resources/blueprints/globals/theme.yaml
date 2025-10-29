@@ -1,0 +1,443 @@
+tabs:
+  main:
+    display: General
+    sections:
+      -
+        display: Navigation
+        fields:
+          -
+            handle: menu_position
+            field:
+              options:
+                left: Left
+                center: Center
+              display: 'Menu Position'
+              type: button_group
+              icon: button_group
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              width: 33
+              instructions: 'Choose the menu position.'
+              replicator_preview: true
+              hide_display: false
+          -
+            handle: menu_background
+            field:
+              options:
+                white: White
+                transparent: Transparent
+              display: 'Menu Background'
+              type: button_group
+              icon: button_group
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              width: 33
+              hide_display: false
+              default: white
+              instructions: 'Choose the menu background color.'
+              replicator_preview: true
+          -
+            handle: text_color
+            field:
+              options:
+                text-dark-950: Dark
+                text-white: White
+              default: text-dark-950
+              type: button_group
+              display: 'Menu Text Color'
+              icon: button_group
+              instructions: 'Choose the color for the menu items.'
+              width: 33
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              replicator_preview: true
+              hide_display: false
+          -
+            handle: logo
+            field:
+              mode: grid
+              container: assets
+              restrict: false
+              allow_uploads: true
+              max_files: 1
+              display: Logo
+              type: assets
+              icon: assets
+              instructions: 'Logo that will be displayed through the website, **SVG** is preferred.'
+              width: 50
+              listable: hidden
+  settings:
+    display: Settings
+    sections:
+      -
+        display: 'Site Settings'
+        fields:
+          -
+            handle: currency
+            field:
+              input_type: text
+              default: $
+              antlers: false
+              type: text
+              display: Currency
+              icon: text
+              instructions: 'Select a default site wide currency.'
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              width: 50
+          -
+            handle: unit_of_measurement
+            field:
+              input_type: text
+              default: m²
+              antlers: false
+              type: text
+              display: 'Unit of measurement'
+              icon: text
+              instructions: 'Select a default site wide unit of measurement symbol.'
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              width: 50
+          -
+            handle: has_map
+            field:
+              default: false
+              type: toggle
+              display: 'Has Map'
+              icon: toggle
+              instructions: 'Toggle this if you want to add map functionality (Mapbox)'
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+          -
+            handle: map_variant
+            field:
+              options:
+                side_map: 'Side Map'
+                modal: Modal
+              type: button_group
+              display: 'Map Variant'
+              icon: button_group
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              instructions: 'Choose how the map should be displayed.'
+              default: side_map
+              width: 50
+              if:
+                has_map: 'equals true'
+          -
+            handle: floor_area
+            field:
+              fields:
+                -
+                  handle: minimum
+                  field:
+                    input_type: text
+                    antlers: false
+                    type: text
+                    display: Minimum
+                    icon: text
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    hide_display: false
+                    width: 33
+                    validate:
+                      - integer
+              mode: table
+              reorderable: true
+              fullscreen: true
+              type: grid
+              display: 'Floor Area'
+              icon: grid
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              instructions: |-
+                Value must be a `min` numeric value.
+
+                Unit of measurement will be append based on `unit of measurement` field above
+  social_media:
+    display: 'Social Media'
+    sections:
+      -
+        fields:
+          -
+            handle: social_media
+            field:
+              fields:
+                -
+                  handle: name
+                  field:
+                    placeholder: 'Social Media Platform'
+                    options:
+                      facebook: Facebook
+                      instagram: Instagram
+                      twitter: Twitter
+                      linkedin: Linkedin
+                      tiktok: 'Tik Tok'
+                      youtube: Youtube
+                      whatsapp: Whatsapp
+                      messenger: Messenger
+                      snapchat: Snapchat
+                      pinterest: Pinterest
+                      skype: Skype
+                      telegram: Telegram
+                      tumblr: Tumblr
+                      reddit: Reddit
+                      vk: Vk
+                    multiple: false
+                    max_items: 1
+                    clearable: false
+                    searchable: true
+                    taggable: false
+                    push_tags: false
+                    cast_booleans: false
+                    display: Name
+                    type: select
+                    icon: select
+                    listable: hidden
+                    instructions_position: above
+                -
+                  handle: link
+                  field:
+                    input_type: text
+                    antlers: false
+                    display: Link
+                    type: text
+                    icon: text
+                    listable: hidden
+                    instructions_position: above
+                    validate:
+                      - required
+              mode: table
+              reorderable: true
+              display: 'Social Media'
+              type: grid
+              icon: grid
+              listable: hidden
+              instructions_position: above
+  favicon:
+    display: Favicon
+    sections:
+      -
+        fields:
+          -
+            handle: favicon
+            field:
+              mode: list
+              container: assets
+              folder: favicons
+              restrict: true
+              allow_uploads: true
+              show_filename: true
+              max_files: 1
+              display: Favicon
+              type: assets
+              icon: assets
+              instructions: 'Ico file for favicon'
+              listable: hidden
+          -
+            handle: favicon_256
+            field:
+              mode: list
+              restrict: true
+              allow_uploads: true
+              show_filename: true
+              display: 'Favicon 256'
+              type: assets
+              icon: assets
+              instructions: 'PNG Format preffered, 256x256'
+              listable: hidden
+              container: assets
+              folder: favicons
+              max_files: 1
+              validate:
+                - image
+          -
+            handle: favicon_192
+            field:
+              mode: list
+              restrict: true
+              allow_uploads: true
+              show_filename: true
+              display: 'Favicon 192'
+              type: assets
+              icon: assets
+              instructions: 'PNG Format preffered, 192x192'
+              listable: hidden
+              container: assets
+              folder: favicons
+              max_files: 1
+              validate:
+                - image
+          -
+            handle: favicon_180
+            field:
+              mode: list
+              restrict: true
+              allow_uploads: true
+              show_filename: true
+              display: 'Favicon 180'
+              type: assets
+              icon: assets
+              instructions: 'Apple Touch Icon, PNG Format preffered, 180x180'
+              listable: hidden
+              container: assets
+              folder: favicons
+              max_files: 1
+              validate:
+                - image
+          -
+            handle: favicon_32
+            field:
+              mode: list
+              restrict: true
+              allow_uploads: true
+              show_filename: true
+              display: 'Favicon 32'
+              type: assets
+              icon: assets
+              instructions: 'Icon, PNG Format preffered, 32x32'
+              listable: hidden
+              container: assets
+              folder: favicons
+              max_files: 1
+              validate:
+                - image
+          -
+            handle: favicon_16
+            field:
+              mode: list
+              restrict: true
+              allow_uploads: true
+              show_filename: true
+              display: 'Favicon 16'
+              type: assets
+              icon: assets
+              instructions: 'Icon, PNG Format preffered, 16x16'
+              listable: hidden
+              container: assets
+              folder: favicons
+              max_files: 1
+              validate:
+                - image
+  no_results:
+    display: 'No Results'
+    sections:
+      -
+        display: 'No Results Page'
+        fields:
+          -
+            handle: no_results_title
+            field:
+              input_type: text
+              antlers: false
+              type: text
+              display: 'No Results Title'
+              icon: text
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+          -
+            handle: no_results_description
+            field:
+              antlers: false
+              type: textarea
+              display: 'No Results Description'
+              icon: textarea
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+          -
+            handle: no_results_image
+            field:
+              max_files: 1
+              mode: list
+              container: assets
+              restrict: false
+              allow_uploads: true
+              show_filename: true
+              show_set_alt: true
+              type: assets
+              display: 'No Results Image'
+              icon: assets
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+  footer:
+    display: Footer
+    sections:
+      -
+        display: Footer
+        fields:
+          -
+            handle: footer_copyright
+            field:
+              input_type: text
+              antlers: true
+              display: 'Footer Copyright'
+              type: text
+              icon: text
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              width: 66
+          -
+            handle: footer_copyright_position
+            field:
+              options:
+                left: Left
+                center: Center
+                right: Right
+              default: center
+              type: button_group
+              display: 'Footer Copyright Position'
+              icon: button_group
+              width: 33
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              validate:
+                - required
+          -
+            handle: footer_description
+            field:
+              antlers: false
+              display: 'Footer Description'
+              type: textarea
+              icon: textarea
+              instructions: 'Used in the footer under the logo'
+              listable: hidden
+          -
+            handle: footer_menu
+            field:
+              max_items: 1
+              mode: default
+              type: structures
+              display: 'Footer Menu'
+              icon: structures
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              replicator_preview: true
+              hide_display: false

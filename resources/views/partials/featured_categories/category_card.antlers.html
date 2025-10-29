@@ -1,0 +1,20 @@
+<x-card as="a" :href="url" ring="brand" class="shadow-card">
+    <div class="inline-flex items-center gap-x-6">
+        <div class="w-16 h-16 overflow-hidden shrink-0 rounded-2xl">
+            {{ partial:components/picture :image="icon" cover="true" }}
+        </div>
+
+        <div>
+            <x-heading size="5" class="mb-1">
+                {{ title }}
+            </x-heading>
+            <x-text size="lg" color="dark-800">
+                {{ total_properties :categories="slug" }}
+            </x-text>
+        </div>
+    </div>
+
+    <x-text color="dark" weight="700" font="heading" class="flex flex-wrap items-center ml-2 ">
+        View {{ svg src="arrow-right" class="w-6 h-6 stroke-current shrink-0 ml-2 transform -rotate-45" }}
+    </x-text>
+</x-card>

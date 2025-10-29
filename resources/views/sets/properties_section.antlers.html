@@ -1,0 +1,68 @@
+<div x-data="{ open: $persist(false).as('map_state'), isMobile: false }" x-screen="isMobile = ($width < 1024)"
+    class="container py-10">
+    
+    {{# Page Header #}}
+    <div class="mb-4 md:mb-10 md:flex md:items-center md:justify-between">
+        {{ if title }}
+            <div class="md:max-w-4xl max-md:mb-4">
+                <x-heading size="2">
+                    {{ title }}
+                </x-heading>
+            </div>
+        {{ /if }}
+        {{# Show Map button (if map closed) #}}
+        {{ if theme:has_map }}
+            <template x-if="! open">
+                {{ partial:partials/maps/map_toggle }}
+            </template>
+        {{ /if }}
+    </div>
+
+    {{# Filters #}}
+    {{ partial:partials/filters/main_filters }}
+
+    <div class="xl:flex lg:justify-between">
+        {{# Show Map (if map is opened) #}}
+        {{ if theme:has_map }}
+            <template x-if="open">
+                <div
+                    :class="{ 'mb-16 lg:mb-0 xl:w-1/2 xl:mr-8': '{{ theme:map_variant }}' == 'side_map' && open }">
+                    {{ if theme:map_variant == 'modal' }}
+                        {{ partial:components/modal }}
+                            {{ partial:partials/maps/map }}
+                        {{ /partial:components/modal }}
+                    {{ else }}
+                        {{ partial:partials/maps/map }}
+                    {{ /if }}
+                </div>
+            </template>
+        {{ /if }}
+
+        <template x-if="open">
+            <div :class="{ 'xl:w-1/2 lg:max-xl:mt-10': '{{ theme:map_variant }}' == 'side_map' && open }">
+                {{ collection:properties paginate="3" as="properties" query_scope="property_filters" }}
+                    {{ if no_results }}
+                        {{ partial:partials/no_results }}
+                    {{ else }}
+                        {{ partial:partials/results }}
+                    {{ /if }}
+                    {{ partial:partials/paginate }}
+                {{ /collection:properties }}
+            </div>
+        </template>
+
+        <template x-if="!open">
+            <div>
+                {{ collection:properties paginate="6" as="properties" query_scope="property_filters" }}
+                    {{ if no_results }}
+                        {{ partial:partials/no_results }}
+                    {{ else }}
+                        {{ partial:partials/results }}
+                    {{ /if }}
+                    {{ partial:partials/paginate }}
+                {{ /collection:properties }}
+            </div>
+        </template>
+
+    </div>
+</div>

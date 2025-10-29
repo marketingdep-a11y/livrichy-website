@@ -1,0 +1,24 @@
+<x-card ring="transparent" direction="vertical" color="dark" class="h-full">
+    <a href="{{ url }}" class="gap-y-4 flex flex-col justify-between" aria-label="{{ title }}">
+        <div class="w-full overflow-hidden h-52 rounded-2xl">
+            {{ partial:components/picture cover="true" }}
+        </div>
+        <div>
+            <x-heading color="gray" size="6">{{ title }}</x-heading>
+            {{ if position }}
+                <x-text size="lg">{{ position }}</x-text>
+            {{ /if }}
+        </div>
+    </a>
+    {{ if social_media }}
+        <div class="flex flex-wrap items-center">
+            {{ social_media }}
+                <a href="{{ name !== 'telephone' && name !== 'email' ?= link }}{{ name == 'telephone' ?= {link | ensure_left('tel:')} }}{{ name == 'email' ?= {link | ensure_left('mailto:')} }}"
+                    {{ if name !== 'telephone' && name !== 'email' }} target="_blank" rel="noopener noreferrer" {{ /if }}
+                    aria-label="{{ name }}" class="mr-4 mt-4 bg-dark-900 rounded-full p-2">
+                    {{ svg :src="name" class="w-4 h-4 fill-current text-white shrink-0" }}
+                </a>
+            {{ /social_media }}
+        </div>
+    {{ /if }}
+</x-card>

@@ -1,0 +1,76 @@
+{{ partial:cities/partials/city_header }}
+<div x-data="{ open: $persist(false).as('map_state'), isMobile: false }" x-screen="isMobile = ($width < 1024)"
+    class="container py-14">
+    <div class="pb-20 md:pb-24 lg:pb-28">
+        {{# Show Map button (mobile only) #}}
+        <template x-if="isMobile">
+            <div>
+                <template x-if="!open">
+                    <x-button x-ref="button" x-on:click="open = !open" type="button" variant="outline"
+                        class="w-full py-4 gap-x-2 shrink-0 lg:py-6 flex justify-center items-center">
+                        <x-text color="brand" weight="700" size="lg" font="heading">Interactive Location Map</x-text>
+                        {{ svg src="eye" class="w-6 h-6 stroke-brand-800 shrink-0" }}
+                    </x-button>
+                </template>
+            </div>
+        </template>
+
+        <div :class="open && '-mt-8 lg:-mt-0'">
+            {{ partial:partials/filters/main_filters }}
+        </div>
+
+        <div class="lg:flex lg:justify-between">
+            {{# Show Map button (if map is opened) #}}
+            {{ if theme:has_map }}
+                <template x-if="open">
+                    <div
+                        :class="{ 'mb-16 lg:mb-0 lg:w-2/5 xl:w-1/2 lg:mr-8': '{{ theme:map_variant }}' == 'side_map' && open }">
+                        {{ if theme:map_variant == 'modal' }}
+                            {{ partial:components/modal }}
+                                {{ partial:partials/maps/map }}
+                            {{ /partial:components/modal }}
+                        {{ else }}
+                            {{ partial:partials/maps/map }}
+                        {{ /if }}
+                    </div>
+                </template>
+            {{ /if }}
+            <template x-if="open">
+                <div :class="{ 'lg:w-3/5 xl:w-1/2': '{{ theme:map_variant }}' == 'side_map' && open }">
+                    {{ collection:properties paginate="3" as="properties" :city:is="id" query_scope="property_filters" }}
+                        {{ if no_results }}
+                            {{ partial:partials/no_results }}
+                        {{ else }}
+                            {{ partial:partials/results }}
+                        {{ /if }}
+                        {{ partial:partials/paginate }}
+                    {{ /collection:properties }}
+                </div>
+            </template>
+            <template x-if="!open">
+                <div :class="{ 'lg:w-3/5 xl:w-1/2': '{{ theme:map_variant }}' == 'side_map' && open }">
+                    {{ collection:properties paginate="6" as="properties" :city:is="id" query_scope="property_filters" }}
+                        {{ if no_results }}
+                            {{ partial:partials/no_results }}
+                        {{ else }}
+                            {{ partial:partials/results }}
+                        {{ /if }}
+                        {{ partial:partials/paginate }}
+                    {{ /collection:properties }}
+                </div>
+            </template>
+
+        </div>
+
+        {{# Show Map button (if map closed) #}}
+        {{ if theme:has_map }}
+            <template x-if="!isMobile">
+                <div>
+                    <template x-if="! open">
+                        {{ partial:partials/maps/map_toggle custom_toggle="true" }}
+                    </template>
+                </div>
+            </template>
+        {{ /if }}
+    </div>
+</div>

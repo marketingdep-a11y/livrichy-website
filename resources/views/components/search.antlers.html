@@ -1,0 +1,22 @@
+<form class="w-full" action="{{ url }}">
+    <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
+        {{ 'Search' | trans }}
+    </label>
+    <div class="relative">
+        <div class="absolute inset-y-0 flex items-center pl-4 pointer-events-none">
+            {{ svg src="search" class="w-6 h-6 shrink-0 stroke-dark-950" }}
+        </div>
+
+        <input type="search" name="q" id="search" value="{{ get:q }}"
+            class="block w-full py-4 text-lg font-light text-gray-900 transition-all duration-300 pl-12 ease-in-out bg-white border lg:py-6 lg:pr-36 rounded-2xl border-dark-200 focus:outline-hidden focus:ring-brand-950"
+            placeholder="{{ placeholder ?? 'Search for properties' }}">
+
+        <x-button type="submit" variant="primary" class="hidden lg:block lg:absolute lg:right-[14px] lg:bottom-[14px]">
+            {{ 'Search' | trans }}
+        </x-button>
+    </div>
+
+    <x-button type="submit" variant="primary" class="w-full mt-6 lg:hidden">
+        {{ 'Search' | trans }}
+    </x-button>
+</form>

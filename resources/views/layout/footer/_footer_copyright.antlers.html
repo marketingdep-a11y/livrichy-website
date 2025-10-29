@@ -1,0 +1,15 @@
+{{ $copyright_position = switch(
+    (theme:footer_copyright_position === 'left') => 'text-left',
+    (theme:footer_copyright_position === 'right') => 'text-right',
+    () => 'text-center'
+) }}
+
+{{ if theme:footer_copyright }}
+    <div class="container py-8 border-t border-dark-100">
+        <div class="{{ $copyright_position }}">
+            <x-text color="light">
+                {{ theme:footer_copyright }}
+            </x-text>
+        </div>
+    </div>
+{{ /if }}

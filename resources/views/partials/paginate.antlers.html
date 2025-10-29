@@ -1,0 +1,50 @@
+<div class="mt-16">
+    {{ paginate }}
+        {{ if prev_page or next_page }}
+            <ul class="flex flex-wrap items-center justify-center">
+                <li class="mr-2">
+                    {{ if prev_page }}
+                        <a href="{{ prev_page }}" aria-label="Previous Page">
+                            {{ svg src="chevron-left" class="w-6 h-6 stroke-dark-950 shrink-0" }}
+                        </a>
+                    {{ else }}
+                        <span>
+                            {{ svg src="chevron-left" class="w-6 h-6 stroke-dark-950 opacity-20 shrink-0" }}
+                        </span>
+                    {{ /if }}
+                </li>
+
+                {{ links:segments }}
+                    {{ first }}
+                        <li class="mx-2">
+                            {{ if page == current_page }}
+                                <span class="flex w-10 h-10 justify-center items-center text-white rounded-[10px] bg-brand-950">
+                                    {{ page }}
+                                </span>
+                            {{ else }}
+                                <a href="{{ url }}" aria-label="{{ page }}">
+                                    <span class="flex justify-center items-center w-10 h-10 text-dark-600 rounded-[10px] hover:bg-brand-950 hover:text-white transition-all duration-300 ease-in-out">
+                                        {{ page }}
+                                    </span>
+                                </a>
+                            {{ /if }}
+                        </li>
+                    {{ /first }}
+                {{ /links:segments }}
+
+                <li class="ml-2">
+                    {{ if next_page }}
+                        <a href="{{ next_page }}" aria-label="Next Page">
+                            {{ svg src="chevron-right" class="w-6 h-6 -mt-0.5 stroke-dark-950 shrink-0" }}
+                        </a>
+                    {{ else }}
+                        {{ svg src="chevron-right" class="w-6 h-6 -mt-0.5 stroke-dark-950 shrink-0 opacity-20" }}
+                    {{ /if }}
+                </li>
+
+            </ul>
+        {{ /if }}
+    {{ /paginate }}
+</div>
+
+

@@ -1,0 +1,99 @@
+/* Testimonials */
+#testimonial-carousel-v2 .splide__pagination__page {
+    background-color: #212326 !important;
+}
+#testimonial-carousel-v2 .splide__pagination__page.is-active {
+    background-color: #212326 !important;
+}
+#testimonial-carousel-v2 .splide__pagination__page:not(.is-active) {
+    background-color: #d9d9d9 !important;
+}
+
+#testimonial-carousel-v3 .splide__pagination__page.is-active {
+    background-color: #0f68ff !important;
+}
+#testimonial-carousel-v3 .splide__pagination__page:not(.is-active) {
+    background-color: #e7f0ff !important;
+}
+#testimonial-carousel-v3 .splide__pagination {
+    transform: translateY(3.5rem) !important;
+}
+
+#testimonial-carousel-v4 .splide__pagination__page.is-active {
+    background-color: #0f68ff !important;
+}
+
+/* Team */
+#team-carousel .splide__pagination__page.is-active {
+    background: #0f68ff;
+    opacity: 100%;
+    margin: 0 12px;
+}
+#team-carousel .splide__pagination__page {
+    background: #e7f0ff;
+    opacity: 100%;
+}
+#team-carousel .splide__pagination,
+.splide__pagination--ltr {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    bottom: 15px;
+    margin-top: 48px;
+}
+
+.splide__progress__bar {
+    background-color: transparent !important;
+    width: 64px !important;
+    height: 64px !important;
+    position: absolute !important;
+    transform: rotate(45deg) !important;
+    border: 4px solid #0f68ff !important;
+    border-radius: 50% !important;
+    animation: spin 5200ms infinite linear !important;
+}
+
+.splide__progress {
+    position: relative !important;
+    width: 64px !important;
+    height: 64px !important;
+}
+
+.splide__pagination__page {
+    margin-left: 1.25rem !important;
+}
+.splide__pagination {
+    transform: translateY(3.5rem);
+}
+
+@media (min-width: 768px) {
+    .splide__pagination {
+        transform: translateY(5rem);
+    }
+}
+
+/* Animations */
+@keyframes spin {
+    0% {
+        clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+    }
+    25% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+    }
+    50% {
+        clip-path: polygon(
+            50% 50%,
+            0 0,
+            100% 0,
+            100% 100%,
+            100% 100%,
+            100% 100%
+        );
+    }
+    75% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+    }
+    100% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+    }
+}

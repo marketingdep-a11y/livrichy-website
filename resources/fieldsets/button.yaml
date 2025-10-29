@@ -1,0 +1,48 @@
+title: Button
+fields:
+  -
+    handle: button_variant
+    field:
+      options:
+        primary: Primary
+        secondary: Secondary
+        outline: Outline
+      default: primary
+      display: 'Button Variant'
+      type: button_group
+      icon: button_group
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      hide_display: false
+  -
+    handle: label
+    field:
+      input_type: text
+      antlers: false
+      display: Label
+      type: text
+      icon: text
+      width: 50
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      validate:
+        - required
+  -
+    handle: link
+    field:
+      collections:
+        - pages
+      display: Link
+      type: link
+      icon: link
+      width: 50
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      validate:
+        - required

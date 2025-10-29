@@ -1,0 +1,12 @@
+<div class="container py-16">
+    {{ partial:partials/set_header }}
+    
+    <div class="relative grid gap-12 mt-20 md:grid-cols-2 lg:grid-cols-4 lg:gap-20">
+        <div class="absolute -left-6 -top-24 lg:-top-36 lg:-left-24 -z-10">
+            {{ svg src="half-circle" class="w-24 h-24 lg:w-40 lg:h-40 shrink-0" }}
+        </div>
+        {{ cards }}
+            {{ partial:partials/multiple_features/small_card direction="vertical" }}
+        {{ /cards }}
+    </div>
+</div>

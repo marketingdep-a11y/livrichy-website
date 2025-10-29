@@ -1,0 +1,32 @@
+---
+styles:
+  primary: 'text-dark-600 placeholder:text-dark-950 bg-white border rounded-2xl border-dark-200 p-3 focus:ring-brand-950 focus:border-brand-950 lg:w-[140px]'
+  secondary: 'text-dark-800 border-0 select-none font-medium pr-1! pb-0 pt-[3px] focus:ring-0 selection:ring-0 ring-0'
+---
+
+{{ view }}
+    <div class="{{ style == 'secondary' ?= 'flex items-center' }} {{ class }}">
+        {{ if style == 'secondary' }}
+            <div class="flex w-10 h-10 shrink-0 bg-brand-100 rounded-2xl mr-3">
+                {{ svg src="location-filled" class="w-5 h-5 fill-current m-auto text-brand-950 shrink-0" }}
+            </div>
+        {{ /if }}
+        <div class="flex-auto">
+            {{ if label }}
+                <label for="{{ name ?? id }}" class="block w-full text-sm font-light text-dark-600">
+                    {{ label }}
+                </label>
+            {{ /if }}
+            <div class="flex items-center">
+                <select id="{{ name ?? id }}" name="{{ name }}"
+                    class="{{ styles[style] ?? styles['primary'] }} p-0 flex-1 block w-full outline-0"
+                    {{ if onChange }} x-on:change="{{ onChange }}" {{ /if }}>
+                    {{ slot }}
+                </select>
+                {{ if style == 'secondary' }}
+                    {{ svg src="chevron-right" class="w-4 h-4 rotate-90 stroke-current text-dark-950 shrink-0" }}
+                {{ /if }}
+            </div>
+        </div>
+    </div>
+{{ /view }}

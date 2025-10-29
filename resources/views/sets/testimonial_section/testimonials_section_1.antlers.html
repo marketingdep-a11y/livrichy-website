@@ -1,0 +1,51 @@
+<div class="relative overflow-hidden bg-dark-90">
+    <div class="mx-auto px-4 max-w-3xl py-24">
+        <x-heading size="2" class="text-center">
+            {{ title }}
+        </x-heading>
+
+        {{# Testimonials #}}
+        <div id="testimonial-carousel" class="splide">
+            <div class="splide__track">
+                <div class="splide__list">
+                    {{ testimonials }}
+                        <div class="pb-2 splide__slide">
+                            <div class="flex items-center justify-center mt-6 mb-8 gap-x-3 lg:mt-16">
+                                {{ loop :times="stars_range" }}
+                                    {{ svg src="star" class="w-5 h-5 fill-current text-orange-950 shrink-0" }}
+                                {{ /loop }}
+                            </div>
+                            <x-prose class="mt-6 text-left prose-p:text-xl">
+                                {{ rich_text }}
+                            </x-prose>
+                            <x-heading size="5" class="mt-8 font-medium text-center">
+                                {{ title }}
+                            </x-heading>
+                            <x-text color="light" size="lg" class="text-center mt-1.5">
+                                {{ position }}
+                            </x-text>
+
+                            <div class="relative flex flex-wrap items-center justify-center h-20 mt-12 rounded-full">
+                                <div class="splide__progress">
+                                    <div id="progress__{{ index }}">
+                                    </div>
+                                </div>
+                                <div class="absolute w-12 h-12 overflow-hidden rounded-full">
+                                    {{ partial:components/picture cover="true" }}
+                                </div>
+                            </div>
+                        </div>
+                    {{ /testimonials }}
+                </div>
+            </div>
+        </div>
+
+        {{# BG Icons #}}
+        <div class="absolute -right-14 -bottom-16 lg:bottom-32 lg:right-32">
+            {{ svg src="triangles" class="w-40 h-40 shrink-0" }}
+        </div>
+        <div class="absolute top-10 lg:-translate-x-20 lg:top-44">
+            {{ svg src="apostrophe-right" class="w-12 h-12 lg:w-[72px] lg:h-[72px] fill-current text-brand-600 shrink-0" }}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,88 @@
+title: 'Card Columns Section'
+fields:
+  -
+    import: set_header
+  -
+    handle: cards
+    field:
+      collapse: accordion
+      previews: true
+      fullscreen: true
+      sets:
+        new_set_group:
+          display: 'New Set Group'
+          instructions: null
+          icon: null
+          sets:
+            new_card:
+              display: 'New Card'
+              instructions: null
+              icon: null
+              fields:
+                -
+                  handle: icon
+                  field:
+                    type: icon
+                    display: Icon
+                    icon: icon_picker
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    hide_display: false
+                    width: 50
+                    validate:
+                      - required
+                    directory: resources/svg/multiple_features
+                -
+                  handle: title
+                  field:
+                    input_type: text
+                    antlers: false
+                    type: text
+                    display: Title
+                    icon: text
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    hide_display: false
+                    width: 50
+                    validate:
+                      - required
+                -
+                  handle: has_description
+                  field:
+                    default: false
+                    type: toggle
+                    display: 'Has Description'
+                    icon: toggle
+                    width: 25
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    hide_display: false
+                -
+                  handle: description
+                  field:
+                    antlers: false
+                    type: textarea
+                    display: Description
+                    icon: textarea
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    hide_display: false
+                    width: 75
+                    validate:
+                      - required
+                      - sometimes
+                    if:
+                      has_description: 'equals true'
+      type: replicator
+      display: Cards
+      icon: replicator
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+      validate:
+        - required

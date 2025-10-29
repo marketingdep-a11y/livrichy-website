@@ -1,0 +1,24 @@
+<x-card ring="brand" class="shadow-card">
+    <div class="flex flex-col justify-between h-full {{ class }}">
+        <a href="{{ url }}" aria-label="{{ title }}">
+            <x-heading size="6">{{ title }}</x-heading>
+            {{ if position }}
+                <x-text size="lg" class="mt-1">{{ position }}</x-text>
+            {{ /if }}
+        </a>
+        {{ if social_media }}
+            <div class="flex flex-wrap items-center">
+                {{ social_media }}
+                    <a href="{{ name !== 'telephone' && name !== 'email' ?= link }}{{ name == 'telephone' ?= {link | ensure_left('tel:')} }}{{ name == 'email' ?= {link | ensure_left('mailto:')} }}"
+                        {{ if name !== 'telephone' && name !== 'email' }} target="_blank" rel="noopener noreferrer" {{ /if }}
+                        aria-label="{{ name }}" class="mr-3 mt-3 bg-dark-900 rounded-full p-2">
+                        {{ svg :src="name" class="w-4 h-4 fill-current text-white shrink-0" }}
+                    </a>
+                {{ /social_media }}
+            </div>
+        {{ /if }}
+    </div>
+    <a href="{{ url }}" class="w-[90px] h-[90px] overflow-hidden rounded-2xl" aria-label="{{ title }}">
+        {{ partial:components/picture cover='true' }}
+    </a>
+</x-card>

@@ -1,0 +1,42 @@
+<div class="py-16 md:py-24 lg:py-32">
+    <x-heading size="2" class="mb-8 text-center md:mb-16">
+        {{ title }}
+    </x-heading>
+
+    <div class="splide" id="testimonial-carousel-v2">
+        <div class="splide__track">
+            <ul class="splide__list">
+                {{ testimonials }}
+                    <li class="splide__slide">
+                        <div class="p-8 rounded-xl bg-brand-100 h-full flex flex-col justify-between">
+                            <div>
+                                <div class="flex w-32 h-5 mb-8 gap-x-3">
+                                    {{ loop :times="stars_range" }}
+                                        {{ svg src="star" class="w-5 h-5 fill-current text-orange-950 shrink-0" }}
+                                    {{ /loop }}
+                                </div>
+                                <x-prose class="prose-p:leading-7 prose-p:text-left prose-p:text-xl">
+                                    {{ rich_text }}
+                                </x-prose>
+                            </div>
+                            
+                            <div class="flex items-center justify-between mt-8">
+                                <div>
+                                    <x-heading size="5" class="mb-0.5" class="font-medium">
+                                        {{ title }}
+                                    </x-heading>
+                                    <x-text color="light" size="lg">
+                                        {{ position }}
+                                    </x-text>
+                                </div>
+                                <div class="w-11 h-11 rounded-full overflow-hidden shrink-0">
+                                    {{ partial:components/picture cover="true" }}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                {{ /testimonials }}
+            </ul>
+        </div>
+    </div>
+</div>

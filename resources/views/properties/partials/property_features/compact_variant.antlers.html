@@ -1,0 +1,17 @@
+<div class="flex flex-wrap mt-4 border-t-2 border-dark-100">
+    {{ property_features limit="3" }}
+        <div class="flex items-center mt-4 mr-4">
+            <div class="w-6 h-6 mr-1 shrink-0">
+                {{ icon }}
+            </div>
+
+            <x-text size="sm" color="light" class="mr-1">{{ description }}</x-text>
+            {{ if type == 'property_size' }}
+                <x-text size="sm" color="light">{{ theme:unit_of_measurement }}</x-text>
+            {{ /if }}
+            {{ if type != 'property_size' && type != 'style' }}
+                <x-text size="sm" color="light">{{ type | ucfirst }}</x-text>
+            {{ /if }}
+        </div>
+    {{ /property_features }}
+</div>

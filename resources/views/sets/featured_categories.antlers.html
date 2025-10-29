@@ -1,0 +1,9 @@
+<div class="container py-16 lg:py-28">
+    {{ partial:partials/set_header :href="link" center="true" }}
+    
+    <div class="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
+        {{ categories }}
+            {{ partial:partials/featured_categories/category_card }}
+        {{ /categories }}
+    </div>
+</div>

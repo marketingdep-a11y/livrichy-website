@@ -1,0 +1,122 @@
+title: 'Map Section'
+fields:
+  -
+    handle: variants
+    field:
+      options:
+        property: 'Map Only'
+        contact: 'Map + Content'
+      default: property
+      type: button_group
+      display: Variants
+      icon: button_group
+      width: 25
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      replicator_preview: true
+      hide_display: false
+  -
+    handle: map_title
+    field:
+      input_type: text
+      antlers: false
+      type: text
+      display: Title
+      icon: text
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+      replicator_preview: true
+  -
+    handle: longitude
+    field:
+      input_type: text
+      antlers: false
+      display: Longitude
+      type: text
+      icon: text
+      width: 50
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      hide_display: false
+      validate:
+        - numeric
+  -
+    handle: latitude
+    field:
+      input_type: text
+      antlers: false
+      display: Latitude
+      type: text
+      icon: text
+      width: 50
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      hide_display: false
+      validate:
+        - numeric
+  -
+    handle: has_content
+    field:
+      default: false
+      display: 'Has Content'
+      type: toggle
+      icon: toggle
+      width: 50
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      replicator_preview: true
+      hide_display: false
+      if:
+        variants: 'equals contact'
+  -
+    handle: rich_text
+    field:
+      collapse: false
+      always_show_set_button: false
+      previews: true
+      buttons:
+        - h3
+        - bold
+        - italic
+        - unorderedlist
+        - orderedlist
+        - anchor
+      save_html: false
+      toolbar_mode: fixed
+      link_noopener: false
+      link_noreferrer: false
+      target_blank: false
+      reading_time: false
+      fullscreen: true
+      allow_source: false
+      enable_input_rules: true
+      enable_paste_rules: true
+      antlers: false
+      remove_empty_nodes: false
+      display: 'Rich Text'
+      type: bard
+      icon: bard
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      validate:
+        - required
+        - sometimes
+      replicator_preview: true
+      smart_typography: false
+      inline: false
+      word_count: false
+      hide_display: false
+      if:
+        has_content: 'equals true'
+        variants: 'equals contact'

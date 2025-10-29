@@ -1,0 +1,28 @@
+---
+widths:
+    none: 'lg:max-w-none'
+    small: 'lg:max-w-xs'
+    large: 'lg:max-w-[410px]'
+---
+
+<div class="flex flex-col justify-between mb-10 gap-y-6 {{ center ? 'items-center max-lg:text-center' : 'items-start' }} {{ !vertical ?= 'lg:flex-row lg:gap-y-0' }}">
+    <x-heading as="h2" size="2" class="max-w-md">{{ title }}</x-heading>
+
+    <div class="flex flex-col">
+        {{ if has_description }}
+            <div class="mt-2 md:mt-0 {{ view:widths[width] ?? view:widths['small'] }}">
+                <x-text size="lg" color="dark-800">
+                    {{ description }}
+                </x-text>
+            </div>
+        {{ /if }}
+
+        {{ if has_button }}
+            <div class="{{ has_description ?= 'mt-8 md:mt-6' }}">
+                <x-arrow-link :href="link" :aria-label="label">
+                    {{ label }}
+                </x-arrow-link>
+            </div>
+        {{ /if }}
+    </div>
+</div>

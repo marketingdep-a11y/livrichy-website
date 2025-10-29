@@ -1,0 +1,48 @@
+<div x-cloak x-show="!isMobile">
+    <div class="lg:flex lg:gap-x-8 lg:mt-10">
+        <div class="lg:w-2/3">
+            <div class="h-full max-h-[500px] w-full overflow-hidden shrink-0 rounded-2xl">
+                {{ partial:components/picture :image="featured_image" cover="true" }}
+            </div>
+        </div>
+
+        <div class="lg:w-1/3">
+            {{ if gallery }}
+                <div class="relative">
+                    {{ gallery limit="2" }}
+                        <div class="overflow-hidden mt-7 lg:first:mt-0 max-h-[235px] h-full w-full shrink-0 rounded-2xl">
+                            {{ partial:components/picture :image="url" cover="true" }}
+                        </div>
+                    {{ /gallery }}
+
+                    {{# Image Lightbox Slider for Desktop #}}
+                    {{ partial:partials/lightbox_slider }}
+                </div>
+            {{ /if }}
+        </div>
+    </div>
+</div>
+
+<div x-cloak x-show="isMobile">
+    <div class="splide" id="property-carousel">
+        <div class="splide__track">
+            <div class="splide__list">
+                {{ if gallery }}
+                    {{ gallery }}
+                        <div class="splide__slide">
+                            <div class="max-h-[275px] h-full mt-8 overflow-hidden lg:mt-10 shrink-0 rounded-2xl">
+                                {{ partial:components/picture :image="url" cover="true" }}
+                            </div>
+                            <div
+                                class="absolute px-3 py-1 text-sm font-medium text-white bg-black/50 rounded-2xl bottom-4 right-4">
+                                <span>{{ count }}</span>
+                                <span>/</span>
+                                <span>{{ total_results }}</span>
+                            </div>
+                        </div>
+                    {{ /gallery }}
+                {{ /if }}
+            </div>
+        </div>
+    </div>
+</div>

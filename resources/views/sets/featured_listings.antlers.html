@@ -1,0 +1,15 @@
+<div class="container py-16 md:py-24 lg:py-28">
+    {{ partial:partials/set_header :href="link" }}
+    
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {{ properties }}
+            {{ if first }}
+                <div class="md:col-span-2 lg:col-span-3">
+                    {{ partial:properties/partials/large_card }}
+                </div>
+            {{ else }}
+                {{ partial:properties/partials/medium_card }}
+            {{ /if }}
+        {{ /properties }}
+    </div>
+</div>

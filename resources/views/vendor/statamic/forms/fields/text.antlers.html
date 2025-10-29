@@ -1,0 +1,22 @@
+<div class="relative">
+    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        {{ if input_type == 'text' }}
+            {{ svg src="user" class="w-5 h-5 text-white fill-current stroke-brand-800 shrink-0" }}
+        {{ elseif input_type == 'tel' }}
+            {{ svg src="phone" class="w-5 h-5 text-white fill-current stroke-brand-800 shrink-0" }}
+        {{ elseif input_type == 'email' }}
+            {{ svg src="mail" class="w-5 h-5 text-white fill-current stroke-brand-800 shrink-0" }}
+        {{ elseif input_type == 'time' }}
+            {{ svg src="clock" class="w-5 h-5 text-white fill-current stroke-brand-800 shrink-0" }}
+        {{ elseif input_type == 'date' }}
+            {{ svg src="date" class="w-5 h-5 fill-current text-white stroke-brand-800 shrink-0" }}
+        {{ /if }}
+    </div>
+
+    <input type="{{ input_type ?? 'text' }}" id="{{ handle }}" name="{{ handle }}" value="{{ value }}"
+        class="block w-full px-4 py-3 pl-10 text-sm transition-all bg-white border border-gray-300 rounded-lg text-dark-400 focus:text-dark-950 focus:ring-dark-950 focus:border-dark-950 hover:border-dark-950"
+        {{ if input_type === 'date' or input_type === 'time' }} onfocus="this.showPicker()" {{ /if }}
+        {{ if placeholder }}placeholder="{{ placeholder }}"{{ /if }}
+        {{ if character_limit }}maxlength="{{ character_limit }}"{{ /if }}
+        {{ if js_driver }}{{ js_attributes }}{{ /if }} {{ if validate|contains:required }}required{{ /if }}>
+</div>

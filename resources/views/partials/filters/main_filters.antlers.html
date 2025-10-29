@@ -1,0 +1,11 @@
+<div class="my-8 lg:mt-0">
+    {{# Desktop #}}
+    <template x-if="!isMobile">
+        {{ partial:partials/filters/main_filters/desktop }}
+    </template>
+
+    {{# Mobile #}}
+    <template x-if="isMobile">
+        {{ partial:partials/filters/main_filters/mobile }}
+    </template>
+</div>

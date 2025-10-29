@@ -1,0 +1,20 @@
+<div class="container py-16">
+    <div class="relative flex flex-col lg:flex-row max-lg:gap-y-20 lg:items-center lg:justify-between">
+        <div class="z-10 hidden xl:block xl:absolute xl:-top-20 xl:right-[30%]">
+            {{ svg src="airplane" class="w-32 h-32 xl:w-40 xl:h-40 shrink-0" }}
+        </div>
+        <div class="flex flex-col gap-y-6 lg:max-w-lg xl:max-w-2xl justify-start">
+            <x-heading size="2">{{ title }}</x-heading>
+            {{ if rich_text }}
+                <x-prose>{{ rich_text }}</x-prose>
+            {{ /if }}
+            <x-button :url="link" class="group" variant="{ button_variant }" class="w-max">
+                {{ label }}
+                {{ svg src="arrow-right" class="w-5 h-5 ml-2 stroke-current shrink-0" }}
+            </x-button>
+        </div>
+        <div class="w-full h-auto max-w-md">
+            {{ partial:components/picture cover="true" }}
+        </div>
+    </div>
+</div>

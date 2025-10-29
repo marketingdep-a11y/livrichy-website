@@ -1,0 +1,44 @@
+<x-card ring="gray" as="a" :href="url" direction="vertical" class="justify-start items-start p-0 relative
+    { isSlider ?= 'max-w-[350px] splide__slide border-0 odd:mr-auto! even:ml-auto! h-auto!' }">
+
+    {{ if show_status }}
+        {{ partial:properties/partials/status_badge position="top-right" }}
+    {{ /if }}
+
+    <div class="w-full h-full overflow-hidden max-h-48 rounded-t-2xl">
+        {{ partial:components/picture :image="featured_image" cover="true" }}
+    </div>
+
+    <div class="relative flex flex-col justify-between w-full h-full p-6">
+        {{ if show_featured_badge }}
+            <div class="absolute -left-2 transform -translate-y-[50%] top-0">
+                {{ svg src="featured_badge" class="w-32 h-auto shrink-0" }}
+            </div>
+        {{ /if }}
+
+        <div>
+            <x-heading size="3" as="p" color="brand" class="my-1">
+                {{ theme:currency }}{{ price | format_number(0, ',') }}
+            </x-heading>
+            <x-heading size="5" as="p">
+                {{ title }}
+            </x-heading>
+            {{ if street_number_1 or region or zip }}
+                <x-text weight="300" color="light" class="mt-2">
+                    {{ street_number_1 }},
+                    {{ region }},
+                    {{ zip }}
+                </x-text>
+            {{ /if }}
+            {{ if street_number_2 }}
+                <x-text weight="300" color="light" class="mt-2">
+                    {{ street_number_2 }}
+                </x-text>
+            {{ /if }}
+        </div>
+
+        {{ if property_features }}
+            {{ partial:properties/partials/property_features/compact_variant }}
+        {{ /if }}
+    </div>
+</x-card>

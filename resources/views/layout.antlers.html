@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="{{ site:short_locale }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{ if environment === 'production' }}
+        <meta name="robots" content="index, follow">
+    {{ else }}
+        <meta name="robots" content="noindex">
+    {{ /if }}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="language" content="English">
+
+    {{# Favicons #}}
+    {{ partial:partials/favicons }}
+    {{ partial:seo }}
+    {{ stack:scripts }}
+    {{ vite src="resources/css/site.css|resources/js/site.js" }}
+</head>
+
+<body
+    class="flex flex-col justify-between min-h-screen font-body antialiased {{ environment === 'local' ?= 'debug-screens' }}">
+
+    {{ partial:layout/navigation }}
+    {{ template_content }}
+    {{ partial:layout/footer }}
+</body>
+
+</html>

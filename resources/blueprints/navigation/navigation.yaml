@@ -1,0 +1,53 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: toggle_button
+            field:
+              default: false
+              type: toggle
+              display: 'Toggle Button'
+              icon: toggle
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+          -
+            handle: button_variant
+            field:
+              options:
+                primary: Primary
+                secondary: Secondary
+                outline: Outline
+                outline-fill: 'Outline Fill'
+              default: primary
+              display: 'Button Variant'
+              type: button_group
+              icon: button_group
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              hide_display: false
+              width: 50
+              instructions: 'Button variant, default is primary.'
+              if:
+                toggle_button: 'equals true'
+          -
+            handle: target_blank
+            field:
+              default: false
+              type: toggle
+              display: 'Target Blank'
+              icon: toggle
+              instructions: 'Open link in new tab or window.'
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              if:
+                toggle_button: 'equals true'

@@ -1,0 +1,70 @@
+title: 'Testimonial Section'
+fields:
+  -
+    handle: variant
+    field:
+      options:
+        testimonials_section_1: 'Variant 1'
+        testimonials_section_2: 'Variant 2'
+        testimonials_section_3: 'Variant 3'
+      default: testimonials_section_1
+      display: Variant
+      type: button_group
+      icon: button_group
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      replicator_preview: true
+      hide_display: false
+  -
+    handle: title
+    field:
+      input_type: text
+      antlers: false
+      display: Title
+      type: text
+      icon: text
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      validate:
+        - required
+        - sometimes
+      hide_display: false
+  -
+    handle: bg_color
+    field:
+      type: button_group
+      display: 'Background Color'
+      icon: button_group
+      instructions: 'Choose the background color for the testimonial card.'
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      replicator_preview: true
+      hide_display: false
+      if:
+        variant: 'equals testimonials_section_3'
+      options:
+        bg-brand-100: Blue
+        bg-dark-90: 'Light Blue'
+      default: bg-brand-100
+  -
+    handle: testimonials
+    field:
+      mode: default
+      create: true
+      collections:
+        - testimonials
+      display: Testimonials
+      type: entries
+      icon: entries
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      hide_display: false
+      validate:
+        - required

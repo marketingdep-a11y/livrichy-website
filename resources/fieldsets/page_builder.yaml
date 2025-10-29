@@ -1,0 +1,126 @@
+title: 'Page Builder'
+fields:
+  -
+    handle: blocks
+    field:
+      collapse: accordion
+      previews: true
+      sets:
+        main:
+          display: Main
+          instructions: null
+          icon: null
+          sets:
+            content:
+              display: Content
+              instructions: null
+              icon: text-formatting-shadow-text
+              fields:
+                -
+                  import: rich_text
+            hero_section:
+              display: 'Hero Section'
+              instructions: null
+              icon: layout-split-verical
+              fields:
+                -
+                  import: hero_section
+            testimonial_section:
+              display: 'Testimonial Section'
+              instructions: null
+              icon: user-multiple
+              fields:
+                -
+                  import: testimonial_section
+            agents_section:
+              display: 'Agents Section'
+              instructions: null
+              icon: user-avatar
+              fields:
+                -
+                  import: agents_section
+            cities_section:
+              display: 'Cities Section'
+              instructions: null
+              icon: globe-world-wide-web
+              fields:
+                -
+                  import: cities_section
+            featured_listings:
+              display: 'Featured Listings'
+              instructions: null
+              icon: layout-header-split
+              fields:
+                -
+                  import: featured_listings
+            related_listings:
+              display: 'Related Listings'
+              instructions: null
+              icon: addon-boxes-stack
+              fields: {  }
+            featured_categories:
+              display: 'Featured Categories'
+              instructions: null
+              icon: layout-three-columns
+              fields:
+                -
+                  import: featured_categories
+            multiple_features:
+              display: 'Multiple Features'
+              instructions: null
+              icon: content-book-open
+              fields:
+                -
+                  import: multiple_features
+            contact_section:
+              display: 'Contact Section'
+              instructions: null
+              icon: mail-sign-at
+              fields:
+                -
+                  import: contact_section
+            map_section:
+              display: 'Map Section'
+              instructions: null
+              icon: form-address-field
+              fields:
+                -
+                  import: map_section
+            properties_section:
+              display: 'Properties Section'
+              instructions: null
+              icon: home-house
+              fields:
+                -
+                  import: properties_section
+            card_columns_section:
+              display: 'Card Columns Section'
+              instructions: null
+              icon: layout-grid-dots
+              fields:
+                -
+                  import: card_columns_section
+            section_with_image:
+              display: 'Section With Image'
+              instructions: null
+              icon: media-image-picture-orientation
+              fields:
+                -
+                  import: section_with_image
+            cta_section:
+              display: 'CTA Section'
+              instructions: null
+              icon: align-object-center
+              fields:
+                -
+                  import: cta_section
+      display: Blocks
+      type: replicator
+      icon: replicator
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      fullscreen: true
+      hide_display: false
+      replicator_preview: true

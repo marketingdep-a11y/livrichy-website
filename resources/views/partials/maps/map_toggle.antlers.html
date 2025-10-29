@@ -1,0 +1,30 @@
+<div class="mt-8 md:mt-0">
+    {{ if !custom_toggle }}
+        {{# Desktop #}}
+        <div class="hidden md:block">
+            <button @click="open = !open" aria-label="Open Map" class="flex items-center gap-x-3 max-md:p-0 p-0">
+                <x-text color="brand" weight="700">
+                    Interactive Location Map
+                </x-text>
+                {{ svg src="eye" class="w-5 h-5 stroke-brand-950 shrink-0" }}
+            </button>
+        </div>
+
+        {{# Mobile #}}
+        <div class="md:hidden">
+            <button x-ref="button" x-on:click="open = !open" type="button"
+                class="w-full py-4 gap-x-2 shrink-0 lg:py-6 flex justify-center items-center">
+                <x-text color="brand" weight="700" size="lg" font="heading">Interactive Location Map</x-text>
+                {{ svg src="eye" class="w-6 h-6 stroke-brand-800 shrink-0" }}
+            </button>
+        </div>
+    {{ else }}
+        <div class="flex justify-center mt-12">
+            <x-button x-ref="button" x-on:click="open = !open" type="button" variant="outline"
+                class="py-4 gap-x-2 shrink-0 lg:py-6 flex items-center">
+                <x-text color="brand" weight="700" size="lg" font="heading">Interactive Location Map</x-text>
+                {{ svg src="eye" class="w-6 h-6 stroke-brand-800 shrink-0" }}
+            </x-button>
+        </div>
+    {{ /if }}
+</div>

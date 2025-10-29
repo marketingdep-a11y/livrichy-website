@@ -1,0 +1,90 @@
+title: Testimonial
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+          -
+            handle: image
+            field:
+              mode: list
+              container: assets
+              restrict: false
+              allow_uploads: true
+              show_filename: true
+              max_files: 1
+              display: Image
+              type: assets
+              icon: assets
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              width: 50
+          -
+            handle: position
+            field:
+              input_type: text
+              antlers: false
+              display: Position
+              type: text
+              icon: text
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              width: 50
+          -
+            handle: show_rating_stars
+            field:
+              default: false
+              display: 'Show Stars'
+              type: toggle
+              icon: toggle
+              instructions: 'Toggle this to display rating stars.'
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+          -
+            handle: stars_range
+            field:
+              min: 1
+              max: 5
+              step: 1
+              default: 3
+              display: 'Rating'
+              type: range
+              icon: range
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              if:
+                show_rating_stars: 'equals true'
+              validate:
+                - required
+                - sometimes
+              hide_display: false
+          -
+            import: rich_text
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true

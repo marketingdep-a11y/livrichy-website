@@ -1,0 +1,40 @@
+title: 'Agents Section'
+fields:
+  -
+    handle: variant
+    field:
+      options:
+        agent_section_1: 'Variant 1'
+        agent_section_2: 'Variant 2'
+        agent_section_3: 'Variant 3'
+      default: agent_section_1
+      display: Variant
+      type: button_group
+      icon: button_group
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      hide_display: false
+  -
+    import: set_header
+  -
+    handle: agents
+    field:
+      mode: default
+      create: true
+      collections:
+        - agents
+      display: Agents
+      type: entries
+      icon: entries
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      hide_display: false
+      validate:
+        - sometimes
+        - required
+      unless:
+        variant: 'equals agent_section_3'

@@ -1,0 +1,23 @@
+<div class="container py-16 md:py-20 lg:py-24">
+    {{ partial:partials/set_header :href="link" center="true" }}
+    
+    {{ if agents | count > 4 }}
+        <div id="team-carousel" class="splide" aria-label="Agents Section 1">
+            <div class="splide__track">
+                <div class="splide__list">
+                    {{ agents }}
+                        <div class="p-1 splide__slide">
+                            {{ partial:agent/partials/large_card }}
+                        </div>
+                    {{ /agents }}
+                </div>
+            </div>
+        </div>
+    {{ else }}
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {{ agents }}
+                {{ partial:agent/partials/large_card }}
+            {{ /agents }}
+        </div>
+    {{ /if }}
+</div>

@@ -1,0 +1,10 @@
+title: SEO
+data:
+  sitename: 'Real Estate'
+  append_on_title: 'Real Estate'
+  meta_description: 'This is a meta description'
+  display_og_tags: true
+  og_image: logo.svg
+  display_twitter_tags: true
+  sitemap_change_frequency: weekly
+  sitemap_priority: 0.5

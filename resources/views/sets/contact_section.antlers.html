@@ -1,0 +1,26 @@
+<div class="container py-16">
+    <div class="lg:justify-between lg:flex">
+        {{# Left #}}
+        <div class="lg:w-1/2 lg:mr-8">
+            {{ if title }}
+                <x-heading as="h2" size="2">{{ title }}</x-heading>
+            {{ /if }}
+            {{ if description }}
+                <div class="mt-4 lg:max-w-sm">
+                    <x-text size="xl" color="dark-800">
+                        {{ description }}
+                    </x-text>
+                </div>
+            {{ /if }}
+            
+            <div class="mt-12">
+                {{ partial:forms/{form:handle} style="primary" }}
+            </div>
+        </div>
+
+        {{# Right #}}
+        <div class="relative max-w-lg max-lg:mx-auto max-lg:mt-12 lg:w-5/12">
+            {{ partial:partials/hero_cards }}
+        </div>
+    </div>
+</div>

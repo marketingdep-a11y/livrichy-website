@@ -1,0 +1,52 @@
+title: Theme
+data:
+  menu_position: center
+  menu_background: transparent
+  text_color: text-dark-950
+  logo: logo.svg
+  currency: $
+  unit_of_measurement: sqft
+  has_map: true
+  map_variant: side_map
+  floor_area:
+    -
+      id: ljqxzq0o
+      minimum: '25'
+    -
+      id: ljqy0iwz
+      minimum: '50'
+    -
+      id: ljqy0lre
+      minimum: '75'
+    -
+      id: ljqy0nn1
+      minimum: '100'
+    -
+      id: ljqy0uza
+      minimum: '125'
+  social_media:
+    -
+      id: lcueka1i
+      name: facebook
+      link: 'https://www.facebook.com/'
+    -
+      id: lcuekhw2
+      name: instagram
+      link: 'https://www.instagram.com/'
+    -
+      id: ljpuynyv
+      name: twitter
+      link: 'https://twitter.com/'
+  favicon: favicons/favicon.ico
+  favicon_256: favicons/android-chrome-256x256.png
+  favicon_192: favicons/android-chrome-192x192.png
+  favicon_180: favicons/apple-touch-icon.png
+  favicon_32: favicons/favicon-32x32.png
+  favicon_16: favicons/favicon-16x16.png
+  no_results_title: "Don't lose hope!"
+  no_results_description: 'Real estate listings change frequently, and your dream property might become available soon. In the meantime, you might want to consider adjusting your search filters or broadening your preferences to explore other potential options.'
+  no_results_image: no_results.png
+  footer_copyright: '© {{ now format="Y" }} Lucky Media. All rights reserved.'
+  footer_copyright_position: center
+  footer_description: 'We are creative people who provide the best way to you who want to have a new confortable and suitable place to live'
+  footer_menu: footer

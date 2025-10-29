@@ -1,0 +1,20 @@
+{{ $direction = switch((direction === 'vertical') => 'vertical',
+                      () => 'horizontal') }}
+
+<x-card :direction="direction" class="justify-start p-0">
+    <div class="{{ direction == 'vertical' ? 'w-10 h-10' : 'w-7 h-7' }} shrink-0">
+        {{ icon }}
+    </div>
+
+    <div class="{{ direction == 'vertical' ? 'mt-8' : 'ml-6' }}">
+        <x-text :size="direction == 'vertical' ? '2xl' : 'lg'" weight="700">
+            {{ title }}
+        </x-text>
+        
+        {{ if has_description }}
+            <x-text size="sm" color="dark-800" class="mt-2">
+                {{ description }}
+            </x-text>
+        {{ /if }}
+    </div>
+</x-card>

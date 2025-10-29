@@ -1,0 +1,50 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: phone_number
+            field:
+              input_type: tel
+              placeholder: 'Phone Number'
+              antlers: false
+              type: text
+              display: 'Phone Number'
+              icon: text
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              replicator_preview: true
+          -
+            handle: email_address
+            field:
+              input_type: email
+              placeholder: 'Email Address'
+              antlers: false
+              type: text
+              display: 'Email Address'
+              icon: text
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              validate:
+                - required
+                - email
+              replicator_preview: true
+          -
+            handle: message
+            field:
+              placeholder: Message
+              antlers: false
+              type: textarea
+              display: Message
+              icon: textarea
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              replicator_preview: true

@@ -1,0 +1,159 @@
+title: Agents
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        display: 'Personal Details'
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+              width: 66
+          -
+            handle: position
+            field:
+              input_type: text
+              antlers: false
+              display: Position
+              type: text
+              icon: text
+              width: 33
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+          -
+            handle: image
+            field:
+              mode: grid
+              container: assets
+              restrict: false
+              allow_uploads: true
+              show_filename: true
+              max_files: 1
+              display: Image
+              type: assets
+              icon: assets
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              show_set_alt: true
+              hide_display: false
+          -
+            handle: social_media
+            field:
+              fields:
+                -
+                  handle: name
+                  field:
+                    options:
+                      email: Email
+                      telephone: Telephone
+                      facebook: Facebook
+                      instagram: Instagram
+                      twitter: Twitter
+                    multiple: false
+                    clearable: false
+                    searchable: true
+                    taggable: false
+                    push_tags: false
+                    cast_booleans: false
+                    display: Name
+                    type: select
+                    icon: select
+                    width: 33
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    always_save: false
+                    validate:
+                      - required
+                    max_items: 1
+                    hide_display: false
+                -
+                  handle: link
+                  field:
+                    collections:
+                      - pages
+                    display: Link
+                    type: link
+                    icon: link
+                    width: 66
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    always_save: false
+                    validate:
+                      - required
+                    hide_display: false
+              mode: table
+              reorderable: true
+              display: 'Social Media'
+              type: grid
+              icon: grid
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              fullscreen: true
+              hide_display: false
+              replicator_preview: true
+      -
+        display: Biography
+        fields:
+          -
+            handle: content
+            field:
+              collapse: true
+              always_show_set_button: false
+              previews: true
+              buttons:
+                - h3
+                - h4
+                - bold
+                - italic
+                - underline
+                - unorderedlist
+                - orderedlist
+                - anchor
+              save_html: false
+              toolbar_mode: fixed
+              link_noopener: false
+              link_noreferrer: false
+              target_blank: false
+              link_collections:
+                - pages
+              reading_time: false
+              fullscreen: true
+              allow_source: false
+              enable_input_rules: true
+              enable_paste_rules: true
+              antlers: false
+              remove_empty_nodes: false
+              display: Content
+              type: bard
+              icon: bard
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              smart_typography: false
+              inline: false
+              word_count: false
+              hide_display: false
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true

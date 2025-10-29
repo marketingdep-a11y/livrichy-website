@@ -1,0 +1,36 @@
+<div x-data="{ isMobile: false }" x-screen="isMobile = ($width < 1024)" class="relative overflow-hidden">
+    <div class="container py-16">
+        
+        <div class="absolute top-0 -z-10 lg:top-8 -left-8">
+            <div class="bg-[#44F4FF] rounded-[125px] blur-[68px] rotate-[123deg] w-28 h-16"></div>
+        </div>
+
+        <div class="lg:flex lg:items-center lg:justify-between">
+            <div class="max-w-md gap-y-4 flex flex-col">
+                <x-heading size="2">
+                    {{ 'The page you were looking for...' | trans }}
+                </x-heading>
+                <x-text>
+                    {{ 'May have been moved, deleted, or possibly never existed. Instead, take a look at these listings!' | trans }}
+                </x-text>
+                <x-button url="/">
+                    {{ 'Go Back' | trans }}
+                </x-button>
+            </div>
+
+            <div class="mt-20 lg:mt-0 lg:w-2/5">
+                <template x-if="isMobile">
+                    <div class="grid gap-6 md:grid-cols-2">
+                        {{ collection:properties limit="3" sort="date:desc" }}
+                            {{ partial:properties/partials/medium_card }}
+                        {{ /collection:properties }}
+                    </div>
+                </template>
+
+                <template x-if="! isMobile">
+                   {{ partial:partials/cards_slider }}
+                </template>
+            </div>
+        </div>
+    </div>
+</div>

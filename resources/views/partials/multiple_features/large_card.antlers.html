@@ -1,0 +1,37 @@
+{{ $classes = switch(
+               (variant === 'multiple_features_1') => 'relative z-10 justify-start',
+               () => 'h-fit ' + {{ switch between='lg:mt-0 | lg:mt-16 | lg:mt-32'}}) }}
+
+{{ $color = switch(
+             (variant === 'multiple_features_1') => 'brand',
+             () => 'dark') }}
+
+{{ $ring = switch(
+            (variant === 'multiple_features_1') => 'transparent',
+            () => 'gray') }}
+
+<x-card direction="vertical" :ring="ring" :color="color" :class="classes">
+    {{ if hasBackground }}
+        <div class="absolute top-0 right-0 -z-10">
+            {{ svg src="eclipse" class="w-64 h-auto shrink-0" }}
+        </div>
+    {{ /if }}
+
+    <div class="p-5 bg-white w-min rounded-2xl">
+        <div class="w-12 h-12 shrink-0">
+            {{ icon }}
+        </div>
+    </div>
+
+    <div class="mt-16">
+        <x-text size="xl" weight="700" class="leading-6 md:text-2xl font-heading">
+            {{ title }}
+        </x-text>
+        
+        {{ if has_description }}
+            <x-text size="sm" color="dark-800" class="mt-2 leading-5 md:text-base">
+                {{ description }}
+            </x-text>
+        {{ /if }}
+    </div>
+</x-card>

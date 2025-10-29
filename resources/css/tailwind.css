@@ -1,0 +1,25 @@
+@import "tailwindcss/base";
+
+@import "tailwindcss/components";
+
+@import "tailwindcss/utilities";
+
+@import "/resources/css/fonts.css";
+
+@import "/resources/css/splide.css";
+
+@import "/resources/css/mapbox.css";
+
+@import "@splidejs/splide/css";
+
+[x-cloak] {
+    display: none !important;
+}
+
+.select-none {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: none;
+}
+

@@ -1,0 +1,21 @@
+<div class="group">
+
+    {{# Modal #}}
+    <div x-cloak x-show="open" x-cloak x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-90" role="dialog" aria-hidden="true" aria-label="Close Modal"
+        aria-labelledby="modal" style="display: none"
+        class="fixed inset-0 z-50 min-h-screen px-4 py-8 overflow-y-auto">
+        
+        {{# Backdrop #}}
+        <div x-transition.opacity class="fixed inset-0 bg-black/50"></div>
+
+        <div @click.away="open = false" x-transition.opacity aria-label="Modal"
+            class="relative z-40 w-full rounded-md shadow-xl md:max-w-6xl md:mx-auto lg:p-8">
+
+            {{ slot }}
+        </div>
+
+    </div>
+</div>

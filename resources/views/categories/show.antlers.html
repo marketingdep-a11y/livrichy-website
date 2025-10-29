@@ -1,0 +1,71 @@
+<div x-data="{ open: $persist(false).as('map_state'), isMobile: false }" x-screen="isMobile = ($width < 1024)"
+    class="relative">
+    <div class="absolute bottom-0 -z-10 -left-8 lg:bottom-16">
+        {{ svg src="airplane" class="w-32 h-32 lg:w-40 lg:h-40 shrink-0" }}
+    </div>
+
+    {{# Category Icon & Title & Show Map #}}
+    <div class="container py-12 md:py-14">
+        <div class="md:flex md:items-center md:justify-between mb-4 md:mb-10">
+            <div class="flex items-center gap-x-4">
+                <div class="w-16 h-16 overflow-hidden shrink-0 rounded-2xl">
+                    {{ partial:components/picture :image="icon" cover="true" }}
+                </div>
+                <x-heading size="2">
+                    {{ title }}
+                </x-heading>
+            </div>
+            {{# Show Map button (if map closed) #}}
+            {{ if theme:has_map }}
+                <div>
+                    <template x-if="!open">
+                        {{ partial:partials/maps/map_toggle }}
+                    </template>
+                </div>
+            {{ /if }}
+        </div>
+
+        {{ partial:partials/filters/main_filters }}
+        <div class="lg:flex lg:justify-between">
+            {{# Show Map button (if map is opened) #}}
+            {{ if theme:has_map }}
+                <template x-if="open">
+                    <div
+                        :class="{ 'mb-16 lg:mb-0 lg:w-2/5 xl:w-1/2 lg:mr-8': '{{ theme:map_variant }}' == 'side_map' && open }">
+                        {{ if theme:map_variant == 'modal' }}
+                            {{ partial:components/modal }}
+                                {{ partial:partials/maps/map }}
+                            {{ /partial:components/modal }}
+                        {{ else }}
+                            {{ partial:partials/maps/map }}
+                        {{ /if }}
+                    </div>
+                </template>
+            {{ /if }}
+            <template x-if="open">
+                <div :class="{ 'lg:w-3/5 xl:w-1/2': '{{ theme:map_variant }}' == 'side_map' && open }">
+                    {{ collection:properties paginate="3" as="properties" :categories:contains="slug" query_scope="property_filters" }}
+                        {{ if no_results }}
+                            {{ partial:partials/no_results }}
+                        {{ else }}
+                            {{ partial:partials/results }}
+                        {{ /if }}
+                        {{ partial:partials/paginate }}
+                    {{ /collection:properties }}
+                </div>
+            </template>
+            <template x-if="!open">
+                <div :class="{ 'lg:w-3/5 xl:w-1/2': '{{ theme:map_variant }}' == 'side_map' && open }">
+                    {{ collection:properties paginate="6" as="properties" :categories:contains="slug" query_scope="property_filters" }}
+                        {{ if no_results }}
+                            {{ partial:partials/no_results }}
+                        {{ else }}
+                            {{ partial:partials/results }}
+                        {{ /if }}
+                        {{ partial:partials/paginate }}
+                    {{ /collection:properties }}
+                </div>
+            </template>
+        </div>
+    </div>
+</div>

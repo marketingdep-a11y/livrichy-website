@@ -1,0 +1,36 @@
+title: 'Cities Section'
+fields:
+  -
+    handle: variant
+    field:
+      options:
+        cities_section_1: 'Variant 1'
+        cities_section_2: 'Variant 2'
+        cities_section_3: 'Variant 3'
+      default: cities_section_1
+      display: Variant
+      type: button_group
+      icon: button_group
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+  -
+    import: set_header
+  -
+    handle: cities
+    field:
+      mode: default
+      create: true
+      collections:
+        - cities
+      display: Cities
+      type: entries
+      icon: entries
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      hide_display: false
+      validate:
+        - required

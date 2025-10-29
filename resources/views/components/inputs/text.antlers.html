@@ -1,0 +1,27 @@
+---
+styles:
+    primary: 'pr-4 py-3 pl-7 rounded-2xl w-full lg:min-w-[120px] lg:max-w-[140px] text-dark-950 placeholder:text-dark-600 bg-white border border-dark-200 focus:ring-brand-950 focus:border-brand-950'
+    secondary: 'p-0 border-none text-dark-950 focus:border-none focus:border-0 focus:ring-0 font-medium placeholder:text-dark-600'
+---
+
+{{ view }}
+    <div class="{{ style === 'secondary' ?='inline-flex items-center gap-x-3 overflow-hidden' }}">
+        {{ if style == 'secondary' }}
+        <div class="flex w-10 h-10 shrink-0 bg-brand-100 rounded-2xl">
+            {{ svg src="money-filled" class="w-5 h-5 fill-current m-auto text-brand-950 shrink-0" }}
+        </div>
+        {{ /if }}
+        <div class="flex flex-col h-full w-full">
+            {{ if label }}
+                <label for="{{ name }}" class="text-sm font-light text-dark-600">{{ label }}</label>
+            {{ /if }}
+            <div class="{{ style == 'primary' ? 'relative w-full' : 'flex items-center gap-x-1 w-full' }}">
+                <div class="flex items-center pointer-events-none {{ style == 'primary' ? 'pl-3 absolute inset-y-0 left-0' : '' }}">
+                    <span class="{{ style == 'primary' ? 'text-dark-400 font-normal' : 'text-dark-800 font-medium' }}">{{ theme:currency ?? '$' }}</span>
+                </div>
+                <input type="number" placeholder="{{ placeholder }}" name="{{ name }}" value="{{ value }}" class="{{ styles[style] ? styles[style] : styles['primary'] }} w-full [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none outline-0"
+                {{ if onInput }} @input.debounce.1000ms="{{ onInput }}" {{ /if }}/>
+            </div>
+        </div>
+    </div>
+{{ /view }}

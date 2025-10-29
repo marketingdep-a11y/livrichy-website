@@ -1,0 +1,98 @@
+title: 'Set Header'
+fields:
+  -
+    handle: title
+    field:
+      input_type: text
+      antlers: false
+      display: Title
+      type: text
+      icon: text
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      hide_display: false
+      validate:
+        - required
+  -
+    handle: has_description
+    field:
+      default: false
+      display: 'Has Description'
+      type: toggle
+      icon: toggle
+      instructions: 'Toggle this to display description.'
+      width: 50
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+  -
+    handle: has_button
+    field:
+      default: false
+      type: toggle
+      display: 'Has Button'
+      icon: toggle
+      width: 50
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+      instructions: 'Toggle this to button with link.'
+  -
+    handle: description
+    field:
+      character_limit: '150'
+      antlers: false
+      display: Description
+      type: textarea
+      icon: textarea
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      if:
+        has_description: 'equals true'
+      validate:
+        - required
+        - sometimes
+  -
+    handle: label
+    field:
+      input_type: text
+      antlers: false
+      display: Label
+      type: text
+      icon: text
+      width: 50
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      validate:
+        - sometimes
+        - required
+      hide_display: false
+      if:
+        has_button: 'equals true'
+  -
+    handle: link
+    field:
+      collections:
+        - pages
+      display: Link
+      type: link
+      icon: link
+      width: 50
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      validate:
+        - sometimes
+        - required
+      hide_display: false
+      if:
+        has_button: 'equals true'

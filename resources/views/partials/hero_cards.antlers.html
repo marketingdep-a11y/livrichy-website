@@ -1,0 +1,37 @@
+{{ if agent }}
+    <div class="absolute right-0 z-40 top-6">
+        {{ agent }}
+            {{ partial:agent/partials/medium_card class="mr-4" }}
+        {{ /agent }}
+    </div>
+{{ /if }}
+{{ images }}
+    <div class="h-80">
+        <div
+            class="max-w-[248px] w-full h-auto absolute {{ first ? 'top-0 left-0 z-10' : 'right-0 bottom-0' }} {{ image_description ? 'h-[264px]' : 'h-[362px]' }} {{ image_description and last ?= 'bottom-[20%]' }}">
+            {{ partial:components/picture cover="true" class="{image_description ? 'rounded-t-[50px]' : 'rounded-[50px]'}" }}
+            {{ if image_description }}
+                <div>
+                    <div class="h-2 bg-white"></div>
+                    <div class="bg-dark-950 p-5 rounded-b-[50px]">
+                        <x-text color="white" size="sm" weight="400" class="text-center">
+                            {{ image_description }}
+                        </x-text>
+                    </div>
+                </div>
+            {{ /if }}
+        </div>
+    </div>
+{{ /images }}
+
+<div class="absolute top-[50%] mx-auto -z-20 -translate-y-[50%]">
+    {{ svg src="bg-rectangle" class="shrink-0" }}
+</div>
+
+<div class="absolute bottom-0 -z-20 -left-2 lg:left-8 lg:bottom-16 xl:left-24">
+    {{ svg src="airplane" class="w-24 h-24 shrink-0" }}
+</div>
+
+<div class="absolute top-0 right-0 -z-10 lg:bottom-0 lg:-right-0 lg:top-10 xl:right-20">
+    {{ svg src="shapes" class="w-32 h-32 lg:w-40 lg:h-40 shrink-0" }}
+</div>

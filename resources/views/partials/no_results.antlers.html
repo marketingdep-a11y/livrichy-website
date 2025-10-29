@@ -1,0 +1,22 @@
+<div class="pt-8 lg:pt-20 lg:flex lg:items-center lg:justify-between"
+    :class="'{{ theme:map_variant }}' == 'side_map' && open && 'flex-col lg:gap-y-12'">
+    <div class="flex flex-col gap-y-4 lg:max-w-md">
+        {{ if theme:no_results_title }}
+            <x-heading size="2">
+                {{ theme:no_results_title }}
+            </x-heading>
+        {{ /if }}
+        {{ if theme:no_results_description }}
+            <x-text>
+                {{ theme:no_results_description }}
+            </x-text>
+        {{ /if }}
+    </div>
+    {{ if theme:no_results_image }}
+        <div class="lg:w-2/5" :class="'{{ theme:map_variant }}' == 'side_map' && open && 'lg:w-3/5'">
+            <div class="w-full h-auto mt-20 lg:mt-0">
+                {{ partial:components/picture :image="theme:no_results_image" cover="true" }}
+            </div>
+        </div>
+    {{ /if }}
+</div>

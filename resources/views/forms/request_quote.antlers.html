@@ -1,0 +1,27 @@
+{{ form:request_quote }}
+    <div>
+        {{ if errors }}
+            {{ partial:forms/partials/error_state class="my-6" }}
+        {{ /if }}
+        {{ if success }}
+            {{ partial:forms/partials/success_state class="my-6" }}
+        {{ /if }}
+        
+        <div class="mt-4 flex flex-col gap-y-5">
+            {{ fields }}
+                <div>
+                    <div>{{ field }}</div>
+                    {{ if error }}
+                        <p class="text-gray-500">{{ error }}</p>
+                    {{ /if }}
+                </div>
+            {{ /fields }}
+
+            <input type="text" class="hidden" name="{{ honeypot ?? 'honeypot' }}">
+
+            <x-button type="submit" variant="primary" class="w-full">
+                {{ form:title }}
+            </x-button>
+        </div>
+    </div>
+{{ /form:request_quote }}

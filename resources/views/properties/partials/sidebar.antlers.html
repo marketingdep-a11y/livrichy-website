@@ -1,0 +1,40 @@
+<x-card direction="vertical" color="dark">
+    <x-text font="heading">{{ 'Price' | trans }}</x-text>
+    <x-heading size="3" color="brand" class="mt-2">
+        {{ theme:currency }}{{ price | format_number(0, ',') }}
+    </x-heading>
+
+    <div class="w-full h-px my-6 bg-brand-200"></div>
+
+    <div x-data="{ tab: '{{ forms:0:form:handle }}' }">
+        {{# Form title #}}
+        {{ forms }}
+            <template x-if="tab === '{{ form:handle }}'">
+                <x-text font="heading" color="dark" weight="500">
+                    {{ form_title }}
+                </x-text>
+            </template>
+        {{ /forms }}
+
+        {{# Tab Switcher #}}
+        <div class="flex mt-4">
+            {{ forms }}
+                <div class="flex items-center w-1/2 py-2 gap-x-2 cursor-pointer {{ count > 1 ?= 'justify-center' }}"
+                    :class="tab === '{{ form:handle }}' ? 'border-brand-950 border-b-2' : 'border-brand-200 border-b'"
+                    x-on:click="tab = '{{ form:handle }}'">
+                    {{ svg src="{{ form:handle === 'home_tour' ? 'date' : 'message' }}" class="w-5 h-5 fill-current shrink-0" x-bind:class="tab === '{{ form:handle }}' ? 'text-brand-950' : 'text-dark-600'" }}
+                    <p class="font-heading leading-[24px] font-medium" :class="tab === '{{ form:handle }}' ? 'text-brand-950' : 'text-dark-600'" x-text="'{{ form:title }}'"></p>
+                </div>
+            {{ /forms }}
+        </div>
+
+        {{# Form Fields #}}
+        {{ forms }}
+            <template x-if="tab === '{{ form:handle }}'">
+                {{ form:create :formset="form:handle" }}
+                    {{ partial:forms/{form:handle} }}
+                {{ /form:create }}
+            </template>
+        {{ /forms }}
+    </div>
+</x-card>

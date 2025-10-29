@@ -1,0 +1,78 @@
+{{# SAVE THIS FILE WITHOUT FORMATTING #}}
+<div class="h-full">
+    <div x-data="{ open: false, activeSlide: 0, slides: [{{ gallery }} '{{ url }}', {{ /gallery }}] }" x-init="slides.push('{{ featured_image }}')" @keydown.escape="open = false" class="w-full h-full">
+        {{# Open Slider Button #}}
+        <div @click="open = true" class="absolute right-4 bottom-4">
+            <x-button variant="outline" class="bg-dark-90" aria-label="Open Slider Button">
+                {{ 'See' | trans }}
+                <p x-text="slides.length" class="mx-1"></p> {{ 'Photos' | trans }}
+            </x-button>
+        </div>
+
+        {{# BG Overlay #}}
+        <div x-cloak class="z-50 fixed top-0 left-0 flex items-center justify-center w-full h-full"
+            style="background-color: rgba(0,0,0,.6);" x-show.transition="open" role="dialog" aria-modal="true"
+            aria-labelledby="modal">
+
+            {{# Close Slider Button #}}
+            <div
+                class="absolute z-50 flex items-center justify-start w-12 m-2 mb-4 ml-6 transform top-4 right-4 md:m-2">
+                <button class="flex items-center justify-center w-12 h-12 text-white rounded-full focus:outline-hidden"
+                    style="background-color: rgba(0,0,0,.4);" @click="open = false" aria-label="Close Slider Button">
+                    {{ svg src="x" class="w-8 h-8 text-white fill-current" }}
+                </button>
+            </div>
+
+
+            {{# Slider Images #}}
+            <div class="flex items-center justify-center w-full h-full overflow-hidden">
+                <template x-for="(slide, index) in slides" :key="index">
+                    <div @click="open = false" class="absolute flex items-center justify-center w-full h-full">
+
+                        <div x-cloak class="absolute top-0 bottom-0 flex flex-col items-center justify-center px-2 py-2 md:py-24"
+                            x-show="activeSlide === index" x-transition:enter="transition ease-out duration-150"
+                            x-transition:enter-start="opacity-0 transform scale-90"
+                            x-transition:enter-end="opacity-100 transform scale-100"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 transform scale-100"
+                            x-transition:leave-end="opacity-0 transform scale-90">
+                            <img :src="slide" class="object-cover w-full h-full rounded-sm shadow-lg"
+                                style="object-position: {{ focus | background_position }}" alt="Slider Image">
+                        </div>
+
+                        <div x-cloak class="fixed items-center justify-center hidden w-40 h-12 mb-2 text-sm font-bold text-white transform bottom-4 md:flex"
+                            x-show="activeSlide === index">
+                            <span class="w-12 text-right" x-text="index + 1"></span>
+                            <span class="w-4 text-center">/</span>
+                            <span class="w-12 text-left" x-text="slides.length"></span>
+                        </div>
+                    </div>
+                </template>
+
+                {{# Next & Back Button #}}
+                <div class="fixed bottom-4 z-50 flex justify-center mb-4 transform inset-x-0 md:mb-2">
+
+                    <div class="flex items-center justify-end w-12 mr-3 md:mr-16">
+                        <button type="button"
+                            class="flex items-center justify-center w-12 h-12 rounded-full focus:outline-hidden"
+                            style="background-color: rgba(0,0,0,.4);"
+                            @click="activeSlide = activeSlide === 0 ? slides.length - 1 : activeSlide - 1"
+                            aria-label="Previous Slide">
+                            {{ svg src="chevron-left" class="w-6 h-6 mr-0.5 text-white fill-current shrink-0" }}
+                        </button>
+                    </div>
+
+                    <div class="flex items-center justify-start w-12 md:ml-16">
+                        <button type="button"
+                            class="flex items-center justify-center w-12 h-12 font-bold text-white rounded-full focus:outline-hidden"
+                            style="background-color: rgba(0,0,0,.4);"
+                            @click="activeSlide = activeSlide === slides.length - 1 ? 0 : activeSlide + 1"
+                            aria-label="Next Slide">
+                            {{ svg src="chevron-right" class="w-6 h-6 ml-0.5 text-white fill-current" }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

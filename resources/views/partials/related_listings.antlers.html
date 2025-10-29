@@ -1,0 +1,15 @@
+{{ collection:properties as="listing" blueprint:is="property" :id:isnt="id" :city:is="city:id" limit="6" sort="random" }}
+    {{ if !no_results }}
+        <div class="container py-16 md:py-24 lg:py-28">
+            <x-heading size="2" class="mb-16 md:mb-10">
+                {{ 'Similiar Listings' | trans }}
+            </x-heading>
+
+            <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {{ listing }}
+                    {{ partial:properties/partials/medium_card }}
+                {{ /listing }}
+            </div>
+        </div>
+    {{ /if }}
+{{ /collection:properties }}

@@ -1,0 +1,274 @@
+title: 'Hero Section'
+fields:
+  -
+    handle: variant
+    field:
+      options:
+        hero_section_1: 'Variant 1'
+        hero_section_2: 'Variant 2'
+        hero_section_3: 'Variant 3'
+      default: hero_section_1
+      display: Variant
+      type: button_group
+      icon: button_group
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+  -
+    handle: title
+    field:
+      input_type: text
+      antlers: false
+      type: text
+      display: Title
+      icon: text
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+      validate:
+        - required
+  -
+    import: rich_text
+  -
+    handle: image
+    field:
+      mode: list
+      container: assets
+      restrict: false
+      allow_uploads: true
+      show_filename: true
+      display: Image
+      type: assets
+      icon: assets
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      max_files: 1
+      if:
+        variant: 'equals hero_section_3'
+      validate:
+        - required
+        - sometimes
+  -
+    handle: properties
+    field:
+      mode: default
+      create: true
+      collections:
+        - properties
+      display: Properties
+      type: entries
+      icon: entries
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      validate:
+        - required
+        - sometimes
+      if:
+        variant: 'equals hero_section_1'
+  -
+    handle: images
+    field:
+      fields:
+        -
+          handle: image
+          field:
+            mode: list
+            container: assets
+            restrict: false
+            allow_uploads: true
+            show_filename: true
+            max_files: 1
+            display: Image
+            type: assets
+            icon: assets
+            width: 33
+            listable: hidden
+            instructions_position: above
+            visibility: visible
+            always_save: false
+            validate:
+              - required
+        -
+          handle: image_description
+          field:
+            character_limit: '150'
+            antlers: false
+            display: 'Image Description'
+            type: textarea
+            icon: textarea
+            width: 66
+            listable: hidden
+            instructions_position: above
+            visibility: visible
+            always_save: false
+      mode: table
+      max_rows: 2
+      add_row: 'Add Image'
+      reorderable: true
+      display: Images
+      type: grid
+      icon: grid
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      if:
+        variant: 'equals hero_section_2'
+      validate:
+        - required
+        - sometimes
+  -
+    handle: show_stats
+    field:
+      default: false
+      type: toggle
+      display: 'Show Stats'
+      icon: toggle
+      width: 50
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+      validate:
+        - sometimes
+      if:
+        variant: 'equals hero_section_1'
+      instructions: 'Toggle this to show Property & Agents counter.'
+  -
+    handle: agent
+    field:
+      max_items: 1
+      mode: default
+      create: true
+      collections:
+        - agents
+      display: Agent
+      type: entries
+      icon: entries
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      if:
+        variant: 'equals hero_section_2'
+      width: 50
+  -
+    handle: show_property_filters
+    field:
+      default: false
+      type: toggle
+      display: 'Show Property Filters'
+      icon: toggle
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+      width: 50
+  -
+    handle: services_section
+    field:
+      display: 'SERVICES SECTION'
+      type: section
+      icon: section
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      if:
+        variant: 'equals hero_section_3'
+  -
+    handle: services_title
+    field:
+      input_type: text
+      antlers: false
+      type: text
+      display: 'Services Title'
+      icon: text
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      hide_display: false
+      validate:
+        - sometimes
+      if:
+        variant: 'equals hero_section_3'
+  -
+    handle: services
+    field:
+      collapse: accordion
+      previews: true
+      sets:
+        main:
+          display: Main
+          instructions: null
+          icon: null
+          sets:
+            service:
+              display: Service
+              instructions: null
+              icon: null
+              fields:
+                -
+                  handle: icon
+                  field:
+                    mode: list
+                    container: assets
+                    restrict: false
+                    allow_uploads: true
+                    show_filename: true
+                    max_files: 1
+                    display: Icon
+                    type: assets
+                    icon: assets
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    always_save: false
+                    width: 33
+                    show_set_alt: true
+                    hide_display: false
+                -
+                  handle: title
+                  field:
+                    input_type: text
+                    antlers: false
+                    display: Title
+                    type: text
+                    icon: text
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    always_save: false
+                    width: 75
+                    hide_display: false
+                -
+                  handle: description
+                  field:
+                    character_limit: '150'
+                    antlers: false
+                    display: Description
+                    type: textarea
+                    icon: textarea
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    always_save: false
+                    hide_display: false
+      display: Services
+      type: replicator
+      icon: replicator
+      listable: hidden
+      instructions_position: above
+      visibility: visible
+      always_save: false
+      if:
+        variant: 'equals hero_section_3'
+      max_sets: 4
+      fullscreen: true
+      hide_display: false

@@ -1,0 +1,547 @@
+title: Property
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        display: Main
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+          -
+            handle: featured_image
+            field:
+              mode: grid
+              container: assets
+              restrict: false
+              allow_uploads: true
+              show_filename: true
+              max_files: 1
+              display: 'Featured Image'
+              type: assets
+              icon: assets
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              validate:
+                - required
+              show_set_alt: true
+              hide_display: false
+      -
+        display: 'Page Content'
+        fields:
+          -
+            handle: content
+            field:
+              collapse: accordion
+              always_show_set_button: false
+              previews: true
+              sets:
+                main:
+                  display: Main
+                  instructions: null
+                  icon: null
+                  sets:
+                    property_details:
+                      display: 'Property Details'
+                      instructions: null
+                      icon: home-house
+                      fields:
+                        -
+                          handle: details
+                          field:
+                            collapse: accordion
+                            previews: true
+                            sets:
+                              main:
+                                display: Main
+                                instructions: null
+                                icon: null
+                                sets:
+                                  details_set:
+                                    display: 'Details Set'
+                                    instructions: null
+                                    icon: null
+                                    fields:
+                                      -
+                                        handle: title
+                                        field:
+                                          input_type: text
+                                          antlers: false
+                                          display: Title
+                                          type: text
+                                          icon: text
+                                          listable: hidden
+                                          instructions_position: above
+                                          visibility: visible
+                                          always_save: false
+                                          validate:
+                                            - required
+                                      -
+                                        handle: specs
+                                        field:
+                                          collapse: accordion
+                                          previews: true
+                                          sets:
+                                            main:
+                                              display: Main
+                                              instructions: null
+                                              icon: null
+                                              sets:
+                                                specs_set:
+                                                  display: 'Specs Set'
+                                                  instructions: null
+                                                  icon: null
+                                                  fields:
+                                                    -
+                                                      handle: title
+                                                      field:
+                                                        input_type: text
+                                                        antlers: false
+                                                        display: Title
+                                                        type: text
+                                                        icon: text
+                                                        listable: hidden
+                                                        instructions_position: above
+                                                        visibility: visible
+                                                        always_save: false
+                                                        validate:
+                                                          - required
+                                                    -
+                                                      handle: specs_list
+                                                      field:
+                                                        display: 'Specs List'
+                                                        type: list
+                                                        icon: list
+                                                        listable: hidden
+                                                        instructions_position: above
+                                                        visibility: visible
+                                                        always_save: false
+                                          display: Specs
+                                          type: replicator
+                                          icon: replicator
+                                          listable: hidden
+                                          instructions_position: above
+                                          visibility: visible
+                                          always_save: false
+                                          fullscreen: true
+                                          hide_display: false
+                                          validate:
+                                            - required
+                            display: Details
+                            type: replicator
+                            icon: replicator
+                            listable: hidden
+                            instructions_position: above
+                            visibility: visible
+                            always_save: false
+                            fullscreen: true
+                            hide_display: false
+                            validate:
+                              - required
+                    video:
+                      display: Video
+                      instructions: null
+                      icon: media-webcam-video
+                      fields:
+                        -
+                          handle: video
+                          field:
+                            type: video
+                            display: Video
+                            icon: video
+                            listable: hidden
+                            instructions_position: above
+                            visibility: visible
+                            hide_display: false
+                            validate:
+                              - required
+              buttons:
+                - h2
+                - h3
+                - bold
+                - italic
+                - unorderedlist
+                - orderedlist
+                - anchor
+                - horizontalrule
+              save_html: false
+              toolbar_mode: fixed
+              link_noopener: false
+              link_noreferrer: false
+              target_blank: false
+              reading_time: false
+              fullscreen: true
+              allow_source: false
+              enable_input_rules: true
+              enable_paste_rules: true
+              antlers: false
+              remove_empty_nodes: false
+              display: Content
+              type: bard
+              icon: bard
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              smart_typography: false
+              inline: false
+              hide_display: false
+              word_count: false
+              replicator_preview: true
+      -
+        display: 'Map Section'
+        instructions: "Leave inputs empty if you don't want to show the map."
+        fields:
+          -
+            import: map_section
+  property_details:
+    display: 'Property Details'
+    sections:
+      -
+        display: 'Property Details'
+        fields:
+          -
+            handle: agent
+            field:
+              max_items: 1
+              mode: default
+              create: true
+              collections:
+                - agents
+              display: Agent
+              type: entries
+              icon: entries
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              validate:
+                - required
+              width: 50
+          -
+            handle: price
+            field:
+              input_type: text
+              antlers: false
+              display: Price
+              type: text
+              icon: text
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              instructions: 'ex: `5000`'
+              hide_display: false
+              validate:
+                - required
+          -
+            handle: property_status
+            field:
+              options:
+                sale: 'For Sale'
+                rent: 'For Rent'
+              type: button_group
+              display: 'Property Status'
+              icon: button_group
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              default: sale
+              width: 50
+              validate:
+                - required
+          -
+            handle: year_build
+            field:
+              input_type: text
+              antlers: false
+              type: text
+              display: 'Year Build'
+              icon: text
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+          -
+            handle: property_features
+            field:
+              fields:
+                -
+                  handle: icon
+                  field:
+                    type: icon
+                    display: Icon
+                    icon: icon_picker
+                    width: 33
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    hide_display: false
+                    directory: resources/svg/property_features
+                -
+                  handle: type
+                  field:
+                    options:
+                      bedrooms: Bedrooms
+                      bathrooms: Bathrooms
+                      property_size: 'Property Size'
+                      style: Style
+                    taggable: false
+                    push_tags: false
+                    multiple: false
+                    clearable: false
+                    searchable: true
+                    cast_booleans: false
+                    type: select
+                    display: Type
+                    icon: select
+                    width: 33
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    hide_display: false
+                -
+                  handle: description
+                  field:
+                    input_type: text
+                    antlers: false
+                    type: text
+                    display: Description
+                    icon: text
+                    width: 33
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    hide_display: false
+              mode: table
+              reorderable: true
+              fullscreen: true
+              type: grid
+              display: 'Property Features'
+              icon: grid
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+  gallery:
+    display: Gallery
+    sections:
+      -
+        display: Media
+        fields:
+          -
+            handle: gallery
+            field:
+              mode: grid
+              container: assets
+              restrict: false
+              allow_uploads: true
+              show_filename: true
+              display: Gallery
+              type: assets
+              icon: assets
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              show_set_alt: true
+              hide_display: false
+  location:
+    display: Location
+    sections:
+      -
+        display: Location
+        fields:
+          -
+            handle: street_number_1
+            field:
+              input_type: text
+              antlers: false
+              type: text
+              display: 'Street Number 1'
+              icon: text
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+          -
+            handle: street_number_2
+            field:
+              input_type: text
+              antlers: false
+              type: text
+              display: 'Street Number 2'
+              icon: text
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+          -
+            handle: city
+            field:
+              max_items: 1
+              mode: default
+              create: true
+              collections:
+                - cities
+              type: entries
+              display: City
+              icon: entries
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              validate:
+                - required
+          -
+            handle: region
+            field:
+              input_type: text
+              antlers: false
+              type: text
+              display: Region
+              icon: text
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+          -
+            handle: zip
+            field:
+              input_type: text
+              antlers: false
+              type: text
+              display: Zip
+              icon: text
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+  forms:
+    display: Forms
+    sections:
+      -
+        display: Forms
+        fields:
+          -
+            handle: forms
+            field:
+              fields:
+                -
+                  handle: form_title
+                  field:
+                    input_type: text
+                    antlers: false
+                    type: text
+                    display: 'Form Title'
+                    icon: text
+                    width: 50
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    hide_display: false
+                    validate:
+                      - required
+                -
+                  handle: form
+                  field:
+                    max_items: 1
+                    type: form
+                    display: Form
+                    icon: form
+                    listable: hidden
+                    instructions_position: above
+                    visibility: visible
+                    hide_display: false
+                    width: 50
+                    validate:
+                      - required
+              mode: table
+              max_rows: 2
+              add_row: 'Add Form'
+              reorderable: true
+              fullscreen: true
+              type: grid
+              display: Forms
+              icon: grid
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+          -
+            handle: categories
+            field:
+              type: terms
+              taxonomies:
+                - categories
+              display: Categories
+              mode: select
+              instructions_position: above
+              listable: hidden
+              visibility: visible
+              create: true
+              hide_display: false
+          -
+            handle: date
+            field:
+              type: date
+              default: now
+              validate:
+                - required
+          -
+            handle: show_featured_badge
+            field:
+              default: false
+              display: 'Show Featured Badge'
+              type: toggle
+              icon: toggle
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+              instructions: 'Toggle this to display the Featured Badge.'
+              hide_display: false
+          -
+            handle: show_status
+            field:
+              default: false
+              type: toggle
+              display: 'Show Property Status Badge'
+              icon: toggle
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              instructions: 'Toggle this to display the Property Status Badge (ex: "For Sale or "For Rent").'
+  seo:
+    display: SEO
+    sections:
+      -
+        fields:
+          -
+            import: seo

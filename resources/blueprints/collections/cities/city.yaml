@@ -1,0 +1,85 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+      -
+        display: Image
+        fields:
+          -
+            handle: featured_image
+            field:
+              max_files: 1
+              mode: grid
+              container: assets
+              restrict: false
+              allow_uploads: true
+              show_filename: true
+              show_set_alt: true
+              type: assets
+              display: 'Featured Image'
+              icon: assets
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+              validate:
+                - required
+      -
+        display: Map
+        instructions: "Leave inputs empty if you don't want to show the map."
+        fields:
+          -
+            handle: longitude
+            field:
+              input_type: text
+              antlers: false
+              display: Longitude
+              type: text
+              icon: text
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+          -
+            handle: latitude
+            field:
+              input_type: text
+              antlers: false
+              display: Latitude
+              type: text
+              icon: text
+              width: 50
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              always_save: false
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+          -
+            handle: parent
+            field:
+              type: entries
+              collections:
+                - cities
+              max_items: 1
+              listable: false
+              localizable: true
+title: City
