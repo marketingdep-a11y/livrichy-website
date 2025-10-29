@@ -1,10 +1,10 @@
 ---
 id: f3bc9f68-5408-4bcf-b7ed-15a8decb07cc
 blueprint: property
-title: 'Beach Pros Realty Inc'
-price: '4299'
+title: '1 Bedroom For Sale In Binghatti Royale, JVC'
+price: '1649000'
 agent: 759ddb6f-7ffd-495b-a743-a942f3a9d749
-date: '2023-06-20'
+date: '2025-10-29'
 show_featured_badge: false
 home_tour_form: false
 seo_title: title
@@ -18,10 +18,10 @@ updated_by: d2615c5e-8300-49e9-82c7-c5f442db8f23
 updated_at: 1701870489
 city: 0f045df6-ab0e-4858-ab98-5b4edacd5eb8
 categories:
-  - office
+  - apartment
 property_status: sale
-longitude: '-121.2756'
-latitude: '37.9616'
+longitude: '55.296132'
+latitude: '25.187017'
 map_title: 'Map View'
 year_build: '2000'
 duplicated_from: 428fad87-caed-45a5-ba6a-69f25dfe0c33
@@ -29,28 +29,41 @@ property_features:
   -
     id: llkwj0sf
     icon: bedrooms
-    title: bedrooms
-    amount: 'Modern Loft'
+    title: Bedrooms
     type: bedrooms
-    bedrooms: '3'
-    bathrooms: '4'
-    property_size: '2405'
     description: '4'
   -
     id: lmuklepj
     icon: bathrooms
+    title: Bathrooms
     type: bathrooms
-    description: '4'
+    description: '5'
   -
-    id: lmuklla3
-    icon: style
-    type: style
-    description: 'Modern Loft'
+    id: lnewpark
+    icon: parking
+    title: Parking
+    type: parking
+    description: '2'
   -
     id: lmyuurrp
     icon: size
+    title: 'Property Size'
     type: property_size
     description: '4552'
+listing_status: published
+listing_description: 'Skyline views, premium amenities and immediate access to Dubai Marina attractions.'
+developer: Binghatti
+geo_points:
+  -
+    label: 'Primary Location'
+    latitude: '25.187017'
+    longitude: '55.296132'
+photo_links:
+  - https://example.com/listings/binghatti-royale/exterior.jpg
+  - https://example.com/listings/binghatti-royale/interior.jpg
+external_agent_id: AGNT-00251
+external_id: '1911'
+source_url: https://example.com/listings/binghatti-royale
 show_status: false
 forms:
   -
@@ -67,6 +80,7 @@ gallery:
   - properties/unsplash_1af5hp6f4ti.jpg
   - properties/unsplash_6cjg-fotys4.jpg
 street_number_1: '3 Leame Close'
+community: 'Dubai Marina'
 region: Hull
 zip: 'HU3 6ND'
 variants: property
