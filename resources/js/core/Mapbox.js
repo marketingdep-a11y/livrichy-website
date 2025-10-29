@@ -3,13 +3,13 @@ export const Mapbox = ({ data = [], type }) => ({
         mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
         // Initial map creation
-        let defaultFocus = [20.9144, 41.7895];
-        let focus =
-            data[0].longitude && data[0].latitude
+        const defaultFocus = [20.9144, 41.7895];
+        const focus =
+            data[0] && data[0].longitude && data[0].latitude
                 ? [data[0].longitude, data[0].latitude]
                 : defaultFocus;
 
-        let map = new mapboxgl.Map({
+        const map = new mapboxgl.Map({
             container: type ?? "map",
             style: "mapbox://styles/mapbox/light-v10",
             center: focus,
@@ -25,22 +25,24 @@ export const Mapbox = ({ data = [], type }) => ({
         });
         map.addControl(controls, "bottom-right");
 
-        // Toggles between map modes (Satelite, Light etc.)
+        // Toggles between map modes (Satellite, Light etc.)
         const layerList = document.getElementById("menu");
-        const inputs = layerList.getElementsByTagName("input");
+        if (layerList) {
+            const inputs = layerList.getElementsByTagName("input");
 
-        for (const input of inputs) {
-            input.onclick = (layer) => {
-                const layerId = layer.target.id;
-                map.setStyle("mapbox://styles/mapbox/" + layerId);
-            };
+            for (const input of inputs) {
+                input.onclick = (layer) => {
+                    const layerId = layer.target.id;
+                    map.setStyle("mapbox://styles/mapbox/" + layerId);
+                };
+            }
         }
 
         // Here we fill the geojson array with the data we got from Data prop, if we have any
-        let geojson = [];
-        let contactjson = [];
+        const geojson = [];
+        const contactjson = [];
 
-        data.length > 0 &&
+        if (data.length > 0) {
             data.map((item) => {
                 geojson.push({
                     type: "Feature",
@@ -68,27 +70,38 @@ export const Mapbox = ({ data = [], type }) => ({
                     });
                 }
             });
-
-        // Add markers to map (Contact Variant)
-        for (const contact of contactjson) {
-            const el = document.createElement("div");
-            el.className = "marker";
-
-            let width = 40;
-            let height = 40;
-            el.style.width = `${width}px`;
-            el.style.height = `${height}px`;
-            el.style.backgroundColor = "transparent";
-            el.style.backgroundImage = `url(svg/marker-icon.svg)`;
-            el.style.backgroundSize = "100%";
-
-            new mapboxgl.Marker(el)
-                .setLngLat(contact.geometry.coordinates)
-                .addTo(map);
         }
 
-        // Add markers to map (Normal Variant)
-        if (contactjson.length < 1) {
+        const markers = [];
+
+        const clearMarkers = () => {
+            while (markers.length) {
+                markers.pop().remove();
+            }
+        };
+
+        const createContactMarkers = () => {
+            for (const contact of contactjson) {
+                const el = document.createElement("div");
+                el.className = "marker";
+                el.dataset.variant = "contact";
+
+                const size = 40;
+                el.style.width = `${size}px`;
+                el.style.height = `${size}px`;
+                el.style.backgroundColor = "transparent";
+                el.style.backgroundImage = `url(svg/marker-icon.svg)`;
+                el.style.backgroundSize = "100%";
+
+                const marker = new mapboxgl.Marker(el)
+                    .setLngLat(contact.geometry.coordinates)
+                    .addTo(map);
+
+                markers.push(marker);
+            }
+        };
+
+        const createPropertyMarkers = () => {
             for (const feature of geojson) {
                 if (
                     feature.properties.price === undefined ||
@@ -97,11 +110,13 @@ export const Mapbox = ({ data = [], type }) => ({
                     feature.properties.url === undefined ||
                     feature.properties.featured_image === undefined ||
                     feature.properties.property_features === undefined
-                )
-                    return;
+                ) {
+                    continue;
+                }
 
                 const el = document.createElement("div");
                 el.className = "marker";
+                el.dataset.variant = "price";
 
                 el.style.color = "#fff";
                 el.style.fontSize = "16px";
@@ -115,11 +130,10 @@ export const Mapbox = ({ data = [], type }) => ({
                     feature.properties.price !== undefined &&
                     feature.properties.price !== 0
                 ) {
-                    new mapboxgl.Marker(el)
+                    const marker = new mapboxgl.Marker(el)
                         .setLngLat(feature.geometry.coordinates)
                         .setPopup(
-                            new mapboxgl.Popup({ offset: 25 }) // Add popups
-                                .setHTML(`
+                            new mapboxgl.Popup({ offset: 25 }).setHTML(`
                             <a href="${feature.properties.url}"
                                 class="flex flex-col w-full duration-200 ease-in-out border rounded-2xl border-dark-100 hover:border-brand-950 hover:ring-1 hover:ring-brand-950">
                                 <div class="shrink-0 rounded-t-2xl overflow-hidden">
@@ -216,9 +230,9 @@ export const Mapbox = ({ data = [], type }) => ({
                                                                 }
                                                             </p>
                                                         </div>`;
-                                                        } else {
-                                                            return ``;
                                                         }
+
+                                                        return ``;
                                                     })
                                                     .join("")}
                                             </div>`
@@ -229,15 +243,38 @@ export const Mapbox = ({ data = [], type }) => ({
                         `)
                         )
                         .addTo(map);
+
+                    markers.push(marker);
                 }
             }
+        };
+
+        const renderMarkers = () => {
+            clearMarkers();
+
+            if (contactjson.length > 0) {
+                createContactMarkers();
+                return;
+            }
+
+            createPropertyMarkers();
+        };
+
+        if (map.loaded()) {
+            renderMarkers();
+        } else {
+            map.once("load", renderMarkers);
         }
+
+        map.on("style.load", renderMarkers);
 
         // Updating size when mapbox/modal is opened.
         if (!type) {
-            var canvas = document.querySelector(".mapboxgl-canvas");
-            canvas.style.width = "100%";
-            canvas.style.height = "650px";
+            const canvas = document.querySelector(".mapboxgl-canvas");
+            if (canvas) {
+                canvas.style.width = "100%";
+                canvas.style.height = "650px";
+            }
         }
 
         // Blurry map loading fix.
