@@ -17,7 +17,7 @@
         <div class="flex items-start gap-x-2">
             {{ svg src="house" class="w-6 h-6 shrink-0 { variant === 'cities_section_2' ? 'stroke-brand-950' : 'stroke-white' }" }}
             <x-text size="lg" color="{ variant == 'cities_section_2' ? 'dark' : 'white' }">
-                {{ total_properties :city="id" }}
+                {{ total_text ?? (total_properties :community=id) }}
             </x-text>
         </div>
     </div>

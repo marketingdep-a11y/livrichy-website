@@ -7,7 +7,7 @@
         <div class="flex items-center gap-x-2">
             {{ svg src="house" class="w-6 h-6 stroke-brand-950 shrink-0" }}
             <x-text color="dark" size="lg" class="mt-0.5">
-                {{ total_properties :city="id" }}
+                {{ total_text ?? (total_properties :community=id) }}
             </x-text>
         </div>
     </div>

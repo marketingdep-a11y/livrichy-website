@@ -33,12 +33,12 @@
 
                 {{ partial:components/inputs/text placeholder="Min Price" name="min_price" :value="get:min_price" style="primary" onInput="$refs.filter_form.submit()" }}
                 {{ partial:components/inputs/text placeholder="Max Price" name="max_price" :value="get:max_price" style="primary" onInput="$refs.filter_form.submit()" }}
-                {{ partial:components/inputs/select name="location" onChange="$refs.filter_form.submit()" }}
-                    <option value="" disabled {{ unless get:location }}selected{{ /unless }} hidden>
-                        {{ get:location ?? 'Community' }}
+                {{ partial:components/inputs/select name="community" onChange="$refs.filter_form.submit()" }}
+                    <option value="" disabled {{ unless get:community }}selected{{ /unless }} hidden>
+                        {{ get:community ?? 'Community' }}
                     </option>
                     {{ property_filter_options:communities }}
-                        <option value="{{ value }}" {{ get:location == value ?= 'selected' }}>
+                        <option value="{{ value }}" {{ get:community == value ?= 'selected' }}>
                             {{ label }}
                         </option>
                     {{ /property_filter_options:communities }}
