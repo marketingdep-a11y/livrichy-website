@@ -127,7 +127,7 @@ blocks:
     title: 'Explore <i>Communities</i>'
     type: communities_section
     enabled: true
-    communities: [ ]
+    selected_communities: [ ]
     has_description: false
     has_button: true
     button_variant: primary

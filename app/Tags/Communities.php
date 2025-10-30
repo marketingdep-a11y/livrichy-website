@@ -72,7 +72,14 @@ class Communities extends Tags
                 $count = $group->count();
 
                 $featured = $group
-                    ->sortByDesc(fn ($entry) => optional($entry->date())->timestamp ?? $entry->updatedAt() ?? 0)
+                    ->sortByDesc(function ($entry) {
+                        $dateTimestamp = optional($entry->date())->timestamp;
+                        $updatedTimestamp = method_exists($entry, 'lastModified')
+                            ? optional($entry->lastModified())->timestamp
+                            : null;
+
+                        return $dateTimestamp ?? $updatedTimestamp ?? 0;
+                    })
                     ->first();
 
                 $featuredImage = $featured?->get('featured_image');

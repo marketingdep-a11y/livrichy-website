@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Services\CommunityImport\CommunitySynchronizer;
 use App\Services\ListingImport\ListingImporter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
@@ -38,10 +37,8 @@ class FetchRemoteJson extends Command
      */
     protected $description = 'Fetch JSON from a remote endpoint and store the raw response for debugging.';
 
-    public function __construct(
-        private readonly ListingImporter $importer,
-        private readonly CommunitySynchronizer $communitySynchronizer
-    ) {
+    public function __construct(private readonly ListingImporter $importer)
+    {
         parent::__construct();
     }
 
@@ -161,6 +158,9 @@ class FetchRemoteJson extends Command
             } else {
                 $report = $this->importer->sync($records->values()->all());
 
+                $communityReport = $report['community_report'] ?? null;
+                unset($report['community_report']);
+
                 $this->newLine();
                 $this->table(
                     ['Metric', 'Value'],
@@ -169,15 +169,15 @@ class FetchRemoteJson extends Command
                         ->all()
                 );
 
-                $communityReport = $this->communitySynchronizer->sync();
-
-                $this->newLine();
-                $this->table(
-                    ['Community Metric', 'Value'],
-                    collect($communityReport)
-                        ->map(fn ($value, $key) => [ucwords(str_replace('_', ' ', $key)), $value])
-                        ->all()
-                );
+                if (is_array($communityReport)) {
+                    $this->newLine();
+                    $this->table(
+                        ['Community Metric', 'Value'],
+                        collect($communityReport)
+                            ->map(fn ($value, $key) => [ucwords(str_replace('_', ' ', $key)), $value])
+                            ->all()
+                    );
+                }
             }
         }
 

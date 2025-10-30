@@ -18,7 +18,7 @@ fields:
   -
     import: set_header
   -
-    handle: communities
+    handle: selected_communities
     field:
       mode: default
       create: true

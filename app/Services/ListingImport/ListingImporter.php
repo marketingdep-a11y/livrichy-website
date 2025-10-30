@@ -2,6 +2,7 @@
 
 namespace App\Services\ListingImport;
 
+use App\Services\CommunityImport\CommunitySynchronizer;
 use App\Services\ListingImport\Dto\ListingImportData;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
@@ -18,14 +19,16 @@ class ListingImporter
      */
     private array $config;
 
-    public function __construct(?array $config = null)
-    {
+    public function __construct(
+        private readonly CommunitySynchronizer $communitySynchronizer,
+        ?array $config = null
+    ) {
         $this->config = $config ?? config('services.import_json', []);
     }
 
     /**
      * @param  array<int, array<string, mixed>>  $records
-     * @return array<string, int>
+     * @return array<string, mixed>
      */
     public function sync(array $records): array
     {
@@ -126,7 +129,11 @@ class ListingImporter
             }
         }
 
-        return $report;
+        $communityReport = $this->communitySynchronizer->sync();
+
+        return array_merge($report, [
+            'community_report' => $communityReport,
+        ]);
     }
 
     private function shouldBePublic(ListingImportData $dto, array $record): bool
