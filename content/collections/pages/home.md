@@ -63,8 +63,8 @@ blocks:
     enabled: true
     categories:
       - apartment
-      - office
-      - studio
+      - townhouse
+      - villa
     has_description: false
     has_button: true
     button_variant: primary
