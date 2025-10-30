@@ -131,6 +131,22 @@ class ListingImportData
             'date' => $this->date,
         ];
 
+        if (array_key_exists('bedrooms', $this->featureMetrics)) {
+            $attributes['bedrooms_count'] = $this->featureMetrics['bedrooms'];
+        }
+
+        if (array_key_exists('bathrooms', $this->featureMetrics)) {
+            $attributes['bathrooms_count'] = $this->featureMetrics['bathrooms'];
+        }
+
+        if (array_key_exists('parking', $this->featureMetrics)) {
+            $attributes['parking_count'] = $this->featureMetrics['parking'];
+        }
+
+        if (array_key_exists('property_size', $this->featureMetrics)) {
+            $attributes['property_size'] = Normalizer::formatFloat($this->featureMetrics['property_size']);
+        }
+
         if ($this->agentId !== null) {
             $attributes['agent'] = $this->agentId;
         }

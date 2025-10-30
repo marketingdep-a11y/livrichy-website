@@ -334,6 +334,58 @@ tabs:
               visibility: visible
               hide_display: false
           -
+            handle: bedrooms_count
+            field:
+              input_type: number
+              type: text
+              display: 'Bedrooms Count'
+              icon: number
+              width: 33
+              listable: hidden
+              instructions_position: above
+              visibility: hidden
+              hide_display: true
+              read_only: true
+          -
+            handle: bathrooms_count
+            field:
+              input_type: number
+              type: text
+              display: 'Bathrooms Count'
+              icon: number
+              width: 33
+              listable: hidden
+              instructions_position: above
+              visibility: hidden
+              hide_display: true
+              read_only: true
+          -
+            handle: parking_count
+            field:
+              input_type: number
+              type: text
+              display: 'Parking Count'
+              icon: number
+              width: 33
+              listable: hidden
+              instructions_position: above
+              visibility: hidden
+              hide_display: true
+              read_only: true
+          -
+            handle: property_size
+            field:
+              input_type: number
+              type: text
+              display: 'Property Size (sqm)'
+              icon: number
+              width: 33
+              listable: hidden
+              instructions_position: above
+              visibility: hidden
+              hide_display: true
+              read_only: true
+          -
             handle: listing_status
             field:
               options:

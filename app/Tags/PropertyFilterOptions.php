@@ -48,28 +48,8 @@ class PropertyFilterOptions extends Tags
             'villa' => 'Villa',
             'duplex' => 'Duplex',
         ];
-
-        $values = Entry::query()
-            ->where('collection', 'properties')
-            ->where('published', true)
-            ->get()
-            ->flatMap(function ($entry) {
-                $categories = $entry->get('categories');
-
-                if (is_string($categories)) {
-                    return [$categories];
-                }
-
-                if (is_array($categories)) {
-                    return $categories;
-                }
-
-                return [];
-            })
-            ->map(fn ($value) => strtolower((string) $value))
+        $values = $this->collectCountsFromArrayField('categories')
             ->filter(fn ($value) => isset($allowed[$value]))
-            ->unique()
-            ->sort()
             ->values();
 
         return $values
@@ -78,5 +58,72 @@ class PropertyFilterOptions extends Tags
                 'label' => $allowed[$value] ?? Str::headline($value),
             ])
             ->all();
+    }
+
+    /**
+     * @return array<int, array<string, string>>
+     */
+    public function bedrooms(): array
+    {
+        return $this->collectNumericOptions('bedrooms_count');
+    }
+
+    /**
+     * @return array<int, array<string, string>>
+     */
+    public function bathrooms(): array
+    {
+        return $this->collectNumericOptions('bathrooms_count');
+    }
+
+    private function collectNumericOptions(string $handle): array
+    {
+        return $this->collectNumericValues($handle)
+            ->map(fn ($value) => [
+                'value' => $value,
+                'label' => $value.'+',
+            ])
+            ->all();
+    }
+
+    private function collectNumericValues(string $handle)
+    {
+        return Entry::query()
+            ->where('collection', 'properties')
+            ->where('published', true)
+            ->get()
+            ->map(fn ($entry) => $entry->get($handle))
+            ->filter(fn ($value) => is_numeric($value))
+            ->map(fn ($value) => (int) $value)
+            ->filter(fn ($value) => $value > 0)
+            ->unique()
+            ->sort()
+            ->values();
+    }
+
+    private function collectCountsFromArrayField(string $handle)
+    {
+        return Entry::query()
+            ->where('collection', 'properties')
+            ->where('published', true)
+            ->get()
+            ->flatMap(function ($entry) use ($handle) {
+                $values = $entry->get($handle);
+
+                if (is_string($values)) {
+                    return [strtolower($values)];
+                }
+
+                if (is_array($values)) {
+                    return collect($values)
+                        ->map(fn ($value) => strtolower((string) $value));
+                }
+
+                return [];
+            })
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values();
     }
 }

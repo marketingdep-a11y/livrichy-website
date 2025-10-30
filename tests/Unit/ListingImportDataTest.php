@@ -80,6 +80,10 @@ class ListingImportDataTest extends TestCase
         $this->assertSame('Binghatti', $attributes['developer']);
         $this->assertSame('Dubai Marina', $attributes['community']);
         $this->assertSame('2025-10-29', $attributes['date']);
+        $this->assertSame(4, $attributes['bedrooms_count']);
+        $this->assertSame(5, $attributes['bathrooms_count']);
+        $this->assertSame(2, $attributes['parking_count']);
+        $this->assertSame('4552', $attributes['property_size']);
 
         $this->assertArrayHasKey('property_features', $attributes);
         $this->assertCount(4, $attributes['property_features']);

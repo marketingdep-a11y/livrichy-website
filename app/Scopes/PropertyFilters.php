@@ -16,49 +16,49 @@ class PropertyFilters extends Scope
     public function apply($query, $values)
     {
         if (request()->filled('min_price')) {
-            $query->where('price', '>=', request()->integer('min_price'));
+            $query->where('data->price', '>=', request()->integer('min_price'));
         }
 
         if (request()->filled('max_price')) {
-            $query->where('price', '<=', request()->integer('max_price'));
+            $query->where('data->price', '<=', request()->integer('max_price'));
         }
 
         if (request()->filled('location')) {
-            $query->where('community', request()->query('location'));
+            $query->where('data->community', request()->query('location'));
         }
 
-        if (request()->has('floor_area')) {
-            $query->where('property_features->0->property_size', '>=', request()->query('floor_area'));
+        if (request()->filled('floor_area')) {
+            $query->where('data->property_size', '>=', request()->integer('floor_area'));
         }
 
         if (request()->filled('status')) {
-            $query->where('property_status', request()->query('status'));
+            $query->where('data->property_status', request()->query('status'));
         }
 
         if (request()->filled('categories')) {
             $values = (array) request()->input('categories', []);
 
-            foreach ($values as $value) {
-                $query->where(function ($subQuery) use ($value) {
-                    $subQuery->where('data->categories', 'like', '%"'.$value.'"%');
-                });
-            }
+            $query->where(function ($subQuery) use ($values) {
+                foreach ($values as $value) {
+                    $subQuery->orWhere('data->categories', 'like', '%"'.$value.'"%');
+                }
+            });
         }
 
-        if (request()->has('bedrooms')) {
-            $query->where('property_features->0->bedrooms', '>=', request()->bedrooms);
+        if (request()->filled('bedrooms')) {
+            $query->where('data->bedrooms_count', '>=', request()->integer('bedrooms'));
         }
 
-        if (request()->has('bathrooms')) {
-            $query->where('property_features->0->bathrooms', '>=', request()->bathrooms);
+        if (request()->filled('bathrooms')) {
+            $query->where('data->bathrooms_count', '>=', request()->integer('bathrooms'));
         }
 
-        if (request()->has('min_year')) {
-            $query->where('year_build', '>=', request()->min_year);
+        if (request()->filled('min_year')) {
+            $query->where('data->year_build', '>=', request()->integer('min_year'));
         }
 
         if (request()->has('q')) {
-            $query->where('title', 'like', '%' . request()->q . '%');
+            $query->where('data->title', 'like', '%' . request()->q . '%');
         }
 
         // Legacy routes for categories/cities are not used in the import workflow.

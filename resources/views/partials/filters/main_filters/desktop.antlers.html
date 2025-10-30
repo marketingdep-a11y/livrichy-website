@@ -43,24 +43,25 @@
                 {{ /partial:components/inputs/select }}
 
                 {{ partial:components/inputs/select name="bedrooms" onChange="$refs.filter_form.submit()" }}
-                    <option value="{{ get:bedrooms }}" disabled selected hidden>
+                    <option value="" disabled {{ unless get:bedrooms }}selected{{ /unless }} hidden>
                         {{ get:bedrooms ?? 'Bedrooms' }}
                     </option>
-                    {{ loop from="1" to="6" }}
-                        <option value="{{ value }}" {{ {get:bedrooms | contains:value} ?= 'selected' }}>
-                            {{ value == 1 ? 'Any' : '{{value}}+ Bedrooms' }}
+                    {{ property_filter_options:bedrooms }}
+                        <option value="{{ value }}" {{ get:bedrooms == value ?= 'selected' }}>
+                            {{ label }}
                         </option>
-                    {{ /loop }}
+                    {{ /property_filter_options:bedrooms }}
                 {{ /partial:components/inputs/select }}
+
                 {{ partial:components/inputs/select name="bathrooms" onChange="$refs.filter_form.submit()" }}
-                    <option value="{{ get:bathrooms }}" disabled selected hidden>
+                    <option value="" disabled {{ unless get:bathrooms }}selected{{ /unless }} hidden>
                         {{ get:bathrooms ?? 'Bathrooms' }}
                     </option>
-                    {{ loop from="1" to="6" }}
-                        <option value="{{ value }}" {{ {get:bathrooms | contains:value} ?= 'selected' }}>
-                            {{ value == 1 ? 'Any' : '{{value}}+ Bathrooms' }}
+                    {{ property_filter_options:bathrooms }}
+                        <option value="{{ value }}" {{ get:bathrooms == value ?= 'selected' }}>
+                            {{ label }}
                         </option>
-                    {{ /loop }}
+                    {{ /property_filter_options:bathrooms }}
                 {{ /partial:components/inputs/select }}
 
                 {{ partial:components/inputs/select name="floor_area" onChange="$refs.filter_form.submit()" }}
