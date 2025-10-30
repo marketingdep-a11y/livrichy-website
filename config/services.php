@@ -54,4 +54,14 @@ return [
         )),
     ],
 
+    'crm_agents' => [
+        'url' => env('CRM_AGENTS_URL'),
+        'timeout' => env('CRM_AGENTS_TIMEOUT', 10),
+        'departments' => array_values(array_filter(array_map(
+            static fn ($value) => (int) trim((string) $value),
+            explode(',', env('CRM_AGENTS_ALLOWED_DEPARTMENTS', '52,24,43,51,38'))
+        ))),
+    ],
+
+
 ];

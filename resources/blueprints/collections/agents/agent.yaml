@@ -104,6 +104,16 @@ tabs:
               fullscreen: true
               hide_display: false
               replicator_preview: true
+          -
+            handle: external_id
+            field:
+              type: hidden
+              display: 'External ID'
+              icon: hidden
+              listable: hidden
+              instructions_position: above
+              visibility: hidden
+              hide_display: true
       -
         display: Biography
         fields:
