@@ -3,7 +3,6 @@
 namespace App\Scopes;
 
 use Statamic\Query\Scopes\Scope;
-use Statamic\Facades\Entry;
 
 class PropertyFilters extends Scope
 {
@@ -24,27 +23,26 @@ class PropertyFilters extends Scope
             $query->where('price', '<=', request()->integer('max_price'));
         }
 
-        if (request()->has('location')) {
-            $city = Entry::query()->where('slug', request()->query('location'))->first();
-
-            $query->where('city', $city->id);
-        }
-
-        if (request()->filled('community')) {
-            $query->where('community', 'like', '%' . request()->query('community') . '%');
+        if (request()->filled('location')) {
+            $query->where('community', request()->query('location'));
         }
 
         if (request()->has('floor_area')) {
             $query->where('property_features->0->property_size', '>=', request()->query('floor_area'));
         }
 
-        if (request()->has('status')) {
-            $query->where('status', 'published')
-                ->where('property_status', request()->status);
+        if (request()->filled('status')) {
+            $query->where('property_status', request()->query('status'));
         }
 
-        if (request()->has('categories')) {
-            $query->whereTaxonomyIn(request()->categories);
+        if (request()->filled('categories')) {
+            $values = (array) request()->input('categories', []);
+
+            foreach ($values as $value) {
+                $query->where(function ($subQuery) use ($value) {
+                    $subQuery->where('data->categories', 'like', '%"'.$value.'"%');
+                });
+            }
         }
 
         if (request()->has('bedrooms')) {
@@ -63,14 +61,6 @@ class PropertyFilters extends Scope
             $query->where('title', 'like', '%' . request()->q . '%');
         }
 
-        if (request()->segment(1) == 'categories' && request()->segment(2)) {
-            $query->whereTaxonomy('categories::' . request()->segment(2));
-        }
-
-        if (request()->segment(1) == 'cities' && request()->segment(2)) {
-            $city = Entry::query()->where('slug', request()->segment(2))->first();
-
-            $query->where('city', $city->id);
-        }
+        // Legacy routes for categories/cities are not used in the import workflow.
     }
 }

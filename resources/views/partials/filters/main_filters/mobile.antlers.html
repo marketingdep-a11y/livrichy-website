@@ -23,20 +23,18 @@
                 <div class="mb-4">
                     <div x-data="{ status: new URLSearchParams(location.search).get('status') }"
                         class="flex items-center justify-between w-auto mb-4 gap-x-2 shrink-0 rounded-2xl">
-                        <x-button type="submit" x-on:click="status = 'sale', $refs.filter_form.submit()"
+                        <x-button type="button" x-on:click="status = 'sale'; $refs.filter_form.submit()"
                             class="flex-1 text-lg ring-0 hover:ring-2 shrink-0"
                             variant="{ get:status == 'sale' ? 'primary' : 'outline' }">
                             For Sale
                         </x-button>
-                        <x-button type="submit" x-on:click="status = 'rent', $refs.filter_form.submit()"
+                        <x-button type="button" x-on:click="status = 'rent'; $refs.filter_form.submit()"
                             variant="{ get:status == 'rent' ? 'primary' : 'outline' }"
                             class="flex-1 text-lg ring-0 hover:ring-2 shrink-0">
                             For Rent
                         </x-button>
 
-                        <template x-if="status">
-                            <input type="hidden" name="status" x-bind:value="status">
-                        </template>
+                        <input type="hidden" name="status" x-model="status">
                     </div>
 
                     <div class="flex w-full py-4 mx-auto gap-y-4 flex-col rounded-2xl">
@@ -44,17 +42,15 @@
                         {{ partial:components/inputs/text placeholder="Min Price" name="min_price" :value="get:min_price" style="primary" onInput="$refs.filter_form.submit()" }}
                         {{ partial:components/inputs/text placeholder="Max Price" name="max_price" :value="get:max_price" style="primary" onInput="$refs.filter_form.submit()" }}
                         {{ partial:components/inputs/select name="location" onChange="$refs.filter_form.submit()" }}
-                            <option value="{{ get:location }}" disabled selected hidden>
-                                {{ get:location ?? 'Location' }}
+                            <option value="" disabled {{ unless get:location }}selected{{ /unless }} hidden>
+                                {{ get:location ?? 'Community' }}
                             </option>
-                            {{ collection:cities }}
-                                <option value="{{ slug }}" {{ {get:location | contains:slug} ?= 'selected' }}>
-                                    {{ title }}
+                            {{ property_filter_options:communities }}
+                                <option value="{{ value }}" {{ get:location == value ?= 'selected' }}>
+                                    {{ label }}
                                 </option>
-                            {{ /collection:cities }}
+                            {{ /property_filter_options:communities }}
                         {{ /partial:components/inputs/select }}
-
-                        {{ partial:components/inputs/text placeholder="Community" name="community" :value="get:community" style="primary" onInput="$refs.filter_form.submit()" }}
 
                         {{ partial:components/inputs/select name="bedrooms" onChange="$refs.filter_form.submit()" }}
                             <option value="{{ get:bedrooms }}" disabled selected hidden>
@@ -95,15 +91,15 @@
                 {{ if current_template !== 'categories.show' }}
                     <x-text weight="500" color="dark">Based on category</x-text>
                     <div class="flex flex-wrap">
-                        {{ taxonomy:categories }}
+                        {{ property_filter_options:categories }}
                             <label class="p-2 mt-4 mr-4 font-medium border rounded-lg text-dark-950 border-dark-100">
                                 <input type="checkbox" x-on:change="$refs.filter_form.submit()"
-                                    {{ {get:categories | contains:id} ?= 'checked' }}
+                                    {{ {get:categories | contains:value} ?= 'checked' }}
                                     class="w-4 h-4 mr-2 border-black rounded-sm text-dark-950 focus:bg-dark-950 checked:fill-dark-950 focus:ring-dark-950"
-                                    name="categories[]" value="{{ id }}" id="{{ id }}">
-                                {{ title }}
+                                    name="categories[]" value="{{ value }}" id="category-mobile-{{ value }}">
+                                {{ label }}
                             </label>
-                        {{ /taxonomy:categories }}
+                        {{ /property_filter_options:categories }}
                     </div>
                 {{ /if }}
         </form>
