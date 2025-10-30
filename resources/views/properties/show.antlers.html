@@ -51,9 +51,10 @@
                     {{ partial:properties/partials/property_features/large_variant class="px-5 py-5 lg:px-10" }}
                 </div>
             {{ /if }}
-            {{ content }}
-                {{ partial src="sets/properties/{type}" }}
-            {{ /content }}
+            {{ if content }}
+                {{ content }}
+                    {{ partial src="sets/properties/{type}" }}
+                {{ /content }}
             {{ elseif listing_description }}
                 <div class="prose max-w-none text-dark-800 mt-6">
                     {{ listing_description }}
