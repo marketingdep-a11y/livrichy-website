@@ -5,7 +5,7 @@
                 {{ icon }}
             </div>
 
-            <x-text size="sm" color="light" class="mr-1">{{ description }}</x-text>
+            <x-text size="sm" color="light" class="mr-1">{{ if type == 'bedrooms' && (description == '0' || description == 0) }}Studio{{ else }}{{ description }}{{ /if }}</x-text>
             {{ if type == 'property_size' }}
                 <x-text size="sm" color="light">{{ theme:unit_of_measurement }}</x-text>
             {{ /if }}

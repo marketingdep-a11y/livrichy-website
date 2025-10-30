@@ -2,7 +2,7 @@
 id: 259fafe3-def6-4c78-914a-6684b0a64a38
 blueprint: property
 title: 'Magnolia Manor'
-price: '295000'
+price: 295000
 agent: 526444cd-7d26-4568-b520-f7baed7c65be
 date: '2023-06-20'
 show_featured_badge: true
@@ -25,6 +25,10 @@ latitude: '34.3442'
 map_title: 'Map View'
 year_build: '2014'
 duplicated_from: b3d00b1d-97b0-41af-b235-f8d38e943d07
+bedrooms_count: 3
+bathrooms_count: 3
+parking_count: 0
+property_size: '4552'
 property_features:
   -
     id: llkwj0sf

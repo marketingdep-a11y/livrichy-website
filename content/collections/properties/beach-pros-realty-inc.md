@@ -2,7 +2,7 @@
 id: f3bc9f68-5408-4bcf-b7ed-15a8decb07cc
 blueprint: property
 title: '1 Bedroom For Sale In Binghatti Royale, JVC'
-price: '1649000'
+price: 1649000
 agent: 759ddb6f-7ffd-495b-a743-a942f3a9d749
 date: '2025-10-29'
 show_featured_badge: false
@@ -25,6 +25,10 @@ latitude: '25.187017'
 map_title: 'Map View'
 year_build: '2000'
 duplicated_from: 428fad87-caed-45a5-ba6a-69f25dfe0c33
+bedrooms_count: 4
+bathrooms_count: 5
+parking_count: 2
+property_size: '4552'
 property_features:
   -
     id: llkwj0sf

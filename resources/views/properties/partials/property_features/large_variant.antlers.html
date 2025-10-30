@@ -9,7 +9,7 @@
                     </div>
 
                     <x-text size="sm" weight="700" color="dark">
-                        {{ description }}
+                        {{ if type == 'bedrooms' && (description == '0' || description == 0) }}Studio{{ else }}{{ description }}{{ /if }}
                         {{ if type == 'property_size' }}
                             {{ theme:unit_of_measurement }}
                         {{ /if }}

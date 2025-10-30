@@ -66,7 +66,7 @@ class ListingImportDataTest extends TestCase
         $this->assertSame('1 BEDROOM FOR SALE IN BINGHATTI ROYALE, JVC', $attributes['title']);
         $this->assertSame('published', $attributes['listing_status']);
         $this->assertSame('Skyline views and contemporary finishes.', $attributes['listing_description']);
-        $this->assertSame('1649000', $attributes['price']);
+        $this->assertSame(1649000.0, $attributes['price']);
         $this->assertSame('agent-uuid', $attributes['agent']);
         $this->assertSame('25.187017', $attributes['latitude']);
         $this->assertSame('55.296132', $attributes['longitude']);

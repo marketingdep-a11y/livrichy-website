@@ -119,7 +119,7 @@ class ListingImportData
             'title' => $this->title,
             'listing_status' => $this->status,
             'listing_description' => $this->description,
-            'price' => Normalizer::formatFloat($this->price),
+            'price' => $this->price,
             'photo_links' => $this->photoLinks,
             'external_id' => $this->externalId,
             'external_agent_id' => $this->externalAgentId,

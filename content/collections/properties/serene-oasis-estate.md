@@ -2,7 +2,7 @@
 id: 3e908b6d-6d80-4f1d-b277-1cd98852805e
 blueprint: property
 title: 'Serene Oasis Estate'
-price: '18630'
+price: 18630
 agent: bc0d8982-c77e-421f-9f5c-1567e674b2f9
 date: '2023-06-20'
 show_featured_badge: false
@@ -23,6 +23,10 @@ latitude: '37.8858'
 map_title: 'Map View'
 year_build: '2000'
 duplicated_from: 9453530f-9035-4742-8ad2-4a22b11a9616
+bedrooms_count: 3
+bathrooms_count: 3
+parking_count: 0
+property_size: '2800'
 property_features:
   -
     id: llkwj0sf
@@ -69,7 +73,7 @@ region: 'San Francisco'
 zip: 'CA 94110, USA'
 variants: property
 categories:
-  - studio
+  - apartment
 content:
   -
     type: heading

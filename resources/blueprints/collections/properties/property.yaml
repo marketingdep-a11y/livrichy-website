@@ -228,11 +228,11 @@ tabs:
           -
             handle: price
             field:
-              input_type: text
+              input_type: number
               antlers: false
               display: Price
-              type: text
-              icon: text
+              type: integer
+              icon: number
               width: 50
               listable: hidden
               instructions_position: above

@@ -65,7 +65,15 @@ class PropertyFilterOptions extends Tags
      */
     public function bedrooms(): array
     {
-        return $this->collectNumericOptions('bedrooms_count');
+        return $this->collectNumericValues('bedrooms_count')
+            ->map(function ($value) {
+                if ($value === 0) {
+                    return ['value' => 'studio', 'label' => 'Studio'];
+                }
+
+                return ['value' => (string) $value, 'label' => (string) $value];
+            })
+            ->all();
     }
 
     /**
@@ -73,16 +81,8 @@ class PropertyFilterOptions extends Tags
      */
     public function bathrooms(): array
     {
-        return $this->collectNumericOptions('bathrooms_count');
-    }
-
-    private function collectNumericOptions(string $handle): array
-    {
-        return $this->collectNumericValues($handle)
-            ->map(fn ($value) => [
-                'value' => $value,
-                'label' => $value.'+',
-            ])
+        return $this->collectNumericValues('bathrooms_count')
+            ->map(fn ($value) => ['value' => (string) $value, 'label' => (string) $value])
             ->all();
     }
 
@@ -92,10 +92,36 @@ class PropertyFilterOptions extends Tags
             ->where('collection', 'properties')
             ->where('published', true)
             ->get()
-            ->map(fn ($entry) => $entry->get($handle))
-            ->filter(fn ($value) => is_numeric($value))
-            ->map(fn ($value) => (int) $value)
-            ->filter(fn ($value) => $value > 0)
+            ->map(function ($entry) use ($handle) {
+                $value = $entry->get($handle);
+
+                if ($value === null) {
+                    $features = $entry->get('property_features');
+
+                    if (is_array($features)) {
+                        foreach ($features as $feature) {
+                            if (($feature['type'] ?? null) === str_replace('_count', '', $handle)) {
+                                $value = $feature['description'] ?? null;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (is_string($value)) {
+                    $lower = strtolower(trim($value));
+                    if ($lower === 'studio' || $lower === '0') {
+                        return 0;
+                    }
+                }
+
+                if (is_numeric($value)) {
+                    return (int) $value;
+                }
+
+                return null;
+            })
+            ->filter(fn ($value) => $value !== null && $value >= 0)
             ->unique()
             ->sort()
             ->values();

@@ -16,11 +16,11 @@ class PropertyFilters extends Scope
     public function apply($query, $values)
     {
         if (request()->filled('min_price')) {
-            $query->where('data->price', '>=', request()->integer('min_price'));
+            $query->whereRaw("CAST(json_extract(data, '$.price') AS REAL) >= ?", [request()->float('min_price')]);
         }
 
         if (request()->filled('max_price')) {
-            $query->where('data->price', '<=', request()->integer('max_price'));
+            $query->whereRaw("CAST(json_extract(data, '$.price') AS REAL) <= ?", [request()->float('max_price')]);
         }
 
         if (request()->filled('location')) {
@@ -28,11 +28,17 @@ class PropertyFilters extends Scope
         }
 
         if (request()->filled('floor_area')) {
-            $query->where('data->property_size', '>=', request()->integer('floor_area'));
+            $query->whereRaw("CAST(json_extract(data, '$.property_size') AS REAL) >= ?", [request()->float('floor_area')]);
         }
 
         if (request()->filled('status')) {
-            $query->where('data->property_status', request()->query('status'));
+            $status = request()->query('status');
+
+            $query->where(function ($subQuery) use ($status) {
+                $subQuery->where('data->property_status', $status)
+                    ->orWhereRaw("json_extract(data, '$.property_status') = ?", [$status])
+                    ->orWhereRaw("json_extract(data, '$.property_status.value') = ?", [$status]);
+            });
         }
 
         if (request()->filled('categories')) {
@@ -46,18 +52,28 @@ class PropertyFilters extends Scope
         }
 
         if (request()->filled('bedrooms')) {
-            $query->where('data->bedrooms_count', '>=', request()->integer('bedrooms'));
+            $bedrooms = request()->input('bedrooms');
+
+            if ($bedrooms === 'studio') {
+                $query->whereRaw("CAST(json_extract(data, '$.bedrooms_count') AS INTEGER) = 0");
+            } else {
+                $count = (int) $bedrooms;
+
+                $query->whereRaw("CAST(json_extract(data, '$.bedrooms_count') AS INTEGER) >= ?", [$count]);
+            }
         }
 
         if (request()->filled('bathrooms')) {
-            $query->where('data->bathrooms_count', '>=', request()->integer('bathrooms'));
+            $count = (int) request()->input('bathrooms');
+
+            $query->whereRaw("CAST(json_extract(data, '$.bathrooms_count') AS INTEGER) >= ?", [$count]);
         }
 
         if (request()->filled('min_year')) {
-            $query->where('data->year_build', '>=', request()->integer('min_year'));
+            $query->whereRaw("CAST(json_extract(data, '$.year_build') AS INTEGER) >= ?", [request()->integer('min_year')]);
         }
 
-        if (request()->has('q')) {
+        if (request()->filled('q')) {
             $query->where('data->title', 'like', '%' . request()->q . '%');
         }
 
