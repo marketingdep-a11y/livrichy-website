@@ -1,4 +1,24 @@
-<x-card ring="gray" as="a" direction="vertical" :href="url ?? ('/properties?community=' ~ (import_key ?? title))" :aria-label="title"
+{{ set href = url }}
+
+{{ if ! href }}
+    {{ set community_param = import_key }}
+
+    {{ if ! community_param }}
+        {{ set community_param = slug }}
+    {{ /if }}
+
+    {{ if ! community_param }}
+        {{ set community_param = title }}
+    {{ /if }}
+
+    {{ if community_param }}
+        {{ set href = '/properties?community=' ~ community_param }}
+    {{ else }}
+        {{ set href = '/properties' }}
+    {{ /if }}
+{{ /if }}
+
+<x-card ring="gray" as="a" direction="vertical" href="{{ href }}" aria-label="{{ title }}"
     class="{ variant === 'communities_section_3' ?= 'relative overflow-hidden h-[515px]' } p-0">
 
     {{ if variant === 'communities_section_3' }}
@@ -23,10 +43,10 @@
                 {{ total_text }}
             {{ elseif import_key }}
                 {{ total_properties :community="import_key" }}
+            {{ elseif slug }}
+                {{ total_properties :community="slug" }}
             {{ elseif title }}
                 {{ total_properties :community="title" }}
-            {{ elseif id }}
-                {{ total_properties :community=id }}
             {{ /if }}
             </x-text>
         </div>

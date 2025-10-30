@@ -2,14 +2,8 @@
     {{ partial:partials/set_header :href="link" center="true" }}
     
     <div class="grid gap-8 lg:grid-cols-2 xl:grid-cols-3">
-        {{ if selected_communities }}
-            {{ selected_communities }}
-                {{ partial:communities/partials/large_card }}
-            {{ /selected_communities }}
-        {{ else }}
-            {{ communities:top limit="3" }}
-                {{ partial:communities/partials/large_card }}
-            {{ /communities:top }}
-        {{ /if }}
+        {{ selected_communities }}
+            {{ partial:communities/partials/large_card }}
+        {{ /selected_communities }}
     </div>
 </div>

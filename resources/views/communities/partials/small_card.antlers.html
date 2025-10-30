@@ -1,4 +1,24 @@
-<x-card ring="gray" as="a" :href="url ?? ('/properties?community=' ~ (import_key ?? title))" :aria-label="title" class="justify-start">
+{{ set href = url }}
+
+{{ if ! href }}
+    {{ set community_param = import_key }}
+
+    {{ if ! community_param }}
+        {{ set community_param = slug }}
+    {{ /if }}
+
+    {{ if ! community_param }}
+        {{ set community_param = title }}
+    {{ /if }}
+
+    {{ if community_param }}
+        {{ set href = '/properties?community=' ~ community_param }}
+    {{ else }}
+        {{ set href = '/properties' }}
+    {{ /if }}
+{{ /if }}
+
+<x-card ring="gray" as="a" href="{{ href }}" aria-label="{{ title }}" class="justify-start">
     <div class="w-16 h-16 mr-4 overflow-hidden shrink-0 rounded-2xl">
         {{ partial:components/picture :image="featured_image" cover="true" }}
     </div>
@@ -11,10 +31,10 @@
                     {{ total_text }}
                 {{ elseif import_key }}
                     {{ total_properties :community="import_key" }}
+                {{ elseif slug }}
+                    {{ total_properties :community="slug" }}
                 {{ elseif title }}
                     {{ total_properties :community="title" }}
-                {{ elseif id }}
-                    {{ total_properties :community=id }}
                 {{ /if }}
             </x-text>
         </div>
