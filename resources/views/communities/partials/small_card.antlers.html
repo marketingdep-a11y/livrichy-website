@@ -10,7 +10,13 @@
                 {{ if total_text }}
                 {{ total_text }}
             {{ else }}
-                {{ total_properties :community=id }}
+                {{ if import_key }}
+                    {{ total_properties :community="import_key" }}
+                {{ elseif title }}
+                    {{ total_properties :community="title" }}
+                {{ else }}
+                    {{ total_properties :community=id }}
+                {{ /if }}
             {{ /if }}
             </x-text>
         </div>

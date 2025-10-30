@@ -39,13 +39,13 @@ fields:
               fields:
                 -
                   import: agents_section
-            cities_section:
-              display: 'Cities Section'
+            communities_section:
+              display: 'Communities Section'
               instructions: null
               icon: globe-world-wide-web
               fields:
                 -
-                  import: cities_section
+                  import: communities_section
             featured_listings:
               display: 'Featured Listings'
               instructions: null

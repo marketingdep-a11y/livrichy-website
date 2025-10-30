@@ -3,6 +3,7 @@
 namespace App\Tags;
 
 use Illuminate\Support\Collection;
+use Statamic\Contracts\Entries\Entry as EntryContract;
 use Statamic\Facades\Entry;
 use Statamic\Support\Str;
 use Statamic\Tags\Tags;
@@ -10,15 +11,58 @@ use Statamic\Tags\Tags;
 class Communities extends Tags
 {
     /**
-     * Return top communities aggregated from properties.
+     * Return the top communities. Prefers synced community entries and falls back to aggregating properties.
      */
     public function top(): Collection
     {
-        $limit = (int) $this->params->get('limit', 3);
+        $limit = max((int) $this->params->get('limit', 3), 1);
 
+        $communities = Entry::query()
+            ->where('collection', 'communities')
+            ->where('published', true)
+            ->get()
+            ->map(fn (EntryContract $entry) => $this->mapCommunityEntry($entry))
+            ->filter();
+
+        if ($communities->isEmpty()) {
+            return $this->fallbackFromProperties($limit);
+        }
+
+        return $communities
+            ->sortByDesc('count')
+            ->take($limit)
+            ->values();
+    }
+
+    private function mapCommunityEntry(EntryContract $entry): ?array
+    {
+        $title = trim((string) ($entry->get('title') ?? ''));
+
+        if ($title === '') {
+            return null;
+        }
+
+        $importKey = trim((string) ($entry->get('import_key') ?? $title));
+        $count = (int) ($entry->get('listings_total') ?? 0);
+        $url = $entry->url() ?? url('/properties?community=' . urlencode($importKey));
+
+        return [
+            'id' => $importKey,
+            'import_key' => $importKey,
+            'title' => $title,
+            'slug' => $entry->slug(),
+            'count' => $count,
+            'total_text' => $this->formatTotal($count),
+            'featured_image' => $entry->get('featured_image'),
+            'url' => $url,
+        ];
+    }
+
+    private function fallbackFromProperties(int $limit): Collection
+    {
         $entries = Entry::query()
             ->where('collection', 'properties')
-            ->where('status', 'published')
+            ->where('published', true)
             ->get();
 
         return $entries
@@ -35,6 +79,7 @@ class Communities extends Tags
 
                 return [
                     'id' => $community,
+                    'import_key' => $community,
                     'title' => $community,
                     'slug' => Str::slug($community),
                     'count' => $count,
@@ -44,7 +89,7 @@ class Communities extends Tags
                 ];
             })
             ->sortByDesc('count')
-            ->take(max($limit, 1))
+            ->take($limit)
             ->values();
     }
 

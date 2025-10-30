@@ -2,15 +2,15 @@
     class="p-5 mt-12 w-full border rounded-2xl bg-white {{ variant == 'hero_section_1' ? 'border-dark-950' : 'border-dark-200' }}">
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
 
-        {{ partial:components/inputs/select name="location" style="secondary" label="Location" }}
-            <option value="{{ get:location }}" disabled selected hidden>
-                {{ get:location ?? 'Location' }}
+        {{ partial:components/inputs/select name="community" style="secondary" label="Community" }}
+            <option value="{{ get:community }}" disabled selected hidden>
+                {{ get:community ?? 'Community' }}
             </option>
-            {{ collection:cities }}
-                <option value="{{ slug }}" {{ {get:location | contains:slug} ?= 'selected' }}>
-                    {{ title }}
+            {{ property_filter_options:communities }}
+                <option value="{{ value }}" {{ get:community == value ?= 'selected' }}>
+                    {{ label }}
                 </option>
-            {{ /collection:cities }}
+            {{ /property_filter_options:communities }}
         {{ /partial:components/inputs/select }}
 
         <div>

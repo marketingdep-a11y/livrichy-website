@@ -9,13 +9,48 @@ use Statamic\Tags\Tags;
 class PropertyFilterOptions extends Tags
 {
     /**
-     * Return unique communities pulled from property entries.
+     * Return unique communities pulled from the synced communities collection.
      *
      * @return array<int, array<string, string>>
      */
     public function communities(): array
     {
         $communities = Entry::query()
+            ->where('collection', 'communities')
+            ->where('published', true)
+            ->orderBy('title')
+            ->get()
+            ->map(function ($entry) {
+                $value = trim((string) ($entry->get('import_key') ?? $entry->get('title')));
+                $label = trim((string) ($entry->get('title') ?? $value));
+
+                if ($value === '') {
+                    return null;
+                }
+
+                return [
+                    'value' => $value,
+                    'label' => $label !== '' ? $label : $value,
+                ];
+            })
+            ->filter();
+
+        if ($communities->isEmpty()) {
+            $communities = $this->communitiesFromProperties();
+        }
+
+        return $communities
+            ->unique(fn ($item) => $item['value'])
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection<int, array<string, string>>
+     */
+    private function communitiesFromProperties()
+    {
+        return Entry::query()
             ->where('collection', 'properties')
             ->where('published', true)
             ->get()
@@ -25,14 +60,11 @@ class PropertyFilterOptions extends Tags
             ->filter()
             ->unique()
             ->sort()
-            ->values();
-
-        return $communities
+            ->values()
             ->map(fn ($value) => [
                 'value' => $value,
                 'label' => $value,
-            ])
-            ->all();
+            ]);
     }
 
     /**

@@ -1,0 +1,64 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+      -
+        display: Images
+        fields:
+          -
+            handle: featured_image
+            field:
+              max_files: 1
+              mode: grid
+              container: assets
+              restrict: false
+              allow_uploads: true
+              show_filename: true
+              show_set_alt: true
+              type: assets
+              display: 'Featured Image'
+              icon: assets
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+              hide_display: false
+      -
+        display: Meta
+        instructions: 'Automatically populated fields used for syncing with CRM data.'
+        fields:
+          -
+            handle: import_key
+            field:
+              type: hidden
+              display: 'Import Key'
+              instructions: 'System field used to map communities from CRM.'
+              listable: hidden
+          -
+            handle: listings_total
+            field:
+              type: integer
+              display: 'Listings Total'
+              readonly: true
+              listable: hidden
+              instructions_position: above
+              visibility: visible
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+title: Community

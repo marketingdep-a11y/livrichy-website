@@ -2,13 +2,13 @@
     {{ partial:partials/set_header :href="link" center="true" }}
     
     <div class="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
-        {{ if cities }}
-            {{ cities }}
-                {{ partial:cities/partials/small_card }}
-            {{ /cities }}
+        {{ if communities }}
+            {{ communities }}
+                {{ partial:communities/partials/small_card }}
+            {{ /communities }}
         {{ else }}
             {{ communities:top limit="3" }}
-                {{ partial:cities/partials/small_card }}
+                {{ partial:communities/partials/small_card }}
             {{ /communities:top }}
         {{ /if }}
     </div>

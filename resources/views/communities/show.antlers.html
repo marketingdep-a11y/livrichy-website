@@ -1,4 +1,4 @@
-{{ partial:cities/partials/city_header }}
+{{ partial:communities/partials/community_header }}
 <div x-data="{ open: $persist(false).as('map_state'), isMobile: false }" x-screen="isMobile = ($width < 1024)"
     class="container py-14">
     <div class="pb-20 md:pb-24 lg:pb-28">
@@ -37,26 +37,48 @@
             {{ /if }}
             <template x-if="open">
                 <div :class="{ 'lg:w-3/5 xl:w-1/2': '{{ theme:map_variant }}' == 'side_map' && open }">
-                    {{ collection:properties paginate="3" as="properties" :city:is="id" query_scope="property_filters" }}
-                        {{ if no_results }}
-                            {{ partial:partials/no_results }}
-                        {{ else }}
-                            {{ partial:partials/results }}
-                        {{ /if }}
-                        {{ partial:partials/paginate }}
-                    {{ /collection:properties }}
+                    {{ if import_key }}
+                        {{ collection:properties paginate="3" as="properties" :community:is="import_key" query_scope="property_filters" }}
+                            {{ if no_results }}
+                                {{ partial:partials/no_results }}
+                            {{ else }}
+                                {{ partial:partials/results }}
+                            {{ /if }}
+                            {{ partial:partials/paginate }}
+                        {{ /collection:properties }}
+                    {{ else }}
+                        {{ collection:properties paginate="3" as="properties" :community:is="title" query_scope="property_filters" }}
+                            {{ if no_results }}
+                                {{ partial:partials/no_results }}
+                            {{ else }}
+                                {{ partial:partials/results }}
+                            {{ /if }}
+                            {{ partial:partials/paginate }}
+                        {{ /collection:properties }}
+                    {{ /if }}
                 </div>
             </template>
             <template x-if="!open">
                 <div :class="{ 'lg:w-3/5 xl:w-1/2': '{{ theme:map_variant }}' == 'side_map' && open }">
-                    {{ collection:properties paginate="6" as="properties" :city:is="id" query_scope="property_filters" }}
-                        {{ if no_results }}
-                            {{ partial:partials/no_results }}
-                        {{ else }}
-                            {{ partial:partials/results }}
-                        {{ /if }}
-                        {{ partial:partials/paginate }}
-                    {{ /collection:properties }}
+                    {{ if import_key }}
+                        {{ collection:properties paginate="6" as="properties" :community:is="import_key" query_scope="property_filters" }}
+                            {{ if no_results }}
+                                {{ partial:partials/no_results }}
+                            {{ else }}
+                                {{ partial:partials/results }}
+                            {{ /if }}
+                            {{ partial:partials/paginate }}
+                        {{ /collection:properties }}
+                    {{ else }}
+                        {{ collection:properties paginate="6" as="properties" :community:is="title" query_scope="property_filters" }}
+                            {{ if no_results }}
+                                {{ partial:partials/no_results }}
+                            {{ else }}
+                                {{ partial:partials/results }}
+                            {{ /if }}
+                            {{ partial:partials/paginate }}
+                        {{ /collection:properties }}
+                    {{ /if }}
                 </div>
             </template>
 

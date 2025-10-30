@@ -123,18 +123,15 @@ blocks:
     enabled: true
   -
     id: leimk2ap
-    variant: cities_section_3
-    title: 'Explore <i>Cities</i>'
-    type: cities_section
+    variant: communities_section_3
+    title: 'Explore <i>Communities</i>'
+    type: communities_section
     enabled: true
-    cities:
-      - f6ba8c87-907b-492a-b1be-40c409ebe7f5
-      - 5ba1e4ff-a7ab-4ffa-b49b-574285e416f7
-      - 0f045df6-ab0e-4858-ab98-5b4edacd5eb8
+    communities: [ ]
     has_description: false
     has_button: true
     button_variant: primary
-    label: 'Browse All Cities'
+    label: 'Browse All Communities'
     link: '#'
   -
     id: leczca1v

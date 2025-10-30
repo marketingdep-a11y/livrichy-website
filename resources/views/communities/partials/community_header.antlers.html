@@ -10,7 +10,15 @@
         </x-heading>
 
         <x-text color="light" class="mt-3">
-            {{ total_properties :city="id" }}
+            {{ if total_text }}
+                {{ total_text }}
+            {{ elseif import_key }}
+                {{ total_properties :community="import_key" }}
+            {{ elseif title }}
+                {{ total_properties :community="title" }}
+            {{ else }}
+                {{ total_properties :community=id }}
+            {{ /if }}
         </x-text>
     </div>
 </div>

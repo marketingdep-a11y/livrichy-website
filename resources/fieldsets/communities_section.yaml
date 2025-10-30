@@ -1,13 +1,13 @@
-title: 'Cities Section'
+title: 'Communities Section'
 fields:
   -
     handle: variant
     field:
       options:
-        cities_section_1: 'Variant 1'
-        cities_section_2: 'Variant 2'
-        cities_section_3: 'Variant 3'
-      default: cities_section_1
+        communities_section_1: 'Variant 1'
+        communities_section_2: 'Variant 2'
+        communities_section_3: 'Variant 3'
+      default: communities_section_1
       display: Variant
       type: button_group
       icon: button_group
@@ -18,13 +18,13 @@ fields:
   -
     import: set_header
   -
-    handle: cities
+    handle: communities
     field:
       mode: default
       create: true
       collections:
-        - cities
-      display: Cities
+        - communities
+      display: Communities
       type: entries
       icon: entries
       listable: hidden
@@ -32,5 +32,3 @@ fields:
       visibility: visible
       always_save: false
       hide_display: false
-      validate:
-        - required
