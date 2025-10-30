@@ -1,4 +1,4 @@
-<x-card ring="gray" as="a" :href="url" :aria-label="title" class="justify-start">
+<x-card ring="gray" as="a" :href="url ?? ('/properties?community=' ~ (import_key ?? title))" :aria-label="title" class="justify-start">
     <div class="w-16 h-16 mr-4 overflow-hidden shrink-0 rounded-2xl">
         {{ partial:components/picture :image="featured_image" cover="true" }}
     </div>
@@ -8,16 +8,14 @@
             {{ svg src="house" class="w-6 h-6 stroke-brand-950 shrink-0" }}
             <x-text color="dark" size="lg" class="mt-0.5">
                 {{ if total_text }}
-                {{ total_text }}
-            {{ else }}
-                {{ if import_key }}
+                    {{ total_text }}
+                {{ elseif import_key }}
                     {{ total_properties :community="import_key" }}
                 {{ elseif title }}
                     {{ total_properties :community="title" }}
-                {{ else }}
+                {{ elseif id }}
                     {{ total_properties :community=id }}
                 {{ /if }}
-            {{ /if }}
             </x-text>
         </div>
     </div>
