@@ -24,19 +24,30 @@ class PropertyFilters extends Scope
         }
 
         if (request()->filled('location')) {
-            $query->where('data->community', request()->query('location'));
+            $query->whereRaw("json_extract(data, '$.community') = ?", [request()->query('location')]);
         }
 
         if (request()->filled('floor_area')) {
-            $query->whereRaw("CAST(json_extract(data, '$.property_size') AS REAL) >= ?", [request()->float('floor_area')]);
+            $range = request()->input('floor_area');
+
+            if (str_contains($range, '+')) {
+                $min = (float) rtrim($range, '+');
+
+                $query->whereRaw("CAST(json_extract(data, '$.property_size') AS REAL) >= ?", [$min]);
+            } elseif (preg_match('/^(\d+)-(\d+)$/', $range, $matches)) {
+                $min = (float) $matches[1];
+                $max = (float) $matches[2];
+
+                $query->whereRaw("CAST(json_extract(data, '$.property_size') AS REAL) BETWEEN ? AND ?", [$min, $max]);
+            }
         }
 
         if (request()->filled('status')) {
             $status = request()->query('status');
 
             $query->where(function ($subQuery) use ($status) {
-                $subQuery->where('data->property_status', $status)
-                    ->orWhereRaw("json_extract(data, '$.property_status') = ?", [$status])
+                $subQuery
+                    ->whereRaw("json_extract(data, '$.property_status') = ?", [$status])
                     ->orWhereRaw("json_extract(data, '$.property_status.value') = ?", [$status]);
             });
         }
@@ -46,7 +57,7 @@ class PropertyFilters extends Scope
 
             $query->where(function ($subQuery) use ($values) {
                 foreach ($values as $value) {
-                    $subQuery->orWhere('data->categories', 'like', '%"'.$value.'"%');
+                    $subQuery->orWhereRaw("json_extract(data, '$.categories') LIKE ?", ['%"' . $value . '"%']);
                 }
             });
         }

@@ -28,7 +28,7 @@ duplicated_from: 428fad87-caed-45a5-ba6a-69f25dfe0c33
 bedrooms_count: 4
 bathrooms_count: 5
 parking_count: 2
-property_size: '4552'
+property_size: 4552
 property_features:
   -
     id: llkwj0sf

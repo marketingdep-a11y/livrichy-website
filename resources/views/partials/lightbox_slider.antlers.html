@@ -1,6 +1,13 @@
 {{# SAVE THIS FILE WITHOUT FORMATTING #}}
 <div class="h-full">
-    <div x-data="{ open: false, activeSlide: 0, slides: [{{ gallery }} '{{ url }}', {{ /gallery }}] }" x-init="slides.push('{{ featured_image }}')" @keydown.escape="open = false" class="w-full h-full">
+    <div x-data="{ open: false, activeSlide: 0, slides: [] }"
+        x-init="
+            {{ if featured_image }}slides.push('{{ glide:featured_image preset='xl' }}');{{ /if }}
+            {{ gallery }}slides.push('{{ url }}');{{ /gallery }}
+            {{ photo_links }}slides.push('{{ value }}');{{ /photo_links }}
+            slides = slides.filter(Boolean);
+        "
+        @keydown.escape="open = false" class="w-full h-full">
         {{# Open Slider Button #}}
         <div @click="open = true" class="absolute right-4 bottom-4">
             <x-button variant="outline" class="bg-dark-90" aria-label="Open Slider Button">

@@ -86,13 +86,31 @@ class PropertyFilterOptions extends Tags
             ->all();
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function floorArea(): array
+    {
+        return collect([
+            ['value' => '0-500', 'label' => 'Up to 500'],
+            ['value' => '500-1000', 'label' => '500 - 1,000'],
+            ['value' => '1000-1500', 'label' => '1,000 - 1,500'],
+            ['value' => '1500-2000', 'label' => '1,500 - 2,000'],
+            ['value' => '2000-2500', 'label' => '2,000 - 2,500'],
+            ['value' => '2500-3000', 'label' => '2,500 - 3,000'],
+            ['value' => '3000+', 'label' => '3,000+'],
+        ])->all();
+    }
+
     private function collectNumericValues(string $handle)
     {
+        $typeHandle = str_replace('_count', '', $handle);
+
         return Entry::query()
             ->where('collection', 'properties')
             ->where('published', true)
             ->get()
-            ->map(function ($entry) use ($handle) {
+            ->map(function ($entry) use ($handle, $typeHandle) {
                 $value = $entry->get($handle);
 
                 if ($value === null) {
@@ -100,7 +118,7 @@ class PropertyFilterOptions extends Tags
 
                     if (is_array($features)) {
                         foreach ($features as $feature) {
-                            if (($feature['type'] ?? null) === str_replace('_count', '', $handle)) {
+                            if (($feature['type'] ?? null) === $typeHandle) {
                                 $value = $feature['description'] ?? null;
                                 break;
                             }
@@ -110,13 +128,22 @@ class PropertyFilterOptions extends Tags
 
                 if (is_string($value)) {
                     $lower = strtolower(trim($value));
+
                     if ($lower === 'studio' || $lower === '0') {
                         return 0;
+                    }
+
+                    if (is_numeric($value)) {
+                        return $handle === 'property_size'
+                            ? (float) $value
+                            : (int) $value;
                     }
                 }
 
                 if (is_numeric($value)) {
-                    return (int) $value;
+                    return $handle === 'property_size'
+                        ? (float) $value
+                        : (int) $value;
                 }
 
                 return null;

@@ -26,7 +26,7 @@ duplicated_from: 9453530f-9035-4742-8ad2-4a22b11a9616
 bedrooms_count: 3
 bathrooms_count: 3
 parking_count: 0
-property_size: '2800'
+property_size: 2800
 property_features:
   -
     id: llkwj0sf

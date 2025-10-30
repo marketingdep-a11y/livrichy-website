@@ -9,7 +9,7 @@
             {{ if type == 'property_size' }}
                 <x-text size="sm" color="light">{{ theme:unit_of_measurement }}</x-text>
             {{ /if }}
-            {{ if type != 'property_size' && type != 'style' }}
+            {{ if type != 'property_size' && type != 'style' && ! (type == 'bedrooms' && (description == '0' || description == 0)) }}
                 <x-text size="sm" color="light">{{ type | ucfirst }}</x-text>
             {{ /if }}
         </div>

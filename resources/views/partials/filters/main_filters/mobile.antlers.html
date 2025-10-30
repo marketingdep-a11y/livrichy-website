@@ -23,18 +23,22 @@
                 <div class="mb-4">
                     <div x-data="{ status: new URLSearchParams(location.search).get('status') }"
                         class="flex items-center justify-between w-auto mb-4 gap-x-2 shrink-0 rounded-2xl">
-                        <x-button type="button" x-on:click="status = 'sale'; $refs.filter_form.submit()"
-                            class="flex-1 text-lg ring-0 hover:ring-2 shrink-0"
-                            variant="{ get:status == 'sale' ? 'primary' : 'outline' }">
+                        <x-button type="button" variant="outline"
+                            x-on:click="status = status === 'sale' ? null : 'sale'; $refs.filter_form.submit()"
+                            :class="status === 'sale' ? 'bg-brand-200 text-brand-950 ring-2 ring-brand-950' : ''"
+                            class="flex-1 text-lg ring-0 hover:ring-2 shrink-0">
                             For Sale
                         </x-button>
-                        <x-button type="button" x-on:click="status = 'rent'; $refs.filter_form.submit()"
-                            variant="{ get:status == 'rent' ? 'primary' : 'outline' }"
+                        <x-button type="button" variant="outline"
+                            x-on:click="status = status === 'rent' ? null : 'rent'; $refs.filter_form.submit()"
+                            :class="status === 'rent' ? 'bg-brand-200 text-brand-950 ring-2 ring-brand-950' : ''"
                             class="flex-1 text-lg ring-0 hover:ring-2 shrink-0">
                             For Rent
                         </x-button>
 
-                        <input type="hidden" name="status" x-model="status">
+                        <template x-if="status">
+                            <input type="hidden" name="status" x-bind:value="status">
+                        </template>
                     </div>
 
                     <div class="flex w-full py-4 mx-auto gap-y-4 flex-col rounded-2xl">
@@ -75,16 +79,14 @@
                         {{ /partial:components/inputs/select }}
 
                         {{ partial:components/inputs/select name="floor_area" onChange="$refs.filter_form.submit()" }}
-                            <option value="{{ get:floor_area }}" disabled selected hidden>
+                            <option value="" disabled {{ unless get:floor_area }}selected{{ /unless }} hidden>
                                 {{ get:floor_area ?? 'Floor Area' }}
                             </option>
-                            {{ theme:floor_area }}
-                                <option value="{{ minimum }}" {{ {get:floor_area | contains:minimum} ?= 'selected' }}>
-                                    +
-                                    {{ minimum }}
-                                    {{ theme:unit_of_measurement }}
+                            {{ property_filter_options:floor_area }}
+                                <option value="{{ value }}" {{ get:floor_area == value ?= 'selected' }}>
+                                    {{ label }} {{ theme:unit_of_measurement }}
                                 </option>
-                            {{ /theme:floor_area }}
+                            {{ /property_filter_options:floor_area }}
                         {{ /partial:components/inputs/select }}
                     </div>
                 </div>
