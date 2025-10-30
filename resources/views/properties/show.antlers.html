@@ -54,6 +54,11 @@
             {{ content }}
                 {{ partial src="sets/properties/{type}" }}
             {{ /content }}
+            {{ elseif listing_description }}
+                <div class="prose max-w-none text-dark-800 mt-6">
+                    {{ listing_description }}
+                </div>
+            {{ /if }}
 
             {{ partial:properties/partials/agent_set }}
             {{ partial:sets/map_section container="false" }}

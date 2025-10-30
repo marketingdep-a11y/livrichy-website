@@ -4,6 +4,7 @@ namespace App\Services\ListingImport\Dto;
 
 use App\Services\ListingImport\Support\Normalizer;
 use App\Services\ListingImport\ValueObjects\GeoPoint;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 class ListingImportData
@@ -129,6 +130,7 @@ class ListingImportData
             'developer' => $this->developer,
             'community' => $this->community,
             'date' => $this->date,
+            'forms' => $this->defaultForms(),
         ];
 
         if (array_key_exists('bedrooms', $this->featureMetrics)) {
@@ -408,5 +410,24 @@ class ListingImportData
         }
 
         return $features;
+    }
+
+    /**
+     * @return array<int, array<string, string>>
+     */
+    private function defaultForms(): array
+    {
+        return [
+            [
+                'id' => Str::random(10),
+                'form_title' => 'Request a home tour',
+                'form' => 'home_tour',
+            ],
+            [
+                'id' => Str::random(10),
+                'form_title' => 'Contact us',
+                'form' => 'contact_us',
+            ],
+        ];
     }
 }

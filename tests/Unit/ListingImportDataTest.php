@@ -69,6 +69,8 @@ class ListingImportDataTest extends TestCase
         $this->assertSame(1649000.0, $attributes['price']);
         $this->assertSame('agent-uuid', $attributes['agent']);
         $this->assertSame('25.187017', $attributes['latitude']);
+        $this->assertCount(2, $attributes['forms']);
+        $this->assertSame('home_tour', $attributes['forms'][0]['form']);
         $this->assertSame('55.296132', $attributes['longitude']);
         $this->assertCount(1, $attributes['geo_points']);
         $this->assertSame(['https://example.com/photos/a.jpg', 'https://example.com/photos/b.jpg'], $attributes['photo_links']);

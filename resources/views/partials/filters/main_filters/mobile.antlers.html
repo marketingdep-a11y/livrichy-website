@@ -24,21 +24,19 @@
                     <div x-data="{ status: new URLSearchParams(location.search).get('status') }"
                         class="flex items-center justify-between w-auto mb-4 gap-x-2 shrink-0 rounded-2xl">
                         <x-button type="button" variant="outline"
-                            x-on:click="status = status === 'sale' ? null : 'sale'; $refs.filter_form.submit()"
+                            x-on:click="status = status === 'sale' ? null : 'sale'; $nextTick(() => $refs.filter_form.submit())"
                             :class="status === 'sale' ? 'bg-brand-200 text-brand-950 ring-2 ring-brand-950' : ''"
                             class="flex-1 text-lg ring-0 hover:ring-2 shrink-0">
                             For Sale
                         </x-button>
                         <x-button type="button" variant="outline"
-                            x-on:click="status = status === 'rent' ? null : 'rent'; $refs.filter_form.submit()"
+                            x-on:click="status = status === 'rent' ? null : 'rent'; $nextTick(() => $refs.filter_form.submit())"
                             :class="status === 'rent' ? 'bg-brand-200 text-brand-950 ring-2 ring-brand-950' : ''"
                             class="flex-1 text-lg ring-0 hover:ring-2 shrink-0">
                             For Rent
                         </x-button>
 
-                        <template x-if="status">
-                            <input type="hidden" name="status" x-bind:value="status">
-                        </template>
+                        <input type="hidden" x-ref="statusInput" x-bind:name="status ? 'status' : null" x-bind:value="status ?? ''">
                     </div>
 
                     <div class="flex w-full py-4 mx-auto gap-y-4 flex-col rounded-2xl">

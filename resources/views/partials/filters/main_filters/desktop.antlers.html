@@ -16,21 +16,19 @@
                 <div x-data="{ status: new URLSearchParams(location.search).get('status') }"
                     class="w-auto flex gap-x-2 shrink-0 rounded-2xl">
                     <x-button type="button" variant="outline-fill"
-                        x-on:click="status = status === 'sale' ? null : 'sale'; $refs.filter_form.submit()"
+                        x-on:click="status = status === 'sale' ? null : 'sale'; $nextTick(() => $refs.filter_form.submit())"
                         :class="status === 'sale' ? 'ring-2 ring-brand-950 bg-brand-200 text-brand-950' : ''"
                         class="text-lg ring-0 hover:ring-2">
                         {{ 'For Sale' | trans }}
                     </x-button>
                     <x-button type="button" variant="outline-fill"
-                        x-on:click="status = status === 'rent' ? null : 'rent'; $refs.filter_form.submit()"
+                        x-on:click="status = status === 'rent' ? null : 'rent'; $nextTick(() => $refs.filter_form.submit())"
                         :class="status === 'rent' ? 'ring-2 ring-brand-950 bg-brand-200 text-brand-950' : ''"
                         class="text-lg ring-0 hover:ring-2">
                         {{ 'For Rent' | trans }}
                     </x-button>
 
-                    <template x-if="status">
-                        <input type="hidden" name="status" x-bind:value="status">
-                    </template>
+                    <input type="hidden" x-ref="statusInput" x-bind:name="status ? 'status' : null" x-bind:value="status ?? ''">
                 </div>
 
                 {{ partial:components/inputs/text placeholder="Min Price" name="min_price" :value="get:min_price" style="primary" onInput="$refs.filter_form.submit()" }}
