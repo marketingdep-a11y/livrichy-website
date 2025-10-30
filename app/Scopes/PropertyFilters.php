@@ -23,8 +23,8 @@ class PropertyFilters extends Scope
             $query->whereRaw("CAST(json_extract(data, '$.price') AS REAL) <= ?", [request()->float('max_price')]);
         }
 
-        if (request()->filled('location')) {
-            $query->whereRaw("json_extract(data, '$.community') = ?", [request()->query('location')]);
+        if (request()->filled('community')) {
+            $query->where('data->community', request()->query('community'));
         }
 
         if (request()->filled('floor_area')) {

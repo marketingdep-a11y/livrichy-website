@@ -50,7 +50,6 @@ fields:
       if:
         variant: 'equals hero_section_3'
       validate:
-        - required
         - sometimes
   -
     handle: properties

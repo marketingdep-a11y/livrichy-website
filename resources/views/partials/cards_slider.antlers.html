@@ -11,9 +11,9 @@
                     {{ partial:properties/partials/medium_card isSlider="true" }}
                 {{ /properties }}
             {{ else }}
-                {{ collection:properties limit="3" }}
+                {{ featured_listings:hero }}
                     {{ partial:properties/partials/medium_card isSlider="true" }}
-                {{ /collection:properties }}
+                {{ /featured_listings:hero }}
             {{ /if }}
         </div>
     </div>

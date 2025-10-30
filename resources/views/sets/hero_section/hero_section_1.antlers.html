@@ -53,9 +53,15 @@
                 {{# Mobile Cards #}}
                 <template x-if="isMobile">
                     <div class="grid gap-6 py-8 md:grid-cols-2">
-                        {{ properties }}
-                            {{ partial:properties/partials/medium_card }}
-                        {{ /properties }}
+                        {{ if properties }}
+                            {{ properties }}
+                                {{ partial:properties/partials/medium_card }}
+                            {{ /properties }}
+                        {{ else }}
+                            {{ featured_listings:hero }}
+                                {{ partial:properties/partials/medium_card }}
+                            {{ /featured_listings:hero }}
+                        {{ /if }}
                     </div>
                 </template>
 
