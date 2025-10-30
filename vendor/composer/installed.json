@@ -759,6 +759,56 @@
             "install-path": "../egulias/email-validator"
         },
         {
+            "name": "emplify-software/statamic-google-reviews",
+            "version": "v1.0.1",
+            "version_normalized": "1.0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/emplify-software/statamic-google-reviews.git",
+                "reference": "7d3e2713bc60efd6fa5a248e91a072cadd1fb565"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/emplify-software/statamic-google-reviews/zipball/7d3e2713bc60efd6fa5a248e91a072cadd1fb565",
+                "reference": "7d3e2713bc60efd6fa5a248e91a072cadd1fb565",
+                "shasum": ""
+            },
+            "require": {
+                "statamic/cms": "^5.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^9.0"
+            },
+            "time": "2025-05-28T12:43:13+00:00",
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "EmplifySoftware\\StatamicGoogleReviews\\ServiceProvider"
+                    ]
+                },
+                "statamic": {
+                    "name": "Statamic Google Reviews",
+                    "description": "Statamic Google Reviews addon"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "EmplifySoftware\\StatamicGoogleReviews\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "support": {
+                "issues": "https://github.com/emplify-software/statamic-google-reviews/issues",
+                "source": "https://github.com/emplify-software/statamic-google-reviews/tree/v1.0.1"
+            },
+            "install-path": "../emplify-software/statamic-google-reviews"
+        },
+        {
             "name": "fakerphp/faker",
             "version": "v1.24.1",
             "version_normalized": "1.24.1.0",

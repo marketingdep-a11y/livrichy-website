@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6c699d1aeebc71b3b7401194834a4edb",
+    "content-hash": "578c341e3b3fd1fb9766630d7231b239",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -648,6 +648,53 @@
                 }
             ],
             "time": "2025-03-06T22:45:56+00:00"
+        },
+        {
+            "name": "emplify-software/statamic-google-reviews",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/emplify-software/statamic-google-reviews.git",
+                "reference": "7d3e2713bc60efd6fa5a248e91a072cadd1fb565"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/emplify-software/statamic-google-reviews/zipball/7d3e2713bc60efd6fa5a248e91a072cadd1fb565",
+                "reference": "7d3e2713bc60efd6fa5a248e91a072cadd1fb565",
+                "shasum": ""
+            },
+            "require": {
+                "statamic/cms": "^5.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "EmplifySoftware\\StatamicGoogleReviews\\ServiceProvider"
+                    ]
+                },
+                "statamic": {
+                    "name": "Statamic Google Reviews",
+                    "description": "Statamic Google Reviews addon"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "EmplifySoftware\\StatamicGoogleReviews\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "support": {
+                "issues": "https://github.com/emplify-software/statamic-google-reviews/issues",
+                "source": "https://github.com/emplify-software/statamic-google-reviews/tree/v1.0.1"
+            },
+            "time": "2025-05-28T12:43:13+00:00"
         },
         {
             "name": "fruitcake/php-cors",
