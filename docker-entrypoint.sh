@@ -15,15 +15,15 @@ fi
 
 # Запускаем миграции
 echo "🗄️  Running database migrations..."
-php artisan migrate --force || echo "⚠️  Migration failed or already up to date"
+php artisan migrate --force
 
 # Импортируем коллекции из файлов в базу данных
 echo "📦 Importing Statamic collections..."
-php artisan statamic:eloquent:import-collections --force || echo "⚠️  Collections import failed or already imported"
+php artisan statamic:eloquent:import-collections --force
 
 # Импортируем записи из файлов в базу данных
 echo "📝 Importing Statamic entries..."
-php artisan statamic:eloquent:import-entries --force || echo "⚠️  Entries import failed or already imported"
+php artisan statamic:eloquent:import-entries --force
 
 # Кэшируем конфигурацию
 echo "⚙️  Optimizing application..."
