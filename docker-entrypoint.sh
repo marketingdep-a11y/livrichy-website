@@ -31,12 +31,20 @@ php artisan vendor:publish --tag=statamic-eloquent-migrations --force || true
 php artisan vendor:publish --tag=statamic-eloquent-entries-table-with-string-ids --force || true
 php artisan vendor:publish --tag=statamic-eloquent-site-migrations --force || true
 php artisan vendor:publish --tag=statamic-eloquent-taxonomy-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-term-migrations --force || true
 php artisan vendor:publish --tag=statamic-eloquent-collection-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-collection-tree-migrations --force || true
 php artisan vendor:publish --tag=statamic-eloquent-blueprint-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-fieldset-migrations --force || true
 php artisan vendor:publish --tag=statamic-eloquent-form-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-form-submission-migrations --force || true
 php artisan vendor:publish --tag=statamic-eloquent-global-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-global-variables-migrations --force || true
 php artisan vendor:publish --tag=statamic-eloquent-navigation-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-navigation-tree-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-asset-container-migrations --force || true
 php artisan vendor:publish --tag=statamic-eloquent-asset-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-token-migrations --force || true
 
 # Проверяем, что миграции действительно существуют
 echo "📋 Checking if migration files exist..."
@@ -122,6 +130,31 @@ php artisan migrate:status || true
 if command -v sqlite3 >/dev/null 2>&1; then
     echo "📋 Tables in database:"
     sqlite3 database/database.sqlite ".tables" 2>/dev/null || echo "Could not list tables"
+    
+    # Проверяем наличие критически важных таблиц
+    echo "🔍 Checking critical tables:"
+    CRITICAL_TABLES=("asset_containers" "fieldsets" "trees" "terms" "global_variables")
+    MISSING_TABLES=0
+    for TABLE in "${CRITICAL_TABLES[@]}"; do
+        if sqlite3 database/database.sqlite "SELECT name FROM sqlite_master WHERE type='table' AND name='$TABLE';" 2>/dev/null | grep -q "$TABLE"; then
+            echo "  ✅ $TABLE exists"
+        else
+            echo "  ❌ $TABLE MISSING"
+            MISSING_TABLES=$((MISSING_TABLES + 1))
+        fi
+    done
+    
+    # Если критически важные таблицы отсутствуют, но миграции отмечены как выполненные,
+    # нужно очистить таблицу migrations и запустить миграции заново
+    if [ "$MISSING_TABLES" -gt 0 ]; then
+        echo "⚠️  Found $MISSING_TABLES missing critical tables. Migrations may have been run but tables were deleted."
+        echo "🔄 Clearing migrations table to force re-run of all migrations..."
+        sqlite3 database/database.sqlite "DELETE FROM migrations;" 2>/dev/null || true
+        echo "🗄️  Re-running all migrations..."
+        php artisan migrate --force
+        echo "📊 Migration status after re-run:"
+        php artisan migrate:status || true
+    fi
 fi
 
 # Проверяем, инициализирована ли база данных (есть ли данные Statamic)
