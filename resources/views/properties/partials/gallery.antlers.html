@@ -39,16 +39,16 @@
                 slides.push('{{ photo_links | first }}');
             {{ /if }}
             
-            // Second: gallery images (Glide, works)
+            // Second: gallery images (Glide, works) or photo_links as fallback
             {{ gallery }}slides.push('{{ glide:url preset='xl' }}');{{ /gallery }}
             
-            // Third: remaining photo_links (external S3 URLs, CORS blocked) - only if no featured_image and no gallery
-            {{ if !featured_image && !gallery }}
-                {{ photo_links }}
-                    {{ if value !== (photo_links | first) }}
-                        slides.push('{{ value }}');
-                    {{ /if }}
-                {{ /photo_links }}
+            // Third: photo_links fallback - use if gallery is empty or as additional images
+            {{ if featured_image && !gallery }}
+                {{ if photo_links | first }}slides.push('{{ photo_links | first }}');{{ /if }}
+            {{ elseif !featured_image && !gallery }}
+                {{ photo_links }}slides.push('{{ value }}');{{ /photo_links }}
+            {{ elseif !featured_image && gallery }}
+                {{ if photo_links | first }}slides.push('{{ photo_links | first }}');{{ /if }}
             {{ /if }}
             
             // Remove duplicates and empty values
