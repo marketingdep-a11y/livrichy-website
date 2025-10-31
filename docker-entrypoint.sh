@@ -108,6 +108,10 @@ php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true
 
+# Создаем символическую ссылку для storage (критично для изображений!)
+echo "🔗 Creating storage symlink..."
+php artisan storage:link || true
+
 # Настраиваем права
 echo "🔒 Setting permissions..."
 chmod -R 775 storage bootstrap/cache || true
