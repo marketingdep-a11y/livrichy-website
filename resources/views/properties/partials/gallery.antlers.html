@@ -7,10 +7,28 @@
         openAt(index) { this.activeSlide = index; this.open = true; },
         initSlides() {
             const slides = [];
-            {{ if featured_image }}slides.push('{{ glide:featured_image preset='xl' }}');{{ /if }}
+            {{ if featured_image }}
+                const featuredImg = '{{ glide:featured_image preset='xl' }}';
+                if (featuredImg && featuredImg.trim()) {
+                    slides.push(featuredImg);
+                }
+            {{ /if }}
+            
+            // If no featured image or it's empty, use first photo_link as fallback
+            if (slides.length === 0) {
+                {{ if photo_links | first }}
+                    const firstPhotoLink = '{{ photo_links | first }}';
+                    if (firstPhotoLink && firstPhotoLink.trim()) {
+                        slides.push(firstPhotoLink);
+                    }
+                {{ /if }}
+            }
+            
             {{ gallery }}slides.push('{{ glide:url preset='xl' }}');{{ /gallery }}
             {{ photo_links }}slides.push('{{ value }}');{{ /photo_links }}
-            this.slides = slides.filter(Boolean);
+            
+            // Remove duplicates and empty values
+            this.slides = [...new Set(slides.filter(Boolean))];
         }
     }"
     x-init="initSlides()"

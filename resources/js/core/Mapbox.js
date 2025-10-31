@@ -235,7 +235,7 @@ export const Mapbox = ({ data = [], type }) => ({
                 const statusText = propertyStatus === 'sale' ? 'FOR SALE' : 'FOR RENT';
                 const statusIcon = propertyStatus === 'sale' ? 'tag' : 'key';
                 const statusBadge = `
-                    <div class="absolute flex items-center p-2 gap-x-2 rounded-lg bg-brand-200 right-4 top-4">
+                    <div class="absolute flex items-center p-2 gap-x-2 rounded-lg bg-brand-200 left-4 top-4">
                         <svg class="w-4 h-4 fill-current shrink-0 text-brand-950" viewBox="0 0 24 24">
                             ${statusIcon === 'tag' ? '<path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82zM7 9a2 2 0 100-4 2 2 0 000 4z"/>' : '<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6z"/>'}
                         </svg>
