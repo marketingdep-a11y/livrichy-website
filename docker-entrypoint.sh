@@ -25,6 +25,38 @@ if [ ! -f database/database.sqlite ]; then
     touch database/database.sqlite
 fi
 
+# Принудительно публикуем миграции Statamic eloquent driver (на случай если они не были опубликованы)
+echo "📦 Publishing Statamic eloquent driver migrations..."
+php artisan vendor:publish --tag=statamic-eloquent-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-entries-table-with-string-ids --force || true
+php artisan vendor:publish --tag=statamic-eloquent-site-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-taxonomy-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-collection-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-blueprint-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-form-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-global-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-navigation-migrations --force || true
+php artisan vendor:publish --tag=statamic-eloquent-asset-migrations --force || true
+
+# Проверяем, что миграции действительно существуют
+echo "📋 Checking if migration files exist..."
+if [ -d "database/migrations" ]; then
+    MIGRATION_FILE_COUNT=$(find database/migrations -name "*.php" -type f 2>/dev/null | wc -l | tr -d ' ')
+    echo "✅ Found $MIGRATION_FILE_COUNT migration files in database/migrations/"
+    if [ "$MIGRATION_FILE_COUNT" -eq 0 ]; then
+        echo "⚠️  Warning: No migration files found! This is a problem."
+        echo "📋 Listing database/migrations directory:"
+        ls -la database/migrations/ || echo "Directory does not exist!"
+    else
+        echo "📋 Sample migration files:"
+        ls -1 database/migrations/*.php | head -5 || true
+    fi
+else
+    echo "❌ Error: database/migrations directory does not exist!"
+    echo "📋 Creating database/migrations directory..."
+    mkdir -p database/migrations
+fi
+
 # Проверяем и устанавливаем таблицу migrations, если её нет
 echo "🗄️  Checking migration status..."
 if command -v sqlite3 >/dev/null 2>&1; then
