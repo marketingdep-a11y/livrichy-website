@@ -383,11 +383,95 @@ php artisan view:cache || true
 
 # Создаем символическую ссылку для storage (критично для изображений!)
 echo "🔗 Creating storage symlink..."
+# Удаляем существующую ссылку если она есть (может быть неверной)
+if [ -L "public/storage" ]; then
+    echo "  Removing existing storage symlink..."
+    rm -f public/storage || true
+fi
+# Создаем новую ссылку
 php artisan storage:link || true
 
-# Настраиваем права
+# Проверяем что символическая ссылка создана правильно
+if [ -L "public/storage" ]; then
+    echo "  ✅ Storage symlink exists"
+    ls -la public/storage | head -1
+else
+    echo "  ⚠️  Storage symlink not found - trying to create manually..."
+    ln -sf ../storage/app/public public/storage || true
+fi
+
+# Проверяем наличие директории assets
+echo "📁 Checking assets directory..."
+if [ ! -d "public/assets" ]; then
+    echo "  Creating public/assets directory..."
+    mkdir -p public/assets
+fi
+
+# Проверяем наличие директории storage/app/public
+if [ ! -d "storage/app/public" ]; then
+    echo "  Creating storage/app/public directory..."
+    mkdir -p storage/app/public
+fi
+
+# Настраиваем права (критично для изображений!)
 echo "🔒 Setting permissions..."
 chmod -R 775 storage bootstrap/cache || true
+chmod -R 775 public/assets || true
+
+# Проверяем права доступа
+echo "📋 Checking permissions..."
+ls -ld public/storage || echo "  ⚠️  public/storage not accessible"
+ls -ld storage/app/public || echo "  ⚠️  storage/app/public not accessible"
+ls -ld public/assets || echo "  ⚠️  public/assets not accessible"
+
+# Проверяем наличие файлов в assets
+echo "📁 Checking assets directory..."
+ASSET_COUNT=$(find public/assets -type f 2>/dev/null | wc -l | tr -d ' ')
+echo "  ✅ Found $ASSET_COUNT files in public/assets"
+
+# Проверяем права доступа к файлам в assets
+echo "🔒 Checking asset file permissions..."
+if [ -d "public/assets" ]; then
+    # Устанавливаем права на чтение для всех файлов в assets
+    chmod -R 644 public/assets/* 2>/dev/null || true
+    find public/assets -type d -exec chmod 755 {} \; 2>/dev/null || true
+    find public/assets -type f -exec chmod 644 {} \; 2>/dev/null || true
+    echo "  ✅ Asset file permissions set"
+fi
+
+# Синхронизируем assets с базой данных (если файлы существуют, но записи в БД нет)
+echo "🔄 Syncing assets with database..."
+php artisan statamic:eloquent:sync-assets || echo "  ⚠️  Asset sync failed (may not be critical)"
+
+# Создаем и настраиваем директорию кэша Glide (критично для обработки изображений!)
+echo "🖼️  Setting up Glide image cache..."
+# Glide использует storage/statamic/glide для кэша
+mkdir -p storage/statamic/glide
+mkdir -p storage/statamic/glide/tmp
+mkdir -p storage/framework/cache/glide
+
+# Устанавливаем права на директории Glide
+chmod -R 775 storage/statamic 2>/dev/null || true
+chmod -R 775 storage/framework/cache 2>/dev/null || true
+
+# Проверяем, что директории созданы
+if [ -d "storage/statamic/glide" ]; then
+    echo "  ✅ Glide cache directory exists"
+else
+    echo "  ❌ Failed to create Glide cache directory"
+fi
+
+# Очищаем кэш изображений Glide перед запуском (на случай проблемных файлов)
+echo "🧹 Clearing Glide image cache..."
+php artisan statamic:glide:clear || echo "  ⚠️  Glide clear failed (may not be critical)"
+if [ -d "storage/statamic/glide" ]; then
+    rm -rf storage/statamic/glide/* 2>/dev/null || true
+fi
+echo "  ✅ Glide cache cleared"
+
+# Проверяем расширение GD (критично для обработки изображений)
+echo "🔍 Checking GD extension..."
+php -r "if (extension_loaded('gd')) { echo '  ✅ GD extension is loaded\n'; var_dump(gd_info()); } else { echo '  ❌ GD extension NOT loaded!\n'; exit(1); }" || echo "  ⚠️  GD check failed"
 
 echo "✅ Initialization completed!"
 

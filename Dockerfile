@@ -40,8 +40,17 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-di
 RUN rm -rf node_modules package-lock.json && npm install
 RUN npm run build
 
+# Создаем необходимые директории для Statamic и Glide
+RUN mkdir -p storage/statamic/glide \
+    && mkdir -p storage/statamic/glide/tmp \
+    && mkdir -p storage/framework/cache/glide \
+    && mkdir -p public/assets
+
 # Настройка прав
-RUN chmod -R 775 storage bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache \
+    && chmod -R 775 storage/statamic \
+    && chmod -R 775 storage/framework/cache \
+    && chmod -R 775 public/assets
 
 # Копирование entrypoint скрипта
 COPY docker-entrypoint.sh /usr/local/bin/
