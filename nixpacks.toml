@@ -1,3 +1,6 @@
+[providers]
+php = true
+
 [phases.setup]
 nixPkgs = ["php82", "composer", "nodejs-20_x", "sqlite"]
 
