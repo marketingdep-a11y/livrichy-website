@@ -281,8 +281,23 @@ export const Mapbox = ({ data = [], type }) => ({
 
             // Spiderfy function to spread markers with same coordinates in a circle
             const spiderfy = (coordinates, features) => {
+                // Validate coordinates
+                if (!coordinates || !Array.isArray(coordinates) || coordinates.length < 2 || 
+                    isNaN(coordinates[0]) || isNaN(coordinates[1])) {
+                    console.warn('Invalid coordinates for spiderfy:', coordinates);
+                    return features.map((f) => ({ 
+                        ...f, 
+                        spiderCoords: f.geometry.coordinates 
+                    }));
+                }
+
+                const [lng, lat] = coordinates;
+                
                 if (features.length <= 1) {
-                    return features.map((f, i) => ({ ...f, spiderIndex: i, spiderCoords: coordinates }));
+                    return features.map((f) => ({ 
+                        ...f, 
+                        spiderCoords: f.geometry.coordinates 
+                    }));
                 }
 
                 const radius = 0.0015; // Distance in degrees
@@ -293,10 +308,18 @@ export const Mapbox = ({ data = [], type }) => ({
                     const offsetLng = Math.cos(angle) * radius;
                     const offsetLat = Math.sin(angle) * radius;
                     
+                    const spiderLng = lng + offsetLng;
+                    const spiderLat = lat + offsetLat;
+                    
+                    // Validate spider coordinates
+                    if (isNaN(spiderLng) || isNaN(spiderLat)) {
+                        console.warn('Invalid spider coordinates:', spiderLng, spiderLat);
+                        return { ...feature, spiderCoords: feature.geometry.coordinates };
+                    }
+                    
                     return {
                         ...feature,
-                        spiderIndex: index,
-                        spiderCoords: [coordinates[0] + offsetLng, coordinates[1] + offsetLat]
+                        spiderCoords: [spiderLng, spiderLat]
                     };
                 });
             };
@@ -325,29 +348,68 @@ export const Mapbox = ({ data = [], type }) => ({
                 
                 // Get all unclustered points from the source
                 const source = map.getSource('properties');
-                if (!source || !source.loaded) return;
+                if (!source || !source.loaded) {
+                    console.warn('Source not loaded yet');
+                    return;
+                }
 
                 // Get visible bounds
                 const bounds = map.getBounds();
                 
                 // Query all features in visible area that are not clusters
                 const visibleFeatures = geojson.features.filter(feature => {
+                    if (!feature || !feature.geometry || !feature.geometry.coordinates) {
+                        return false;
+                    }
                     const [lng, lat] = feature.geometry.coordinates;
+                    if (isNaN(lng) || isNaN(lat)) {
+                        console.warn('Invalid coordinates in feature:', feature);
+                        return false;
+                    }
                     return bounds.contains([lng, lat]);
                 });
+
+                if (visibleFeatures.length === 0) {
+                    console.warn('No visible features found');
+                    return;
+                }
 
                 // Group features by coordinates for spiderfy
                 const groupedFeatures = groupFeaturesByCoordinates(visibleFeatures);
                 
                 // Create markers with spiderfy for overlapping coordinates
                 groupedFeatures.forEach((features, key) => {
-                    const [lng, lat] = features[0].geometry.coordinates;
+                    if (!features || features.length === 0) return;
+                    
+                    const firstFeature = features[0];
+                    if (!firstFeature || !firstFeature.geometry || !firstFeature.geometry.coordinates) {
+                        console.warn('Invalid first feature:', firstFeature);
+                        return;
+                    }
+                    
+                    const [lng, lat] = firstFeature.geometry.coordinates;
+                    if (isNaN(lng) || isNaN(lat)) {
+                        console.warn('Invalid coordinates:', lng, lat);
+                        return;
+                    }
+                    
                     const coordinates = [lng, lat];
                     
                     // Apply spiderfy to spread markers
                     const spiderfiedFeatures = spiderfy(coordinates, features);
                     
                     spiderfiedFeatures.forEach(feature => {
+                        if (!feature || !feature.spiderCoords) {
+                            console.warn('Feature missing spiderCoords:', feature);
+                            return;
+                        }
+                        
+                        const [spiderLng, spiderLat] = feature.spiderCoords;
+                        if (isNaN(spiderLng) || isNaN(spiderLat)) {
+                            console.warn('Invalid spider coordinates:', spiderLng, spiderLat);
+                            return;
+                        }
+                        
                         const el = document.createElement("div");
                         el.className = "marker";
                         el.dataset.variant = "price";
@@ -359,14 +421,18 @@ export const Mapbox = ({ data = [], type }) => ({
                             feature.properties.price
                         )}`;
 
-                        const marker = new mapboxgl.Marker(el)
-                            .setLngLat(feature.spiderCoords)
-                            .setPopup(
-                                new mapboxgl.Popup({ offset: 25 }).setHTML(createPopupHTML(feature))
-                            )
-                            .addTo(map);
+                        try {
+                            const marker = new mapboxgl.Marker(el)
+                                .setLngLat([spiderLng, spiderLat])
+                                .setPopup(
+                                    new mapboxgl.Popup({ offset: 25 }).setHTML(createPopupHTML(feature))
+                                )
+                                .addTo(map);
 
-                        unclusteredMarkers.push(marker);
+                            unclusteredMarkers.push(marker);
+                        } catch (error) {
+                            console.error('Error creating marker:', error, feature);
+                        }
                     });
                 });
             };
@@ -377,6 +443,14 @@ export const Mapbox = ({ data = [], type }) => ({
                 clearTimeout(updateTimeout);
                 updateTimeout = setTimeout(() => {
                     const zoom = map.getZoom();
+                    const source = map.getSource('properties');
+                    
+                    if (!source || !source.loaded) {
+                        // Wait for source to load
+                        map.once('sourcedata', updateMarkers);
+                        return;
+                    }
+                    
                     if (zoom >= 14) {
                         // Hide cluster layers and show custom markers
                         if (map.getLayer('clusters')) {
@@ -385,7 +459,10 @@ export const Mapbox = ({ data = [], type }) => ({
                         if (map.getLayer('cluster-count')) {
                             map.setLayoutProperty('cluster-count', 'visibility', 'none');
                         }
-                        createCustomMarkers();
+                        // Small delay to ensure layers are hidden before creating markers
+                        setTimeout(() => {
+                            createCustomMarkers();
+                        }, 50);
                     } else {
                         // Show cluster layers and hide custom markers
                         if (map.getLayer('clusters')) {
@@ -401,22 +478,31 @@ export const Mapbox = ({ data = [], type }) => ({
 
             map.on('zoom', updateMarkers);
             map.on('moveend', updateMarkers);
+            map.on('move', updateMarkers); // Also update on move for smoother experience
 
             // Initial marker creation if zoom is high enough
-            map.once('sourcedata', () => {
-                if (map.getSource('properties').loaded) {
-                    const zoom = map.getZoom();
-                    if (zoom >= 14) {
-                        if (map.getLayer('clusters')) {
-                            map.setLayoutProperty('clusters', 'visibility', 'none');
-                        }
-                        if (map.getLayer('cluster-count')) {
-                            map.setLayoutProperty('cluster-count', 'visibility', 'none');
-                        }
-                        createCustomMarkers();
-                    }
+            const initMarkers = () => {
+                const source = map.getSource('properties');
+                if (!source || !source.loaded) {
+                    map.once('sourcedata', initMarkers);
+                    return;
                 }
-            });
+                
+                const zoom = map.getZoom();
+                if (zoom >= 14) {
+                    if (map.getLayer('clusters')) {
+                        map.setLayoutProperty('clusters', 'visibility', 'none');
+                    }
+                    if (map.getLayer('cluster-count')) {
+                        map.setLayoutProperty('cluster-count', 'visibility', 'none');
+                    }
+                    setTimeout(() => {
+                        createCustomMarkers();
+                    }, 100);
+                }
+            };
+            
+            map.once('sourcedata', initMarkers);
         };
 
         const renderMarkers = () => {
