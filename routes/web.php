@@ -26,3 +26,8 @@ Route::statamic('site.webmanifest', 'partials._manifest', [
     'layout' => null,
     'content_type' => 'application/json'
 ]);
+
+// Redirect /home to root /
+Route::get('/home', function () {
+    return redirect('/', 301);
+});
