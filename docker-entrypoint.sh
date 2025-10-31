@@ -25,26 +25,43 @@ if [ ! -f database/database.sqlite ]; then
     touch database/database.sqlite
 fi
 
-# Проверяем, инициализирована ли база данных
-# Проверяем размер файла базы данных и наличие таблицы migrations
-DB_FILE_SIZE=$(stat -f%z database/database.sqlite 2>/dev/null || stat -c%s database/database.sqlite 2>/dev/null || echo "0")
+# Всегда выполняем миграции - Laravel сам определит, какие миграции уже выполнены
+echo "🗄️  Running database migrations..."
+php artisan migrate --force
 
-# Проверяем наличие таблицы migrations через SQLite CLI (если доступен) или используем размер файла
+# Проверяем, инициализирована ли база данных (есть ли данные Statamic)
+# Проверяем наличие таблицы entries - это главный признак того, что миграции Statamic выполнены
 if command -v sqlite3 >/dev/null 2>&1; then
-    DB_HAS_MIGRATIONS=$(sqlite3 database/database.sqlite "SELECT name FROM sqlite_master WHERE type='table' AND name='migrations';" 2>/dev/null | grep -q "migrations" && echo "yes" || echo "no")
+    DB_HAS_ENTRIES=$(sqlite3 database/database.sqlite "SELECT name FROM sqlite_master WHERE type='table' AND name='entries';" 2>/dev/null | grep -q "entries" && echo "yes" || echo "no")
+    
+    # Если таблицы entries нет после миграций, значит миграции не выполнились корректно
+    if [ "$DB_HAS_ENTRIES" != "yes" ]; then
+        echo "⚠️  Warning: Table 'entries' was not found after migrations. This might indicate an issue with migrations."
+        echo "🔄 Re-running migrations to ensure all tables are created..."
+        php artisan migrate --force
+        DB_HAS_ENTRIES=$(sqlite3 database/database.sqlite "SELECT name FROM sqlite_master WHERE type='table' AND name='entries';" 2>/dev/null | grep -q "entries" && echo "yes" || echo "no")
+        
+        if [ "$DB_HAS_ENTRIES" != "yes" ]; then
+            echo "❌ Error: Table 'entries' still not found. Check migration files and database connection."
+        fi
+    fi
 else
-    # Если sqlite3 недоступен, используем только размер файла (если < 10KB, считаем базу пустой)
-    DB_HAS_MIGRATIONS="no"
+    # Если sqlite3 недоступен, предполагаем, что миграции выполнились
+    DB_HAS_ENTRIES="yes"
 fi
 
-# Если файл базы данных пустой или таблица migrations отсутствует, значит база не инициализирована
-if [ "$DB_FILE_SIZE" -lt 10000 ] || [ "$DB_HAS_MIGRATIONS" != "yes" ]; then
-    # База данных пустая или не инициализирована
-    echo "🗄️  Database is empty or not initialized - running migrations..."
-    php artisan migrate --force
-    
-    # Импортируем данные из файлов только при первом запуске
-    echo "🔄 First run detected - importing Statamic content from files..."
+# Проверяем, есть ли данные в таблице entries (для определения, нужно ли импортировать)
+DB_HAS_DATA="no"
+if [ "$DB_HAS_ENTRIES" = "yes" ] && command -v sqlite3 >/dev/null 2>&1; then
+    ENTRY_COUNT=$(sqlite3 database/database.sqlite "SELECT COUNT(*) FROM entries;" 2>/dev/null || echo "0")
+    if [ "$ENTRY_COUNT" -gt 0 ]; then
+        DB_HAS_DATA="yes"
+    fi
+fi
+
+# Если данных нет, импортируем из файлов
+if [ "$DB_HAS_DATA" != "yes" ]; then
+    echo "🔄 Database is empty - importing Statamic content from files..."
     
     # Импортируем сайты из файлов в базу данных (важно сделать первым)
     echo "🌍 Importing Statamic sites..."
@@ -123,11 +140,7 @@ if [ "$DB_FILE_SIZE" -lt 10000 ] || [ "$DB_HAS_MIGRATIONS" != "yes" ]; then
     echo "🔄 Refreshing Statamic Stache..."
     php artisan statamic:stache:refresh || true
 else
-    echo "✅ Database is initialized - skipping import (preserving existing data)"
-    
-    # Только запускаем миграции для обновления структуры (без потери данных)
-    echo "🗄️  Running database migrations (if needed)..."
-    php artisan migrate --force
+    echo "✅ Database already contains data - skipping import (preserving existing data)"
     
     # Очищаем кэш для обновления конфигурации
     echo "🧹 Refreshing cache..."
