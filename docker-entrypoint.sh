@@ -3,14 +3,8 @@ set -e
 
 echo "🚀 Starting Laravel/Statamic application initialization..."
 
-# Определяем рабочую директорию (может быть /app или /app/mysite в зависимости от Base Directory)
-if [ -d "/app/mysite" ]; then
-    # Если Base Directory = mysite, то проект в /app/mysite
-    APP_DIR="/app/mysite"
-else
-    # Если Base Directory пустой, то проект в /app
-    APP_DIR="/app"
-fi
+# Проект находится прямо в /app (Base Directory = /)
+APP_DIR="/app"
 
 # Переходим в рабочую директорию
 cd "$APP_DIR"
