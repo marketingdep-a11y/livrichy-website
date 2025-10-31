@@ -31,7 +31,7 @@ RUN mkdir -p database && touch database/database.sqlite
 
 # Установка зависимостей
 RUN composer install --no-dev --optimize-autoloader --no-interaction
-RUN npm ci
+RUN rm -rf node_modules package-lock.json && npm install
 RUN npm run build
 
 # Настройка прав
