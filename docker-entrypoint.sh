@@ -82,6 +82,10 @@ echo "🧹 Clearing cache after import..."
 php artisan cache:clear || true
 php artisan statamic:stache:clear || true
 
+# Обновляем Statamic Stache (перестраиваем кэш после импорта всех данных)
+echo "🔄 Refreshing Statamic Stache..."
+php artisan statamic:stache:refresh || true
+
 # Кэшируем конфигурацию для продакшена
 echo "⚙️  Optimizing application..."
 php artisan config:cache || true
