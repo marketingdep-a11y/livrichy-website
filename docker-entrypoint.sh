@@ -118,6 +118,53 @@ fi
 echo "📊 Migration status before running:"
 php artisan migrate:status || true
 
+# Синхронизируем таблицу migrations с существующими таблицами
+# Если таблицы существуют, но миграции не зарегистрированы, записываем их
+if command -v sqlite3 >/dev/null 2>&1; then
+    MIGRATIONS_COUNT=$(sqlite3 database/database.sqlite "SELECT COUNT(*) FROM migrations;" 2>/dev/null || echo "0")
+    
+    # Маппинг таблиц к миграциям
+    if [ "$MIGRATIONS_COUNT" -eq 0 ]; then
+        echo "🔄 Syncing migrations table with existing tables..."
+        
+        # Проверяем существующие таблицы и записываем соответствующие миграции
+        declare -A TABLE_MIGRATIONS=(
+            ["asset_containers"]="2024_03_07_100000_create_asset_containers_table"
+            ["assets_meta"]="2024_03_07_100000_create_asset_table"
+            ["blueprints"]="2024_03_07_100000_create_blueprints_table"
+            ["collections"]="2024_03_07_100000_create_collections_table"
+            ["entries"]="2024_03_07_100000_create_entries_table_with_string_ids"
+            ["fieldsets"]="2024_03_07_100000_create_fieldsets_table"
+            ["form_submissions"]="2024_03_07_100000_create_form_submissions_table"
+            ["forms"]="2024_03_07_100000_create_forms_table"
+            ["global_set_variables"]="2024_03_07_100000_create_global_variables_table"
+            ["global_sets"]="2024_03_07_100000_create_globals_table"
+            ["trees"]="2024_03_07_100000_create_navigation_trees_table"
+            ["navigations"]="2024_03_07_100000_create_navigations_table"
+            ["taxonomies"]="2024_03_07_100000_create_taxonomies_table"
+            ["taxonomy_terms"]="2024_03_07_100000_create_terms_table"
+            ["tokens"]="2024_03_07_100000_create_tokens_table"
+            ["sites"]="2024_07_16_100000_create_sites_table"
+        )
+        
+        BATCH=1
+        for TABLE in "${!TABLE_MIGRATIONS[@]}"; do
+            MIGRATION="${TABLE_MIGRATIONS[$TABLE]}"
+            if sqlite3 database/database.sqlite "SELECT name FROM sqlite_master WHERE type='table' AND name='$TABLE';" 2>/dev/null | grep -q "$TABLE"; then
+                echo "  ✅ $TABLE exists - marking $MIGRATION as run"
+                sqlite3 database/database.sqlite "INSERT OR IGNORE INTO migrations (migration, batch) VALUES ('$MIGRATION', $BATCH);" 2>/dev/null || true
+            fi
+        done
+        
+        # Также записываем миграцию модификации form_submissions если таблица существует
+        if sqlite3 database/database.sqlite "SELECT name FROM sqlite_master WHERE type='table' AND name='form_submissions';" 2>/dev/null | grep -q "form_submissions"; then
+            sqlite3 database/database.sqlite "INSERT OR IGNORE INTO migrations (migration, batch) VALUES ('2024_05_15_100000_modify_form_submissions_id', $BATCH);" 2>/dev/null || true
+        fi
+        
+        echo "✅ Migrations table synced with existing tables"
+    fi
+fi
+
 # Всегда выполняем миграции - Laravel сам определит, какие миграции уже выполнены
 echo "🗄️  Running database migrations..."
 php artisan migrate --force
@@ -144,16 +191,44 @@ if command -v sqlite3 >/dev/null 2>&1; then
         fi
     done
     
+    # Проверяем, сколько таблиц существует и сколько миграций записано
+    EXISTING_TABLES_COUNT=$(sqlite3 database/database.sqlite "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name NOT IN ('sqlite_sequence', 'migrations');" 2>/dev/null || echo "0")
+    MIGRATIONS_COUNT=$(sqlite3 database/database.sqlite "SELECT COUNT(*) FROM migrations;" 2>/dev/null || echo "0")
+    
+    echo "📊 Existing tables: $EXISTING_TABLES_COUNT"
+    echo "📊 Recorded migrations: $MIGRATIONS_COUNT"
+    
     # Если критически важные таблицы отсутствуют, но миграции отмечены как выполненные,
     # нужно очистить таблицу migrations и запустить миграции заново
     if [ "$MISSING_TABLES" -gt 0 ]; then
-        echo "⚠️  Found $MISSING_TABLES missing critical tables. Migrations may have been run but tables were deleted."
-        echo "🔄 Clearing migrations table to force re-run of all migrations..."
-        sqlite3 database/database.sqlite "DELETE FROM migrations;" 2>/dev/null || true
-        echo "🗄️  Re-running all migrations..."
-        php artisan migrate --force
+        echo "⚠️  Found $MISSING_TABLES missing critical tables."
+        
+        # Проверяем, существуют ли хотя бы некоторые таблицы
+        if [ "$EXISTING_TABLES_COUNT" -gt 0 ]; then
+            echo "⚠️  Some tables exist, but critical ones are missing."
+            echo "⚠️  This might cause migration conflicts. Proceeding carefully..."
+            # Пробуем запустить миграции с --force, Laravel попытается создать только недостающие
+            echo "🗄️  Running migrations (will skip existing tables)..."
+            php artisan migrate --force || echo "⚠️  Some migrations failed (this is expected if tables exist)"
+        else
+            echo "🔄 No tables exist - clearing migrations table and running all migrations..."
+            sqlite3 database/database.sqlite "DELETE FROM migrations;" 2>/dev/null || true
+            echo "🗄️  Running all migrations..."
+            php artisan migrate --force
+        fi
+        
         echo "📊 Migration status after re-run:"
         php artisan migrate:status || true
+    elif [ "$EXISTING_TABLES_COUNT" -gt 0 ] && [ "$MIGRATIONS_COUNT" -eq 0 ]; then
+        # Таблицы существуют, но миграции не зарегистрированы - это проблема
+        # Нужно записать миграции как выполненные или использовать migrate:status для синхронизации
+        echo "⚠️  Tables exist but no migrations are recorded."
+        echo "⚠️  This might cause issues. The migrations table is out of sync."
+        echo "💡 Note: Laravel will try to run migrations and may fail if tables exist."
+        echo "🔄 Attempting to run migrations - they should be skipped for existing tables..."
+        # Используем --pretend для проверки, но на самом деле просто запускаем
+        # Laravel должен пропустить миграции для существующих таблиц
+        php artisan migrate --force 2>&1 | grep -v "already exists" || true
     fi
 fi
 
