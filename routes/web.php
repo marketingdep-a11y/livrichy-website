@@ -27,6 +27,12 @@ Route::statamic('site.webmanifest', 'partials._manifest', [
     'content_type' => 'application/json'
 ]);
 
+// Home page at root URL - load entry by ID
+Route::statamic('/', 'pages/home', [
+    'layout' => 'layout',
+    'load' => 'home', // Entry ID
+]);
+
 // Redirect /home to root /
 Route::get('/home', function () {
     return redirect('/', 301);
