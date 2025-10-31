@@ -25,6 +25,22 @@ php artisan statamic:eloquent:import-collections --force
 echo "📝 Importing Statamic entries..."
 php artisan statamic:eloquent:import-entries --force
 
+# Импортируем навигации из файлов в базу данных
+echo "🧭 Importing Statamic navigations..."
+php artisan statamic:eloquent:import-navs --force
+
+# Импортируем таксономии из файлов в базу данных
+echo "🏷️  Importing Statamic taxonomies..."
+php artisan statamic:eloquent:import-taxonomies --force
+
+# Импортируем глобальные переменные из файлов в базу данных
+echo "🌐 Importing Statamic globals..."
+php artisan statamic:eloquent:import-globals --force
+
+# Импортируем сайты из файлов в базу данных
+echo "🌍 Importing Statamic sites..."
+php artisan statamic:eloquent:import-sites --force
+
 # Кэшируем конфигурацию
 echo "⚙️  Optimizing application..."
 php artisan config:cache || true
