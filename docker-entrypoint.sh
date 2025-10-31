@@ -502,23 +502,7 @@ fi
 
 # Проверяем, что APP_DEBUG установлен правильно для диагностики
 echo "🔧 Checking error reporting..."
-php -r "echo '  - APP_DEBUG: ' . (env('APP_DEBUG', false) ? 'true' : 'false') . '\n';"
-php -r "echo '  - Error Reporting: ' . (ini_get('display_errors') ? 'On' : 'Off') . '\n';"
-
-# Проверяем доступность конкретного asset через Laravel (диагностика)
-echo "🔍 Testing asset access..."
-php artisan tinker --execute="
-\$asset = \Statamic\Facades\Asset::find('assets::properties/beach-pros-realty-inc..jpg');
-if (\$asset) {
-    echo '  ✅ Asset found in database: ' . \$asset->id() . PHP_EOL;
-    echo '  - Path: ' . \$asset->path() . PHP_EOL;
-    echo '  - Exists on disk: ' . (\$asset->disk()->exists(\$asset->path()) ? 'Yes' : 'No') . PHP_EOL;
-    echo '  - Full path: ' . \$asset->resolvedPath() . PHP_EOL;
-    echo '  - URL: ' . \$asset->url() . PHP_EOL;
-} else {
-    echo '  ❌ Asset NOT found in database: assets::properties/beach-pros-realty-inc..jpg' . PHP_EOL;
-}
-" 2>&1 | grep -E "(Asset|Path|Exists|URL|NOT)" || echo "  ⚠️  Asset test failed or asset not found"
+php -r "require 'vendor/autoload.php'; \$app = require_once 'bootstrap/app.php'; echo '  - APP_DEBUG: ' . (config('app.debug') ? 'true' : 'false') . PHP_EOL; echo '  - Error Reporting: ' . (ini_get('display_errors') ? 'On' : 'Off') . PHP_EOL;" 2>&1 | head -2 || echo "  ⚠️  Could not check error reporting"
 
 echo "✅ Initialization completed!"
 
