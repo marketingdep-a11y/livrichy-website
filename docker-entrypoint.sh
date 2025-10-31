@@ -3,8 +3,18 @@ set -e
 
 echo "🚀 Starting Laravel/Statamic application initialization..."
 
+# Определяем рабочую директорию (может быть /app или /app/mysite в зависимости от Base Directory)
+if [ -d "/app/mysite" ]; then
+    # Если Base Directory = mysite, то проект в /app/mysite
+    APP_DIR="/app/mysite"
+else
+    # Если Base Directory пустой, то проект в /app
+    APP_DIR="/app"
+fi
+
 # Переходим в рабочую директорию
-cd /app
+cd "$APP_DIR"
+echo "📂 Working directory: $APP_DIR"
 
 # Очищаем кэш перед началом инициализации
 echo "🧹 Clearing cache..."
