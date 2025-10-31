@@ -23,9 +23,24 @@ if [ ! -f database/database.sqlite ]; then
     echo "📝 Creating database.sqlite file..."
     mkdir -p database
     touch database/database.sqlite
-    
-    # Запускаем миграции только если база новая
-    echo "🗄️  Running database migrations..."
+fi
+
+# Проверяем, инициализирована ли база данных
+# Проверяем размер файла базы данных и наличие таблицы migrations
+DB_FILE_SIZE=$(stat -f%z database/database.sqlite 2>/dev/null || stat -c%s database/database.sqlite 2>/dev/null || echo "0")
+
+# Проверяем наличие таблицы migrations через SQLite CLI (если доступен) или используем размер файла
+if command -v sqlite3 >/dev/null 2>&1; then
+    DB_HAS_MIGRATIONS=$(sqlite3 database/database.sqlite "SELECT name FROM sqlite_master WHERE type='table' AND name='migrations';" 2>/dev/null | grep -q "migrations" && echo "yes" || echo "no")
+else
+    # Если sqlite3 недоступен, используем только размер файла (если < 10KB, считаем базу пустой)
+    DB_HAS_MIGRATIONS="no"
+fi
+
+# Если файл базы данных пустой или таблица migrations отсутствует, значит база не инициализирована
+if [ "$DB_FILE_SIZE" -lt 10000 ] || [ "$DB_HAS_MIGRATIONS" != "yes" ]; then
+    # База данных пустая или не инициализирована
+    echo "🗄️  Database is empty or not initialized - running migrations..."
     php artisan migrate --force
     
     # Импортируем данные из файлов только при первом запуске
@@ -108,7 +123,7 @@ if [ ! -f database/database.sqlite ]; then
     echo "🔄 Refreshing Statamic Stache..."
     php artisan statamic:stache:refresh || true
 else
-    echo "✅ Database exists - skipping import (preserving existing data)"
+    echo "✅ Database is initialized - skipping import (preserving existing data)"
     
     # Только запускаем миграции для обновления структуры (без потери данных)
     echo "🗄️  Running database migrations (if needed)..."
