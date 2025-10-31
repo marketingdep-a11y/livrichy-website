@@ -486,7 +486,18 @@ echo "  ✅ Glide cache cleared"
 
 # Проверяем расширение GD (критично для обработки изображений)
 echo "🔍 Checking GD extension..."
-php -r "if (extension_loaded('gd')) { echo '  ✅ GD extension is loaded\n'; \$info = gd_info(); echo '  - GD Version: ' . \$info['GD Version'] . '\n'; echo '  - JPEG Support: ' . (isset(\$info['JPEG Support']) && \$info['JPEG Support'] ? 'Yes' : 'No') . '\n'; echo '  - PNG Support: ' . (isset(\$info['PNG Support']) && \$info['PNG Support'] ? 'Yes' : 'No') . '\n'; } else { echo '  ❌ GD extension NOT loaded!\n'; exit(1); }" || echo "  ⚠️  GD check failed"
+php -r "if (extension_loaded('gd')) { 
+    echo '  ✅ GD extension is loaded\n'; 
+    \$info = gd_info(); 
+    echo '  - GD Version: ' . \$info['GD Version'] . '\n'; 
+    echo '  - JPEG Support: ' . (isset(\$info['JPEG Support']) && \$info['JPEG Support'] ? 'Yes' : 'No') . '\n'; 
+    echo '  - PNG Support: ' . (isset(\$info['PNG Support']) && \$info['PNG Support'] ? 'Yes' : 'No') . '\n'; 
+    echo '  - WebP Support: ' . (function_exists('imagewebp') ? 'Yes' : 'No') . '\n';
+    echo '  - FreeType Support: ' . (isset(\$info['FreeType Support']) && \$info['FreeType Support'] ? 'Yes' : 'No') . '\n';
+} else { 
+    echo '  ❌ GD extension NOT loaded!\n'; 
+    exit(1); 
+}" || echo "  ⚠️  GD check failed"
 
 # Создаем директорию для логов (если не существует)
 echo "📝 Setting up logging..."
