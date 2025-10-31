@@ -145,14 +145,14 @@ export const Mapbox = ({ data = [], type }) => ({
                 clusterRadius: 50,
             });
 
-            // Add cluster layer
+            // Add cluster layer (color matches marker style #C5AC62)
             map.addLayer({
                 id: 'clusters',
                 type: 'circle',
                 source: 'properties',
                 filter: ['has', 'point_count'],
                 paint: {
-                    'circle-color': '#f59e0b',
+                    'circle-color': '#C5AC62',
                     'circle-stroke-width': 2,
                     'circle-stroke-color': '#fff',
                     'circle-radius': [
@@ -189,7 +189,10 @@ export const Mapbox = ({ data = [], type }) => ({
                     <a href="${feature.properties.url}"
                         class="flex flex-col w-full duration-200 ease-in-out border rounded-2xl border-dark-100 hover:border-brand-950 hover:ring-1 hover:ring-brand-950">
                         <div class="shrink-0 rounded-t-2xl overflow-hidden">
-                            <img src="${feature.properties.featured_image}" class="object-cover w-full max-h-48 h-full" />
+                            <img src="${feature.properties.featured_image}" 
+                                 class="object-cover w-full max-h-48 h-full" 
+                                 crossorigin="anonymous"
+                                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\'%3E%3Crect fill=\'%23ddd\' width=\'400\' height=\'300\'/%3E%3Ctext fill=\'%23999\' x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\'%3EImage not available%3C/text%3E%3C/svg%3E';" />
                         </div>
 
                         <div class="relative flex flex-col justify-between flex-1 p-4 bg-white rounded-b-2xl">
@@ -276,7 +279,47 @@ export const Mapbox = ({ data = [], type }) => ({
                 map.getCanvas().style.cursor = '';
             });
 
-            // Create custom markers for individual points (when zoomed in)
+            // Spiderfy function to spread markers with same coordinates in a circle
+            const spiderfy = (coordinates, features) => {
+                if (features.length <= 1) {
+                    return features.map((f, i) => ({ ...f, spiderIndex: i, spiderCoords: coordinates }));
+                }
+
+                const radius = 0.0015; // Distance in degrees
+                const angleStep = (2 * Math.PI) / features.length;
+                
+                return features.map((feature, index) => {
+                    const angle = index * angleStep;
+                    const offsetLng = Math.cos(angle) * radius;
+                    const offsetLat = Math.sin(angle) * radius;
+                    
+                    return {
+                        ...feature,
+                        spiderIndex: index,
+                        spiderCoords: [coordinates[0] + offsetLng, coordinates[1] + offsetLat]
+                    };
+                });
+            };
+
+            // Group features by coordinates
+            const groupFeaturesByCoordinates = (features) => {
+                const groups = new Map();
+                
+                features.forEach(feature => {
+                    const [lng, lat] = feature.geometry.coordinates;
+                    // Round coordinates to avoid floating point precision issues
+                    const key = `${Math.round(lng * 10000) / 10000},${Math.round(lat * 10000) / 10000}`;
+                    
+                    if (!groups.has(key)) {
+                        groups.set(key, []);
+                    }
+                    groups.get(key).push(feature);
+                });
+                
+                return groups;
+            };
+
+            // Create custom markers for individual points (when zoomed in) with original style
             const createCustomMarkers = () => {
                 clearMarkers();
                 
@@ -288,36 +331,43 @@ export const Mapbox = ({ data = [], type }) => ({
                 const bounds = map.getBounds();
                 
                 // Query all features in visible area that are not clusters
-                const unclusteredPoints = geojson.features.filter(feature => {
+                const visibleFeatures = geojson.features.filter(feature => {
                     const [lng, lat] = feature.geometry.coordinates;
                     return bounds.contains([lng, lat]);
                 });
 
-                // Create markers for unclustered points
-                unclusteredPoints.forEach(feature => {
-                    const el = document.createElement("div");
-                    el.className = "marker";
-                    el.dataset.variant = "price";
-                    el.style.color = "#fff";
-                    el.style.fontSize = "14px";
-                    el.style.fontWeight = "bold";
-                    el.style.textAlign = "center";
-                    el.style.padding = "6px 10px";
-                    el.style.backgroundColor = "#f59e0b";
-                    el.style.borderRadius = "8px";
-                    el.style.border = "2px solid #fff";
-                    el.style.boxShadow = "0 2px 4px rgba(0,0,0,0.2)";
-                    el.style.whiteSpace = "nowrap";
-                    el.innerHTML = `AED ${new Intl.NumberFormat().format(feature.properties.price)}`;
+                // Group features by coordinates for spiderfy
+                const groupedFeatures = groupFeaturesByCoordinates(visibleFeatures);
+                
+                // Create markers with spiderfy for overlapping coordinates
+                groupedFeatures.forEach((features, key) => {
+                    const [lng, lat] = features[0].geometry.coordinates;
+                    const coordinates = [lng, lat];
+                    
+                    // Apply spiderfy to spread markers
+                    const spiderfiedFeatures = spiderfy(coordinates, features);
+                    
+                    spiderfiedFeatures.forEach(feature => {
+                        const el = document.createElement("div");
+                        el.className = "marker";
+                        el.dataset.variant = "price";
 
-                    const marker = new mapboxgl.Marker(el)
-                        .setLngLat(feature.geometry.coordinates)
-                        .setPopup(
-                            new mapboxgl.Popup({ offset: 25 }).setHTML(createPopupHTML(feature))
-                        )
-                        .addTo(map);
+                        // Original marker style (golden/orange color with price)
+                        el.style.color = "#fff";
+                        el.style.fontSize = "16px";
+                        el.innerHTML = `AED ${new Intl.NumberFormat().format(
+                            feature.properties.price
+                        )}`;
 
-                    unclusteredMarkers.push(marker);
+                        const marker = new mapboxgl.Marker(el)
+                            .setLngLat(feature.spiderCoords)
+                            .setPopup(
+                                new mapboxgl.Popup({ offset: 25 }).setHTML(createPopupHTML(feature))
+                            )
+                            .addTo(map);
+
+                        unclusteredMarkers.push(marker);
+                    });
                 });
             };
 
