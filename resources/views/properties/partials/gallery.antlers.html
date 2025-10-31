@@ -73,11 +73,11 @@
         </div>
 
         <div class="lg:w-1/3" x-show="slides.length > 1">
-            <div class="relative flex flex-col gap-y-7 h-full">
+            <div class="relative flex flex-col justify-between h-full">
                 <template x-for="(slide, index) in slides" :key="'thumb-'+index">
                     <div
                         x-show="index > 0 && index < 3"
-                        class="overflow-hidden max-h-[235px] flex-1 w-full rounded-2xl cursor-pointer"
+                        class="overflow-hidden max-h-[235px] w-full rounded-2xl cursor-pointer"
                         @click="openAt(index)"
                     >
                         <img 
