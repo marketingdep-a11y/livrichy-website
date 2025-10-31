@@ -26,8 +26,8 @@ WORKDIR /app
 # Копирование файлов проекта
 COPY . /app
 
-# Создание database.sqlite файла перед установкой зависимостей
-RUN mkdir -p database && touch database/database.sqlite
+# Создаем директорию для базы данных (файл будет создан в entrypoint если его нет)
+RUN mkdir -p database
 
 # Установка зависимостей
 RUN composer install --no-dev --optimize-autoloader --no-interaction
