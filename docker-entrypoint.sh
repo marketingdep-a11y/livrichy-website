@@ -49,6 +49,10 @@ php artisan statamic:eloquent:import-blueprints --force --only-fieldsets || true
 echo "📦 Importing Statamic collections..."
 php artisan statamic:eloquent:import-collections --force
 
+# Импортируем деревья коллекций из файлов в базу данных (ДО entries!)
+echo "🌲 Importing Statamic collection trees..."
+php artisan statamic:eloquent:import-collections --force --only-collection-trees || true
+
 # Импортируем таксономии из файлов в базу данных (ДО entries!)
 echo "🏷️  Importing Statamic taxonomies..."
 php artisan statamic:eloquent:import-taxonomies --force --only-taxonomies || true
@@ -84,6 +88,10 @@ php artisan statamic:eloquent:import-forms --force --only-forms || true
 # Импортируем submissions форм (опционально, обычно не нужно при первом деплое)
 echo "📋 Importing Statamic form submissions (if any)..."
 php artisan statamic:eloquent:import-forms --force --only-form-submissions || true
+
+# Импортируем revisions (опционально, только если включены)
+echo "📚 Importing Statamic revisions (if enabled)..."
+php artisan statamic:eloquent:import-revisions || true
 
 # Очищаем кэш после импорта
 echo "🧹 Clearing cache after import..."
