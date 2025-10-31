@@ -6,12 +6,21 @@
         slides: [],
         openAt(index) { this.activeSlide = index; this.open = true; },
         handleImageError(event) {
-            if (this.slides && this.slides.length > 1 && event.target.src !== this.slides[1]) {
-                event.target.src = this.slides[1];
-            } else {
-                event.target.onerror = null;
-                event.target.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'800\' height=\'600\'%3E%3Crect fill=\'%23ddd\' width=\'800\' height=\'600\'/%3E%3Ctext fill=\'%23999\' x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' font-size=\'24\'%3EImage not available%3C/text%3E%3C/svg%3E';
+            const failedSrc = event.target.src;
+            const failedIndex = this.slides.indexOf(failedSrc);
+            
+            // Try next image if available
+            if (this.slides && failedIndex >= 0 && failedIndex < this.slides.length - 1) {
+                const nextIndex = failedIndex + 1;
+                if (this.slides[nextIndex] && event.target.src !== this.slides[nextIndex]) {
+                    event.target.src = this.slides[nextIndex];
+                    return;
+                }
             }
+            
+            // If no next image or all failed, show placeholder
+            event.target.onerror = null;
+            event.target.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'800\' height=\'600\'%3E%3Crect fill=\'%23ddd\' width=\'800\' height=\'600\'/%3E%3Ctext fill=\'%23999\' x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' font-size=\'24\'%3EImage not available%3C/text%3E%3C/svg%3E';
         },
         initSlides() {
             const slides = [];
@@ -55,7 +64,13 @@
                         class="overflow-hidden mt-7 lg:first:mt-0 max-h-[235px] h-full w-full shrink-0 rounded-2xl cursor-pointer"
                         @click="openAt(index)"
                     >
-                        <img :src="slide" class="object-cover w-full h-full" loading="lazy" :alt="'{{ title }} thumbnail ' + index">
+                        <img 
+                            :src="slide" 
+                            class="object-cover w-full h-full" 
+                            loading="lazy" 
+                            :alt="'{{ title }} thumbnail ' + index"
+                            @error="handleImageError($event)"
+                        >
                     </div>
                 </template>
 
@@ -70,7 +85,14 @@
                 <template x-for="(slide, index) in slides" :key="'mobile-slide-'+index">
                     <div class="splide__slide">
                         <div class="max-h-[275px] h-full mt-8 overflow-hidden lg:mt-10 shrink-0 rounded-2xl">
-                            <img :src="slide" class="object-cover w-full h-full" loading="lazy" :alt="'{{ title }} mobile ' + index" @click="openAt(index)">
+                            <img 
+                                :src="slide" 
+                                class="object-cover w-full h-full" 
+                                loading="lazy" 
+                                :alt="'{{ title }} mobile ' + index" 
+                                @click="openAt(index)"
+                                @error="handleImageError($event)"
+                            >
                         </div>
                         <div class="absolute px-3 py-1 text-sm font-medium text-white bg-black/50 rounded-2xl bottom-4 right-4">
                             <span x-text="index + 1"></span>
