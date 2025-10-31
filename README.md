@@ -1,5 +1,5 @@
 # 🏡 Real Estate
-
+оооло
 Real Estate is a comprehensive starter kit specially designed to jump-start your real estate website on Statamic. Featuring **30+ pre-designed sets**, this versatile kit empowers you to create unique property listings, agent profiles, testimonials, and more with ease. Whether you're building a website for a real estate agency, showcasing property portfolios, or setting up a rental platform, Real Estate equips you with the resources to do it all elegantly and efficiently.
 
 ## Why is Real Estate the perfect starting point?

@@ -70,3 +70,4 @@ php artisan optimize
 
 echo "✅ Deployment completed successfully!"
 
+
