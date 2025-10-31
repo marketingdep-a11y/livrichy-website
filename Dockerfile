@@ -20,6 +20,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 # Установка Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Настройка Git для Composer (для работы с GitHub репозиториями)
+RUN git config --global --add safe.directory /app
+
 # Рабочая директория
 WORKDIR /app
 
@@ -31,7 +34,8 @@ COPY . /app
 RUN mkdir -p database
 
 # Установка зависимостей
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Используем --prefer-dist для более быстрой установки из GitHub
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 RUN rm -rf node_modules package-lock.json && npm install
 RUN npm run build
 

@@ -9,6 +9,12 @@
         "flat file",
         "laravel"
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/emplify-software/statamic-google-reviews.git"
+        }
+    ],
     "require": {
         "php": "^8.2",
         "emplify-software/statamic-google-reviews": "^1.0",

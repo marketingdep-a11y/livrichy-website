@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "578c341e3b3fd1fb9766630d7231b239",
+    "content-hash": "1152941a03dfe889f123e6e458148802",
     "packages": [
         {
             "name": "ajthinking/archetype",
@@ -671,14 +671,14 @@
             },
             "type": "library",
             "extra": {
+                "statamic": {
+                    "name": "Statamic Google Reviews",
+                    "description": "Statamic Google Reviews addon"
+                },
                 "laravel": {
                     "providers": [
                         "EmplifySoftware\\StatamicGoogleReviews\\ServiceProvider"
                     ]
-                },
-                "statamic": {
-                    "name": "Statamic Google Reviews",
-                    "description": "Statamic Google Reviews addon"
                 }
             },
             "autoload": {
@@ -686,13 +686,17 @@
                     "EmplifySoftware\\StatamicGoogleReviews\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "EmplifySoftware\\StatamicGoogleReviews\\Tests\\": "tests"
+                }
+            },
             "license": [
                 "MIT"
             ],
             "support": {
-                "issues": "https://github.com/emplify-software/statamic-google-reviews/issues",
-                "source": "https://github.com/emplify-software/statamic-google-reviews/tree/v1.0.1"
+                "source": "https://github.com/emplify-software/statamic-google-reviews/tree/v1.0.1",
+                "issues": "https://github.com/emplify-software/statamic-google-reviews/issues"
             },
             "time": "2025-05-28T12:43:13+00:00"
         },

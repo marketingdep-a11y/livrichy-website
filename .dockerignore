@@ -1,0 +1,54 @@
+# Git
+.git
+.gitignore
+
+# Composer
+/vendor/*
+!composer.json
+!composer.lock
+
+# Node
+node_modules
+package-lock.json
+npm-debug.log
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode
+.idea
+.phpstorm.meta.php
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+/public/build
+/public/hot
+/public/storage
+
+# Logs
+*.log
+storage/logs/*
+!storage/logs/.gitkeep
+
+# Cache
+storage/framework/cache/*
+!storage/framework/cache/.gitkeep
+storage/framework/sessions/*
+!storage/framework/sessions/.gitkeep
+storage/framework/views/*
+!storage/framework/views/.gitkeep
+
+# Tests
+tests
+.phpunit.result.cache
+
+# Documentation
+README.md
+docs
+
