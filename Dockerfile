@@ -20,22 +20,27 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 # Установка Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Рабочая директория
-WORKDIR /app
-
 # Копирование файлов проекта
+# При Base Directory = / в Coolify, структура будет /app/mysite/...
 COPY . /app
 
-# Создаем директорию для базы данных (файл будет создан в entrypoint если его нет)
-RUN mkdir -p database
+# Определяем директорию проекта (может быть /app или /app/mysite)
+# Если Base Directory = /, то проект в /app/mysite
+RUN if [ -d "/app/mysite" ]; then \
+        WORK_DIR="/app/mysite"; \
+    else \
+        WORK_DIR="/app"; \
+    fi && \
+    cd "$WORK_DIR" && \
+    mkdir -p database && \
+    composer install --no-dev --optimize-autoloader --no-interaction && \
+    rm -rf node_modules package-lock.json && \
+    npm install && \
+    npm run build && \
+    chmod -R 775 storage bootstrap/cache
 
-# Установка зависимостей
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-RUN rm -rf node_modules package-lock.json && npm install
-RUN npm run build
-
-# Настройка прав
-RUN chmod -R 775 storage bootstrap/cache
+# Рабочая директория будет определена в entrypoint
+WORKDIR /app
 
 # Копирование entrypoint скрипта
 COPY docker-entrypoint.sh /usr/local/bin/
