@@ -11,4 +11,3 @@ preview_targets:
     refresh: true
 structure:
   root: true
-  max_depth: 5
