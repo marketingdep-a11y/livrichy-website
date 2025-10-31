@@ -25,9 +25,72 @@ if [ ! -f database/database.sqlite ]; then
     touch database/database.sqlite
 fi
 
+# Проверяем и устанавливаем таблицу migrations, если её нет
+echo "🗄️  Checking migration status..."
+if command -v sqlite3 >/dev/null 2>&1; then
+    # Проверяем существование файла базы данных
+    if [ ! -f database/database.sqlite ]; then
+        echo "❌ Database file not found at database/database.sqlite"
+    else
+        echo "✅ Database file exists at database/database.sqlite"
+        DB_FILE_SIZE=$(stat -f%z database/database.sqlite 2>/dev/null || stat -c%s database/database.sqlite 2>/dev/null || echo "0")
+        echo "📊 Database file size: $DB_FILE_SIZE bytes"
+    fi
+    
+    HAS_MIGRATIONS_TABLE=$(sqlite3 database/database.sqlite "SELECT name FROM sqlite_master WHERE type='table' AND name='migrations';" 2>/dev/null | grep -q "migrations" && echo "yes" || echo "no")
+    HAS_ENTRIES_TABLE=$(sqlite3 database/database.sqlite "SELECT name FROM sqlite_master WHERE type='table' AND name='entries';" 2>/dev/null | grep -q "entries" && echo "yes" || echo "no")
+    
+    echo "📋 Migrations table exists: $HAS_MIGRATIONS_TABLE"
+    echo "📋 Entries table exists: $HAS_ENTRIES_TABLE"
+    
+    if [ "$HAS_MIGRATIONS_TABLE" != "yes" ]; then
+        echo "📋 Migration table not found. Installing migration table..."
+        php artisan migrate:install --force || true
+    else
+        # Проверяем, какие миграции записаны в таблицу
+        echo "📋 Registered migrations:"
+        sqlite3 database/database.sqlite "SELECT migration FROM migrations ORDER BY id;" 2>/dev/null || echo "Could not read migrations"
+        
+        # Проверяем, сколько миграций найдено Laravel
+        echo "📋 Available migration files:"
+        ls -1 database/migrations/*.php 2>/dev/null | wc -l || echo "0"
+        echo "   (checking if Laravel can find them)"
+    fi
+    
+    # Если таблица migrations существует, но таблица entries отсутствует,
+    # значит миграции не выполнились корректно - нужно пересоздать migrations
+    if [ "$HAS_MIGRATIONS_TABLE" = "yes" ] && [ "$HAS_ENTRIES_TABLE" != "yes" ]; then
+        echo "⚠️  Migration table exists but entries table is missing. Resetting migrations..."
+        
+        # Проверяем, сколько миграций записано
+        MIGRATION_COUNT=$(sqlite3 database/database.sqlite "SELECT COUNT(*) FROM migrations;" 2>/dev/null || echo "0")
+        echo "📊 Migrations recorded in database: $MIGRATION_COUNT"
+        
+        if [ "$MIGRATION_COUNT" -gt 0 ]; then
+            echo "🔄 Clearing migrations table (found $MIGRATION_COUNT migrations but tables missing)..."
+            sqlite3 database/database.sqlite "DELETE FROM migrations;" 2>/dev/null || true
+            echo "✅ Migrations table cleared. Ready to run migrations."
+        fi
+    fi
+fi
+
+# Проверяем статус миграций перед запуском
+echo "📊 Migration status before running:"
+php artisan migrate:status || true
+
 # Всегда выполняем миграции - Laravel сам определит, какие миграции уже выполнены
 echo "🗄️  Running database migrations..."
 php artisan migrate --force
+
+# Проверяем результат миграций
+echo "📊 Migration status after running:"
+php artisan migrate:status || true
+
+# Проверяем, какие таблицы были созданы
+if command -v sqlite3 >/dev/null 2>&1; then
+    echo "📋 Tables in database:"
+    sqlite3 database/database.sqlite ".tables" 2>/dev/null || echo "Could not list tables"
+fi
 
 # Проверяем, инициализирована ли база данных (есть ли данные Statamic)
 # Проверяем наличие таблицы entries - это главный признак того, что миграции Statamic выполнены
@@ -37,12 +100,36 @@ if command -v sqlite3 >/dev/null 2>&1; then
     # Если таблицы entries нет после миграций, значит миграции не выполнились корректно
     if [ "$DB_HAS_ENTRIES" != "yes" ]; then
         echo "⚠️  Warning: Table 'entries' was not found after migrations. This might indicate an issue with migrations."
-        echo "🔄 Re-running migrations to ensure all tables are created..."
-        php artisan migrate --force
+        
+        # Проверяем, что находится в таблице migrations
+        echo "📋 Checking migrations table content:"
+        sqlite3 database/database.sqlite "SELECT * FROM migrations;" 2>/dev/null || echo "Could not read migrations table"
+        
+        # Пробуем очистить кэш и запустить миграции снова
+        echo "🔄 Clearing cache and re-running migrations..."
+        php artisan config:clear || true
+        php artisan cache:clear || true
+        
+        # Пробуем принудительно запустить все миграции
+        echo "🔄 Re-running migrations with verbose output..."
+        php artisan migrate --force -vvv || true
+        
         DB_HAS_ENTRIES=$(sqlite3 database/database.sqlite "SELECT name FROM sqlite_master WHERE type='table' AND name='entries';" 2>/dev/null | grep -q "entries" && echo "yes" || echo "no")
         
         if [ "$DB_HAS_ENTRIES" != "yes" ]; then
-            echo "❌ Error: Table 'entries' still not found. Check migration files and database connection."
+            echo "❌ Error: Table 'entries' still not found after multiple migration attempts."
+            echo "💡 Trying to manually check migration files..."
+            
+            # Проверяем наличие файла миграции
+            if [ -f "database/migrations/2024_03_07_100000_create_entries_table_with_string_ids.php" ]; then
+                echo "✅ Migration file exists: create_entries_table_with_string_ids.php"
+            else
+                echo "❌ Migration file NOT found: create_entries_table_with_string_ids.php"
+            fi
+            
+            # Пробуем выполнить миграции из конкретного пути
+            echo "🔄 Attempting to run migrations from specific path..."
+            php artisan migrate --path=database/migrations --force || true
         fi
     fi
 else
