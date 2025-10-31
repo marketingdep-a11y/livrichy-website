@@ -183,28 +183,56 @@ export const Mapbox = ({ data = [], type }) => ({
                 }
             });
 
+            // Helper function to escape HTML and URLs
+            const escapeHtml = (str) => {
+                if (!str) return '';
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            };
+
+            // Helper function to validate and escape image URL for HTML attributes
+            const escapeImageUrl = (url) => {
+                if (!url) return '';
+                // Remove any whitespace
+                let cleanUrl = url.trim().replace(/\s+/g, '');
+                // For HTML attributes, we need to escape quotes but not encode the entire URL
+                // Replace quotes and other special characters that could break HTML
+                cleanUrl = cleanUrl.replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
+                // Return as-is for valid URLs (browser will handle encoding)
+                return cleanUrl;
+            };
+
             // Helper function to create popup HTML
             const createPopupHTML = (feature) => {
+                const imageUrl = escapeImageUrl(feature.properties.featured_image || '');
+                const listingUrl = escapeHtml(feature.properties.url || '#');
+                const title = escapeHtml(feature.properties.title || '');
+                const address = escapeHtml(feature.properties.address || '');
+                const price = new Intl.NumberFormat().format(feature.properties.price || 0);
+                
+                const placeholderSvg = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\'%3E%3Crect fill=\'%23ddd\' width=\'400\' height=\'300\'/%3E%3Ctext fill=\'%23999\' x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\'%3EImage not available%3C/text%3E%3C/svg%3E';
+                
                 return `
-                    <a href="${feature.properties.url}"
+                    <a href="${listingUrl}"
                         class="flex flex-col w-full duration-200 ease-in-out border rounded-2xl border-dark-100 hover:border-brand-950 hover:ring-1 hover:ring-brand-950">
                         <div class="shrink-0 rounded-t-2xl overflow-hidden">
-                            <img src="${feature.properties.featured_image}" 
+                            <img src="${imageUrl}" 
                                  class="object-cover w-full max-h-48 h-full" 
-                                 crossorigin="anonymous"
-                                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\'%3E%3Crect fill=\'%23ddd\' width=\'400\' height=\'300\'/%3E%3Ctext fill=\'%23999\' x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\'%3EImage not available%3C/text%3E%3C/svg%3E';" />
+                                 alt="${title}"
+                                 onerror="this.onerror=null; this.src='${placeholderSvg}';" />
                         </div>
 
                         <div class="relative flex flex-col justify-between flex-1 p-4 bg-white rounded-b-2xl">
                             <div class="flex-1">
                                 <p class="font-bold font-heading [&>i]:font-sans [&>i]:font-medium text-xl text-brand-800">
-                                AED ${new Intl.NumberFormat().format(feature.properties.price)}
+                                AED ${price}
                                 </p>
                                 <p class="font-bold font-heading [&>i]:font-sans [&>i]:font-medium text-lg leading-8 text-dark-950 mb-2">
-                                    ${feature.properties.title}
+                                    ${title}
                                 </p>
                                 <p class="text-base leading-6 text-dark-950 font-light">
-                                    ${feature.properties.address}
+                                    ${address}
                                 </p>
                             </div>
 
@@ -212,32 +240,35 @@ export const Mapbox = ({ data = [], type }) => ({
                                 ? `<div class="mt-4 border-t flex flex-wrap items-center">
                                     ${feature.properties.property_features
                                         .map((propFeature) => {
+                                            const description = escapeHtml(propFeature?.description || '');
+                                            const icon = propFeature?.icon || '';
+                                            
                                             if (propFeature.type?.value == "bedrooms") {
                                                 return `<div class="mr-4 mt-4 inline-flex items-center">
-                                                ${propFeature.icon ? `<div class="shrink-0 mr-2 w-5 h-5">${propFeature.icon}</div>` : ''}
+                                                ${icon ? `<div class="shrink-0 mr-2 w-5 h-5">${icon}</div>` : ''}
                                                 <p class="text-xs font-light text-dark-600">
-                                                    ${propFeature.description} Bedrooms
+                                                    ${description} Bedrooms
                                                 </p>
                                             </div>`;
                                             } else if (propFeature.type?.value == "bathrooms") {
                                                 return `<div class="mr-4 mt-4 inline-flex items-center">
-                                                ${propFeature.icon ? `<div class="shrink-0 mr-2 w-5 h-5">${propFeature.icon}</div>` : ''}
+                                                ${icon ? `<div class="shrink-0 mr-2 w-5 h-5">${icon}</div>` : ''}
                                                 <p class="text-xs font-light text-dark-600">
-                                                    ${propFeature.description} Bathrooms
+                                                    ${description} Bathrooms
                                                 </p>
                                             </div>`;
                                             } else if (propFeature.type?.value == "property_size") {
                                                 return `<div class="mr-4 mt-4 inline-flex items-center">
-                                                ${propFeature.icon ? `<div class="shrink-0 mr-2 w-5 h-5">${propFeature.icon}</div>` : ''}
+                                                ${icon ? `<div class="shrink-0 mr-2 w-5 h-5">${icon}</div>` : ''}
                                                 <p class="text-xs font-light text-dark-600">
-                                                    ${propFeature.description} Square Area
+                                                    ${description} Square Area
                                                 </p>
                                             </div>`;
                                             } else if (propFeature.type?.value == "style") {
                                                 return `<div class="mr-4 mt-4 inline-flex items-center">
-                                                ${propFeature.icon ? `<div class="shrink-0 mr-2 w-5 h-5">${propFeature.icon}</div>` : ''}
+                                                ${icon ? `<div class="shrink-0 mr-2 w-5 h-5">${icon}</div>` : ''}
                                                 <p class="text-xs font-light text-dark-600">
-                                                    ${propFeature.description}
+                                                    ${description}
                                                 </p>
                                             </div>`;
                                             }
@@ -300,7 +331,12 @@ export const Mapbox = ({ data = [], type }) => ({
                     }));
                 }
 
-                const radius = 0.0015; // Distance in degrees
+                // Dynamic radius based on number of markers (increases for more markers)
+                // Base radius: 0.0015 degrees (~167m), scales up for larger groups
+                const baseRadius = 0.0015;
+                const scaleFactor = Math.min(features.length / 10, 3); // Scale up to 3x for large groups
+                const radius = baseRadius * scaleFactor;
+                
                 const angleStep = (2 * Math.PI) / features.length;
                 
                 return features.map((feature, index) => {
