@@ -77,6 +77,14 @@ php artisan statamic:eloquent:import-globals --force --only-global-sets || true
 echo "🔧 Importing Statamic global variables..."
 php artisan statamic:eloquent:import-globals --force --only-global-variables || true
 
+# Импортируем формы из файлов в базу данных
+echo "📝 Importing Statamic forms..."
+php artisan statamic:eloquent:import-forms --force --only-forms || true
+
+# Импортируем submissions форм (опционально, обычно не нужно при первом деплое)
+echo "📋 Importing Statamic form submissions (if any)..."
+php artisan statamic:eloquent:import-forms --force --only-form-submissions || true
+
 # Очищаем кэш после импорта
 echo "🧹 Clearing cache after import..."
 php artisan cache:clear || true

@@ -14,7 +14,11 @@
             {{ /if }}
             
             <div class="mt-12">
-                {{ partial:forms/{form:handle} style="primary" }}
+                {{ if form:handle }}
+                    {{ partial:forms/{form:handle} style="primary" }}
+                {{ else }}
+                    <p class="text-red-500">Form handle is not defined</p>
+                {{ /if }}
             </div>
         </div>
 
