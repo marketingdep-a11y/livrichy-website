@@ -25,23 +25,30 @@
         initSlides() {
             const slides = [];
             
-            // First: featured_image (Glide, works)
+            // First: featured_image (Glide, works) or photo_links fallback
             {{ if featured_image }}
-                {{ asset :url="featured_image" }}
-                    slides.push('{{ glide:url preset='xl' }}');
-                {{ /asset }}
+                const featuredImg = '{{ glide:featured_image preset='xl' }}';
+                if (featuredImg && featuredImg.trim()) {
+                    slides.push(featuredImg);
+                } else {
+                    {{ asset :url="featured_image" }}
+                        slides.push('{{ url }}');
+                    {{ /asset }}
+                }
+            {{ elseif photo_links | first }}
+                slides.push('{{ photo_links | first }}');
             {{ /if }}
             
             // Second: gallery images (Glide, works)
             {{ gallery }}slides.push('{{ glide:url preset='xl' }}');{{ /gallery }}
             
-            // Third: photo_links (external S3 URLs, CORS blocked) - only as fallback if no featured_image and no gallery
+            // Third: remaining photo_links (external S3 URLs, CORS blocked) - only if no featured_image and no gallery
             {{ if !featured_image && !gallery }}
                 {{ photo_links }}
-                    slides.push('{{ value }}');
+                    {{ if value !== (photo_links | first) }}
+                        slides.push('{{ value }}');
+                    {{ /if }}
                 {{ /photo_links }}
-            {{ elseif !featured_image }}
-                {{ if photo_links | first }}slides.push('{{ photo_links | first }}');{{ /if }}
             {{ /if }}
             
             // Remove duplicates and empty values
