@@ -59,19 +59,29 @@ export const Mapbox = ({ data = [], type }) => ({
                     item.price !== null &&
                     item.price !== 0
                 ) {
+                    // Parse coordinates as numbers to avoid string concatenation issues
+                    const longitude = parseFloat(item.longitude);
+                    const latitude = parseFloat(item.latitude);
+                    
+                    // Validate coordinates
+                    if (isNaN(longitude) || isNaN(latitude)) {
+                        console.warn('Invalid coordinates for property:', item);
+                        return;
+                    }
+                    
                     geojson.features.push({
                         type: "Feature",
                         geometry: {
                             type: "Point",
-                            coordinates: [item.longitude, item.latitude],
+                            coordinates: [longitude, latitude],
                         },
                         properties: {
-                            url: item.url,
-                            featured_image: item.featured_image,
-                            title: item.title,
-                            price: Number(item.price),
-                            address: item.address,
-                            property_features: item.property_features,
+                            url: item.url || '#',
+                            featured_image: item.featured_image || '',
+                            title: item.title || '',
+                            price: Number(item.price) || 0,
+                            address: item.address || '',
+                            property_features: item.property_features || [],
                         },
                     });
                 }
@@ -193,13 +203,19 @@ export const Mapbox = ({ data = [], type }) => ({
 
             // Helper function to validate and escape image URL for HTML attributes
             const escapeImageUrl = (url) => {
-                if (!url) return '';
+                if (!url || typeof url !== 'string') return '';
                 // Remove any whitespace
                 let cleanUrl = url.trim().replace(/\s+/g, '');
-                // For HTML attributes, we need to escape quotes but not encode the entire URL
-                // Replace quotes and other special characters that could break HTML
+                // If URL doesn't start with http/https, it might be a relative path or missing protocol
+                if (cleanUrl && !cleanUrl.match(/^https?:\/\//i)) {
+                    // If it's a relative path starting with /, keep it
+                    // Otherwise, try to add https://
+                    if (!cleanUrl.startsWith('/')) {
+                        console.warn('Image URL missing protocol:', cleanUrl);
+                    }
+                }
+                // For HTML attributes, escape quotes that could break the attribute
                 cleanUrl = cleanUrl.replace(/"/g, '&quot;').replace(/'/g, '&#x27;');
-                // Return as-is for valid URLs (browser will handle encoding)
                 return cleanUrl;
             };
 
@@ -322,7 +338,18 @@ export const Mapbox = ({ data = [], type }) => ({
                     }));
                 }
 
-                const [lng, lat] = coordinates;
+                // Ensure coordinates are numbers, not strings
+                const lng = parseFloat(coordinates[0]);
+                const lat = parseFloat(coordinates[1]);
+                
+                // Validate parsed coordinates
+                if (isNaN(lng) || isNaN(lat)) {
+                    console.warn('Invalid parsed coordinates:', lng, lat);
+                    return features.map((f) => ({ 
+                        ...f, 
+                        spiderCoords: f.geometry.coordinates 
+                    }));
+                }
                 
                 if (features.length <= 1) {
                     return features.map((f) => ({ 
@@ -341,11 +368,12 @@ export const Mapbox = ({ data = [], type }) => ({
                 
                 return features.map((feature, index) => {
                     const angle = index * angleStep;
-                    const offsetLng = Math.cos(angle) * radius;
-                    const offsetLat = Math.sin(angle) * radius;
+                    const offsetLng = parseFloat((Math.cos(angle) * radius).toFixed(10));
+                    const offsetLat = parseFloat((Math.sin(angle) * radius).toFixed(10));
                     
-                    const spiderLng = lng + offsetLng;
-                    const spiderLat = lat + offsetLat;
+                    // Ensure we're adding numbers, not concatenating strings
+                    const spiderLng = parseFloat((lng + offsetLng).toFixed(10));
+                    const spiderLat = parseFloat((lat + offsetLat).toFixed(10));
                     
                     // Validate spider coordinates
                     if (isNaN(spiderLng) || isNaN(spiderLat)) {

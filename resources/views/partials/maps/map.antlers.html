@@ -11,14 +11,14 @@
         [
             {{ collection:properties query_scope="property_filters" }}
                 {
-                    url: '{{ url }}',
-                    featured_image: '{{ featured_image }}',
-                    title: '{{ title }}',
-                    price: '{{ price }}',
-                    address: {{ if street_number_1 or region or zip }}'{{ street_number_1 }}, {{ region }}, {{ zip }}'{{ else }}''{{ /if }},
-                    property_features: {{ if property_features }}{{ property_features | to_json | entities }}{{ else }}''{{ /if }},
-                    latitude: '{{ latitude }}',
-                    longitude: '{{ longitude }}',
+                    url: {{ url | to_json }},
+                    featured_image: {{ if featured_image }}{{ glide:featured_image preset='xl' | to_json }}{{ else }}{{ photo_links | first | to_json }}{{ /if }},
+                    title: {{ title | to_json }},
+                    price: {{ price }},
+                    address: {{ if street_number_1 or region or zip }}{{ street_number_1 }}, {{ region }}, {{ zip }}{{ else }}{{ '' }}{{ /if }} | to_json,
+                    property_features: {{ if property_features }}{{ property_features | to_json | entities }}{{ else }}[]{{ /if }},
+                    latitude: {{ latitude }},
+                    longitude: {{ longitude }},
                 },
             {{ /collection:properties }}
         ], type: '{{ theme:map_variant }}' == 'side_map' ? 'normalmap' : 'map' })" class="relative">
