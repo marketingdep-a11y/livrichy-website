@@ -12,7 +12,7 @@
             {{ collection:properties query_scope="property_filters" }}
                 {
                     url: '{{ url }}',
-                    featured_image: {{ if featured_image }}'{{ glide:featured_image preset='xl' }}'{{ else }}{{ if photo_links | first }}{{ set first_photo = photo_links | first }}'{{ glide src=first_photo preset='xl' }}'{{ else }}''{{ /if }}{{ /if }},
+                    featured_image: {{ if featured_image }}'{{ glide:featured_image preset='xl' }}'{{ else }}{{ if photo_links | first }}'{{ photo_links | first }}'{{ else }}''{{ /if }}{{ /if }},
                     title: '{{ title }}',
                     price: '{{ price }}',
                     address: {{ if street_number_1 or region or zip }}'{{ street_number_1 }}, {{ region }}, {{ zip }}'{{ else }}''{{ /if }},

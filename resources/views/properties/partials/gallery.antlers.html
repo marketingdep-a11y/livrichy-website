@@ -9,7 +9,7 @@
             const slides = [];
             {{ if featured_image }}slides.push('{{ glide:featured_image preset='xl' }}');{{ /if }}
             {{ gallery }}slides.push('{{ glide:url preset='xl' }}');{{ /gallery }}
-            {{ photo_links }}slides.push('{{ glide src=value preset='xl' }}');{{ /photo_links }}
+            {{ photo_links }}slides.push('{{ value }}');{{ /photo_links }}
             this.slides = slides.filter(Boolean);
         }
     }"
