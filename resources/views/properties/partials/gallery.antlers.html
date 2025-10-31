@@ -5,6 +5,14 @@
         activeSlide: 0,
         slides: [],
         openAt(index) { this.activeSlide = index; this.open = true; },
+        handleImageError(event) {
+            if (this.slides && this.slides.length > 1 && event.target.src !== this.slides[1]) {
+                event.target.src = this.slides[1];
+            } else {
+                event.target.onerror = null;
+                event.target.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'800\' height=\'600\'%3E%3Crect fill=\'%23ddd\' width=\'800\' height=\'600\'/%3E%3Ctext fill=\'%23999\' x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' font-size=\'24\'%3EImage not available%3C/text%3E%3C/svg%3E';
+            }
+        },
         initSlides() {
             const slides = [];
             {{ if featured_image }}
@@ -14,9 +22,12 @@
             {{ elseif photo_links | first }}
                 slides.push('{{ photo_links | first }}');
             {{ /if }}
+            
             {{ gallery }}slides.push('{{ glide:url preset='xl' }}');{{ /gallery }}
             {{ photo_links }}slides.push('{{ value }}');{{ /photo_links }}
-            this.slides = slides.filter(Boolean);
+            
+            // Remove duplicates and empty values
+            this.slides = [...new Set(slides.filter(Boolean))];
         }
     }"
     x-init="initSlides()"
@@ -31,15 +42,7 @@
                     :alt="'{{ title }}'"
                     loading="lazy"
                     @click="openAt(0)"
-                    crossorigin="anonymous"
-                    @error="
-                        if (this.slides.length > 1 && $event.target.src !== this.slides[1]) {
-                            $event.target.src = this.slides[1];
-                        } else {
-                            $event.target.onerror = null;
-                            $event.target.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'800\' height=\'600\'%3E%3Crect fill=\'%23ddd\' width=\'800\' height=\'600\'/%3E%3Ctext fill=\'%23999\' x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' font-size=\'24\'%3EImage not available%3C/text%3E%3C/svg%3E';
-                        }
-                    "
+                    @error="handleImageError($event)"
                 >
             </div>
         </div>
