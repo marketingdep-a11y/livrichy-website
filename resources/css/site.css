@@ -92,3 +92,10 @@
     appearance: none;
     background-image: none;
 }
+
+select.truncate {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 100%;
+}

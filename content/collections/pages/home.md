@@ -132,7 +132,7 @@ blocks:
     has_button: true
     button_variant: primary
     label: 'Browse All Communities'
-    link: '#'
+    link: '/properties'
   -
     id: leczca1v
     variant: agent_section_1

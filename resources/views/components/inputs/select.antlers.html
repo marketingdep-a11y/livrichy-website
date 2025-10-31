@@ -11,15 +11,15 @@ styles:
                 {{ svg src="location-filled" class="w-5 h-5 fill-current m-auto text-brand-950 shrink-0" }}
             </div>
         {{ /if }}
-        <div class="flex-auto">
+        <div class="flex-auto min-w-0">
             {{ if label }}
                 <label for="{{ name ?? id }}" class="block w-full text-sm font-light text-dark-600">
                     {{ label }}
                 </label>
             {{ /if }}
-            <div class="flex items-center">
+            <div class="flex items-center min-w-0">
                 <select id="{{ name ?? id }}" name="{{ name }}"
-                    class="{{ styles[style] ?? styles['primary'] }} p-0 flex-1 block w-full outline-0"
+                    class="{{ styles[style] ?? styles['primary'] }} p-0 flex-1 block w-full outline-0 truncate min-w-0"
                     {{ if onChange }} x-on:change="{{ onChange }}" {{ /if }}>
                     {{ slot }}
                 </select>

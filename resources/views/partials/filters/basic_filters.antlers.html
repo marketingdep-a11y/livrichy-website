@@ -4,7 +4,7 @@
 
         {{ partial:components/inputs/select name="community" style="secondary" label="Community" }}
             <option value="{{ get:community }}" disabled selected hidden>
-                {{ get:community ?? 'Community' }}
+                {{ get:community ?? 'Select' }}
             </option>
             {{ property_filter_options:communities }}
                 <option value="{{ value }}" {{ get:community == value ?= 'selected' }}>

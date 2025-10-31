@@ -1,0 +1,16 @@
+[phases.setup]
+nixPkgs = ["php82", "composer", "nodejs-20_x", "sqlite"]
+
+[phases.install]
+cmds = [
+  "composer install --no-dev --optimize-autoloader --no-interaction",
+  "npm ci",
+  "npm run build"
+]
+
+[start]
+cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
+
+[variables]
+PHP_VERSION = "8.2"
+
