@@ -82,6 +82,7 @@ export const Mapbox = ({ data = [], type }) => ({
                             price: Number(item.price) || 0,
                             address: item.address || '',
                             property_features: item.property_features || [],
+                            property_status: item.property_status || 'rent',
                         },
                     });
                 }
@@ -229,10 +230,24 @@ export const Mapbox = ({ data = [], type }) => ({
                 
                 const placeholderSvg = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\'%3E%3Crect fill=\'%23ddd\' width=\'400\' height=\'300\'/%3E%3Ctext fill=\'%23999\' x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\'%3EImage not available%3C/text%3E%3C/svg%3E';
                 
+                // Status badge
+                const propertyStatus = feature.properties.property_status || 'rent';
+                const statusText = propertyStatus === 'sale' ? 'FOR SALE' : 'FOR RENT';
+                const statusIcon = propertyStatus === 'sale' ? 'tag' : 'key';
+                const statusBadge = `
+                    <div class="absolute flex items-center p-2 gap-x-2 rounded-lg bg-brand-200 right-4 top-4">
+                        <svg class="w-4 h-4 fill-current shrink-0 text-brand-950" viewBox="0 0 24 24">
+                            ${statusIcon === 'tag' ? '<path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82zM7 9a2 2 0 100-4 2 2 0 000 4z"/>' : '<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6z"/>'}
+                        </svg>
+                        <span class="text-xs font-bold font-heading text-brand-950 mt-0.5">${statusText}</span>
+                    </div>
+                `;
+                
                 return `
                     <a href="${listingUrl}"
                         class="flex flex-col w-full duration-200 ease-in-out border rounded-2xl border-dark-100 hover:border-brand-950 hover:ring-1 hover:ring-brand-950">
-                        <div class="shrink-0 rounded-t-2xl overflow-hidden">
+                        <div class="relative shrink-0 rounded-t-2xl overflow-hidden">
+                            ${statusBadge}
                             <img src="${imageUrl}" 
                                  class="object-cover w-full max-h-48 h-full" 
                                  alt="${title}"
@@ -278,6 +293,13 @@ export const Mapbox = ({ data = [], type }) => ({
                                                 ${icon ? `<div class="shrink-0 mr-2 w-5 h-5">${icon}</div>` : ''}
                                                 <p class="text-xs font-light text-dark-600">
                                                     ${description} Square Area
+                                                </p>
+                                            </div>`;
+                                            } else if (propFeature.type?.value == "parking") {
+                                                return `<div class="mr-4 mt-4 inline-flex items-center">
+                                                ${icon ? `<div class="shrink-0 mr-2 w-5 h-5">${icon}</div>` : ''}
+                                                <p class="text-xs font-light text-dark-600">
+                                                    ${description} Parking
                                                 </p>
                                             </div>`;
                                             } else if (propFeature.type?.value == "style") {
