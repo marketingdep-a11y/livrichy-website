@@ -30,8 +30,8 @@ WORKDIR /app
 # Проект находится прямо в /app (Base Directory = /)
 COPY . /app
 
-# Создаем директорию для базы данных (файл будет создан в entrypoint если его нет)
-RUN mkdir -p database
+# Создаем директорию для базы данных и файл базы данных (нужен для composer install)
+RUN mkdir -p database && touch database/database.sqlite
 
 # Установка зависимостей
 # Используем --prefer-dist для более быстрой установки из GitHub
