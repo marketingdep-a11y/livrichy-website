@@ -26,6 +26,9 @@ WORKDIR /app
 # Копирование файлов проекта
 COPY . /app
 
+# Создание database.sqlite файла перед установкой зависимостей
+RUN mkdir -p database && touch database/database.sqlite
+
 # Установка зависимостей
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 RUN npm ci
