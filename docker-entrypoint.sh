@@ -443,6 +443,21 @@ fi
 echo "🔄 Syncing assets with database..."
 php artisan statamic:eloquent:sync-assets || echo "  ⚠️  Asset sync failed (may not be critical)"
 
+# Проверяем синхронизацию assets (диагностика)
+if command -v sqlite3 >/dev/null 2>&1; then
+    ASSET_COUNT=$(sqlite3 database/database.sqlite "SELECT COUNT(*) FROM assets_meta;" 2>/dev/null || echo "0")
+    echo "  📊 Assets in database: $ASSET_COUNT"
+    
+    # Проверяем наличие конкретного файла из URL (beach-pros-realty-inc..jpg)
+    if [ -f "public/assets/properties/beach-pros-realty-inc..jpg" ]; then
+        echo "  ✅ Test file exists: public/assets/properties/beach-pros-realty-inc..jpg"
+    else
+        echo "  ⚠️  Test file NOT found: public/assets/properties/beach-pros-realty-inc..jpg"
+        echo "  📁 Listing public/assets/properties/:"
+        ls -la public/assets/properties/ 2>/dev/null | head -5 || echo "    Directory not found"
+    fi
+fi
+
 # Создаем и настраиваем директорию кэша Glide (критично для обработки изображений!)
 echo "🖼️  Setting up Glide image cache..."
 # Glide использует storage/statamic/glide для кэша
@@ -471,7 +486,39 @@ echo "  ✅ Glide cache cleared"
 
 # Проверяем расширение GD (критично для обработки изображений)
 echo "🔍 Checking GD extension..."
-php -r "if (extension_loaded('gd')) { echo '  ✅ GD extension is loaded\n'; var_dump(gd_info()); } else { echo '  ❌ GD extension NOT loaded!\n'; exit(1); }" || echo "  ⚠️  GD check failed"
+php -r "if (extension_loaded('gd')) { echo '  ✅ GD extension is loaded\n'; \$info = gd_info(); echo '  - GD Version: ' . \$info['GD Version'] . '\n'; echo '  - JPEG Support: ' . (isset(\$info['JPEG Support']) && \$info['JPEG Support'] ? 'Yes' : 'No') . '\n'; echo '  - PNG Support: ' . (isset(\$info['PNG Support']) && \$info['PNG Support'] ? 'Yes' : 'No') . '\n'; } else { echo '  ❌ GD extension NOT loaded!\n'; exit(1); }" || echo "  ⚠️  GD check failed"
+
+# Создаем директорию для логов (если не существует)
+echo "📝 Setting up logging..."
+mkdir -p storage/logs
+chmod -R 775 storage/logs 2>/dev/null || true
+
+# Проверяем доступность логов
+if [ -d "storage/logs" ] && [ -w "storage/logs" ]; then
+    echo "  ✅ Logs directory is writable"
+else
+    echo "  ⚠️  Logs directory may not be writable"
+fi
+
+# Проверяем, что APP_DEBUG установлен правильно для диагностики
+echo "🔧 Checking error reporting..."
+php -r "echo '  - APP_DEBUG: ' . (env('APP_DEBUG', false) ? 'true' : 'false') . '\n';"
+php -r "echo '  - Error Reporting: ' . (ini_get('display_errors') ? 'On' : 'Off') . '\n';"
+
+# Проверяем доступность конкретного asset через Laravel (диагностика)
+echo "🔍 Testing asset access..."
+php artisan tinker --execute="
+\$asset = \Statamic\Facades\Asset::find('assets::properties/beach-pros-realty-inc..jpg');
+if (\$asset) {
+    echo '  ✅ Asset found in database: ' . \$asset->id() . PHP_EOL;
+    echo '  - Path: ' . \$asset->path() . PHP_EOL;
+    echo '  - Exists on disk: ' . (\$asset->disk()->exists(\$asset->path()) ? 'Yes' : 'No') . PHP_EOL;
+    echo '  - Full path: ' . \$asset->resolvedPath() . PHP_EOL;
+    echo '  - URL: ' . \$asset->url() . PHP_EOL;
+} else {
+    echo '  ❌ Asset NOT found in database: assets::properties/beach-pros-realty-inc..jpg' . PHP_EOL;
+}
+" 2>&1 | grep -E "(Asset|Path|Exists|URL|NOT)" || echo "  ⚠️  Asset test failed or asset not found"
 
 echo "✅ Initialization completed!"
 
