@@ -29,6 +29,14 @@ php artisan migrate --force
 echo "🌍 Importing Statamic sites..."
 php artisan statamic:eloquent:import-sites
 
+# Импортируем asset containers из файлов в базу данных (ДО entries, так как entries могут ссылаться на assets!)
+echo "📁 Importing Statamic asset containers..."
+php artisan statamic:eloquent:import-assets --force --only-asset-containers || true
+
+# Импортируем assets из файлов в базу данных (ДО entries!)
+echo "🖼️  Importing Statamic assets..."
+php artisan statamic:eloquent:import-assets --force --only-assets || true
+
 # Импортируем blueprints из файлов в базу данных (критично - ДО entries!)
 echo "📋 Importing Statamic blueprints..."
 php artisan statamic:eloquent:import-blueprints --force --only-blueprints || true
