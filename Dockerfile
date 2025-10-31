@@ -37,9 +37,13 @@ RUN npm run build
 # Настройка прав
 RUN chmod -R 775 storage bootstrap/cache
 
+# Копирование entrypoint скрипта
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Expose порт
 EXPOSE 8000
 
-# Команда запуска
-CMD php artisan serve --host=0.0.0.0 --port=8000
+# Использование entrypoint скрипта
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
