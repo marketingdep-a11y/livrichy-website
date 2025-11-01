@@ -7,18 +7,8 @@
                 {{ partial:communities/partials/large_card :variant="variant" }}
             {{ /selected_communities }}
         {{ else }}
-            {{ communities:top limit="3" as="community_items" }}
-                {{ community_items scope="community" }}
-                    {{ partial:communities/partials/large_card 
-                        :variant="variant"
-                        :url="url"
-                        :featured_image="featured_image"
-                        :import_key="import_key"
-                        :title="title"
-                        :slug="slug"
-                        :count="count"
-                        :total_text="total_text" }}
-                {{ /community_items }}
+            {{ communities:top limit="3" }}
+                {{ partial:communities/partials/large_card variant="{ variant }" }}
             {{ /communities:top }}
         {{ /if }}
     </div>
