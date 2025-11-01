@@ -156,6 +156,42 @@ export const Mapbox = ({ data = [], type }) => ({
             }
         };
 
+        const createSimpleMarker = () => {
+            console.log('🎯 Creating simple marker for normalmap');
+            console.log('🎯 Features to render:', geojson.features);
+            
+            if (geojson.features.length === 0) {
+                console.warn('⚠️ No features to render');
+                return;
+            }
+
+            // Create a simple marker for single property page
+            const feature = geojson.features[0];
+            const coordinates = feature.geometry.coordinates;
+            
+            console.log('🎯 Creating marker at:', coordinates);
+
+            const el = document.createElement("div");
+            el.className = "marker";
+            el.dataset.variant = "property";
+
+            const size = 40;
+            el.style.width = `${size}px`;
+            el.style.height = `${size}px`;
+            el.style.backgroundColor = "transparent";
+            el.style.backgroundImage = `url(/svg/marker-icon.svg)`;
+            el.style.backgroundSize = "100%";
+            el.style.cursor = "pointer";
+
+            const marker = new mapboxgl.Marker(el)
+                .setLngLat(coordinates)
+                .addTo(map);
+
+            markers.push(marker);
+            
+            console.log('✅ Marker created and added to map');
+        };
+
         const renderPropertyMarkers = () => {
             // Remove existing layers and sources if they exist
             if (map.getLayer('clusters')) {
@@ -616,6 +652,7 @@ export const Mapbox = ({ data = [], type }) => ({
         };
 
         const renderMarkers = () => {
+            console.log('🗺️ renderMarkers called, type:', type);
             clearMarkers();
 
             if (contactjson.length > 0) {
@@ -624,7 +661,14 @@ export const Mapbox = ({ data = [], type }) => ({
             }
 
             if (geojson.features.length > 0) {
-                renderPropertyMarkers();
+                // For normalmap (single property page), use simple marker
+                if (type === 'normalmap') {
+                    console.log('🎯 Using simple marker for normalmap');
+                    createSimpleMarker();
+                } else {
+                    console.log('🎯 Using property markers with clustering');
+                    renderPropertyMarkers();
+                }
             }
         };
 
