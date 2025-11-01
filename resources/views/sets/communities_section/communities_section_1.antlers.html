@@ -8,7 +8,14 @@
             {{ /selected_communities }}
         {{ else }}
             {{ communities:top limit="3" }}
-                {{ partial:communities/partials/small_card }}
+                {{ partial:communities/partials/small_card 
+                    :url="url"
+                    :featured_image="featured_image"
+                    :import_key="import_key"
+                    :title="title"
+                    :slug="slug"
+                    :count="count"
+                    :total_text="total_text" }}
             {{ /communities:top }}
         {{ /if }}
     </div>
