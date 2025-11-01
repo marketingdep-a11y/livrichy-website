@@ -1,15 +1,9 @@
-{{ set community_param = import_key }}
+{{# DEBUG: title={{ title }} | import_key={{ import_key }} | slug={{ slug }} #}}
 
-{{ if ! community_param }}
-    {{ set community_param = slug }}
-{{ /if }}
-
-{{ if ! community_param }}
-    {{ set community_param = title }}
-{{ /if }}
+{{ set community_param = import_key ?? slug ?? title }}
 
 {{ if community_param }}
-    {{ set href = '/properties?community=' ~ community_param }}
+    {{ set href = '/properties?community=' ~ (community_param | url_encode) }}
 {{ else }}
     {{ set href = '/properties' }}
 {{ /if }}
