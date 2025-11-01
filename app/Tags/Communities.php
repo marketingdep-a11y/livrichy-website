@@ -40,7 +40,7 @@ class Communities extends Tags
             $featuredImageValue = $entry->augmentedValue('featured_image');
             $featuredImage = $featuredImageValue ? $featuredImageValue->value() : null;
             
-            return [
+            $result = [
                 'id' => $entry->id(),
                 'title' => $entry->get('title'),
                 'slug' => $slug,
@@ -50,6 +50,17 @@ class Communities extends Tags
                 'total_text' => $this->formatTotal($count),
                 'community_url' => '/properties?community=' . urlencode($importKey ?: $slug),
             ];
+            
+            // Debug logging
+            \Log::info('Communities::top - mapped community', [
+                'title' => $result['title'],
+                'slug' => $result['slug'],
+                'import_key' => $result['import_key'],
+                'community_url' => $result['community_url'],
+                'has_featured_image' => !is_null($result['featured_image']),
+            ]);
+            
+            return $result;
         });
     }
 
