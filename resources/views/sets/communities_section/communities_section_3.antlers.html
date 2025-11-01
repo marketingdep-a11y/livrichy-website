@@ -8,6 +8,12 @@
             {{ /selected_communities }}
         {{ else }}
             {{ communities:top limit="3" }}
+                {{# DEBUG: {{ dump }} #}}
+                <div style="display:none">
+                    URL: {{ url }}
+                    Featured: {{ featured_image }}
+                    Import: {{ import_key }}
+                </div>
                 {{ partial:communities/partials/large_card :variant="variant" }}
             {{ /communities:top }}
         {{ /if }}
