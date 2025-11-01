@@ -47,18 +47,28 @@ export const Mapbox = ({ data = [], type }) => ({
 
         if (data.length > 0) {
             data.map((item) => {
-                // Only add valid properties with required fields
-                if (
-                    item.price !== undefined &&
+                // For normalmap (single property page), only require coordinates
+                // For listing maps, require all fields including price
+                const isNormalMap = type === 'normalmap';
+                const hasCoordinates = item.longitude !== undefined && 
+                                      item.latitude !== undefined &&
+                                      item.longitude !== '' && 
+                                      item.latitude !== '';
+                
+                // Strict validation for listing maps
+                const hasRequiredFields = item.price !== undefined &&
                     item.title !== undefined &&
                     item.address !== undefined &&
                     item.url !== undefined &&
                     item.featured_image !== undefined &&
-                    item.longitude !== undefined &&
-                    item.latitude !== undefined &&
                     item.price !== null &&
-                    item.price !== 0
-                ) {
+                    item.price !== 0;
+                
+                // For normalmap: only check coordinates
+                // For other maps: check all required fields
+                const shouldAddMarker = isNormalMap ? hasCoordinates : (hasCoordinates && hasRequiredFields);
+                
+                if (shouldAddMarker) {
                     // Parse coordinates as numbers to avoid string concatenation issues
                     const longitude = parseFloat(item.longitude);
                     const latitude = parseFloat(item.latitude);
@@ -78,7 +88,7 @@ export const Mapbox = ({ data = [], type }) => ({
                         properties: {
                             url: item.url || '#',
                             featured_image: item.featured_image || '',
-                            title: item.title || '',
+                            title: item.title || 'Property',
                             price: Number(item.price) || 0,
                             address: item.address || '',
                             property_features: item.property_features || [],
