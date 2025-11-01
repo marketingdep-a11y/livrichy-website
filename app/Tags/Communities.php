@@ -30,8 +30,22 @@ class Communities extends Tags
             return $this->fallbackFromProperties($limit);
         }
 
-        // Augment entries for Antlers - this makes all fields accessible in templates
-        return $communities->map(fn (EntryContract $entry) => $entry->toAugmentedArray());
+        // Map entries to simple arrays for Antlers templates
+        return $communities->map(function (EntryContract $entry) {
+            $count = (int) $entry->get('listings_total', 0);
+            $importKey = $entry->get('import_key');
+            
+            return [
+                'id' => $entry->id(),
+                'title' => $entry->get('title'),
+                'slug' => $entry->slug(),
+                'import_key' => $importKey,
+                'featured_image' => $entry->get('featured_image'),
+                'count' => $count,
+                'total_text' => $this->formatTotal($count),
+                'url' => url('/properties?community=' . urlencode($importKey ?: $entry->slug())),
+            ];
+        });
     }
 
     private function mapCommunityEntry(EntryContract $entry): ?array
