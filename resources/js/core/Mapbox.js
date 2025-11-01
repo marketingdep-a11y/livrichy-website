@@ -46,13 +46,7 @@ export const Mapbox = ({ data = [], type }) => ({
         const contactjson = [];
 
         if (data.length > 0) {
-            console.log('🗺️ Mapbox Init - Full data received:', data);
-            console.log('🗺️ Map type:', type);
-            
             data.map((item) => {
-                console.log('---');
-                console.log('📍 Processing item:', item);
-                
                 // For normalmap (single property page), only require coordinates
                 // For listing maps, require all fields including price
                 const isNormalMap = type === 'normalmap';
@@ -60,10 +54,6 @@ export const Mapbox = ({ data = [], type }) => ({
                                       item.latitude !== undefined &&
                                       item.longitude !== '' && 
                                       item.latitude !== '';
-                
-                console.log('🗺️ Is normalmap:', isNormalMap);
-                console.log('📍 Coordinates:', item.longitude, item.latitude);
-                console.log('✅ Has coordinates:', hasCoordinates);
                 
                 // Strict validation for listing maps
                 const hasRequiredFields = item.price !== undefined &&
@@ -74,13 +64,9 @@ export const Mapbox = ({ data = [], type }) => ({
                     item.price !== null &&
                     item.price !== 0;
                 
-                console.log('📋 Has required fields:', hasRequiredFields);
-                
                 // For normalmap: only check coordinates
                 // For other maps: check all required fields
                 const shouldAddMarker = isNormalMap ? hasCoordinates : (hasCoordinates && hasRequiredFields);
-                
-                console.log('🎯 Should add marker:', shouldAddMarker);
                 
                 if (shouldAddMarker) {
                     // Parse coordinates as numbers to avoid string concatenation issues
@@ -157,19 +143,13 @@ export const Mapbox = ({ data = [], type }) => ({
         };
 
         const createSimpleMarker = () => {
-            console.log('🎯 Creating simple marker for normalmap');
-            console.log('🎯 Features to render:', geojson.features);
-            
             if (geojson.features.length === 0) {
-                console.warn('⚠️ No features to render');
                 return;
             }
 
             // Create a simple marker for single property page
             const feature = geojson.features[0];
             const coordinates = feature.geometry.coordinates;
-            
-            console.log('🎯 Creating marker at:', coordinates);
 
             const el = document.createElement("div");
             el.className = "marker";
@@ -188,8 +168,6 @@ export const Mapbox = ({ data = [], type }) => ({
                 .addTo(map);
 
             markers.push(marker);
-            
-            console.log('✅ Marker created and added to map');
         };
 
         const renderPropertyMarkers = () => {
@@ -652,7 +630,6 @@ export const Mapbox = ({ data = [], type }) => ({
         };
 
         const renderMarkers = () => {
-            console.log('🗺️ renderMarkers called, type:', type);
             clearMarkers();
 
             if (contactjson.length > 0) {
@@ -663,10 +640,8 @@ export const Mapbox = ({ data = [], type }) => ({
             if (geojson.features.length > 0) {
                 // For normalmap (single property page), use simple marker
                 if (type === 'normalmap') {
-                    console.log('🎯 Using simple marker for normalmap');
                     createSimpleMarker();
                 } else {
-                    console.log('🎯 Using property markers with clustering');
                     renderPropertyMarkers();
                 }
             }

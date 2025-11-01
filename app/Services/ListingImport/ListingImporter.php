@@ -98,6 +98,19 @@ class ListingImporter
                 $entry->set($key, $value);
             }
 
+            // Resolve agent by external_agent_id if available
+            if ($dto->externalAgentId && !$dto->agentId) {
+                $agentId = $this->resolveAgentByExternalId($dto->externalAgentId);
+                if ($agentId) {
+                    $entry->set('agent', $agentId);
+                    Log::info('Agent linked to listing.', [
+                        'external_id' => $externalId,
+                        'external_agent_id' => $dto->externalAgentId,
+                        'agent_id' => $agentId,
+                    ]);
+                }
+            }
+
             $entry->set('external_id', $externalId);
 
             if ($isNewEntry && $entry->get('show_status') === null) {
@@ -199,5 +212,18 @@ class ListingImporter
         }
 
         return $base.'-'.$externalId;
+    }
+
+    /**
+     * Find agent by external_id and return its Statamic ID
+     */
+    private function resolveAgentByExternalId(string $externalAgentId): ?string
+    {
+        $agent = Entry::query()
+            ->where('collection', 'agents')
+            ->where('data->external_id', $externalAgentId)
+            ->first();
+
+        return $agent?->id();
     }
 }
