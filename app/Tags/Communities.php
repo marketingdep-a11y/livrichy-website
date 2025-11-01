@@ -48,7 +48,7 @@ class Communities extends Tags
                 'featured_image' => $featuredImage,
                 'count' => $count,
                 'total_text' => $this->formatTotal($count),
-                'url' => '/properties?community=' . urlencode($importKey ?: $slug),
+                'community_url' => '/properties?community=' . urlencode($importKey ?: $slug),
             ];
         });
     }
@@ -122,7 +122,7 @@ class Communities extends Tags
                     'count' => $count,
                     'total_text' => $this->formatTotal($count),
                     'featured_image' => $featuredImage,
-                    'url' => url('/properties?community=' . urlencode($community)),
+                    'community_url' => url('/properties?community=' . urlencode($community)),
                 ];
             })
             ->sortByDesc('count')

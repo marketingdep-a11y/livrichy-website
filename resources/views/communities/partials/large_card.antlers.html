@@ -1,5 +1,5 @@
-{{ if url }}
-    {{ set href = url }}
+{{ if community_url }}
+    {{ set href = community_url }}
 {{ else }}
     {{ set community_param = import_key ?? slug ?? title }}
     {{ if community_param }}
