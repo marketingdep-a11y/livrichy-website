@@ -47,28 +47,18 @@ export const Mapbox = ({ data = [], type }) => ({
 
         if (data.length > 0) {
             data.map((item) => {
-                // For normalmap (single property page), only require coordinates
-                // For listing maps, require all fields including price
-                const isNormalMap = type === 'normalmap';
-                const hasCoordinates = item.longitude !== undefined && 
-                                      item.latitude !== undefined &&
-                                      item.longitude !== '' && 
-                                      item.latitude !== '';
-                
-                // Strict validation for listing maps
-                const hasRequiredFields = item.price !== undefined &&
+                // Only add valid properties with required fields
+                if (
+                    item.price !== undefined &&
                     item.title !== undefined &&
                     item.address !== undefined &&
                     item.url !== undefined &&
                     item.featured_image !== undefined &&
+                    item.longitude !== undefined &&
+                    item.latitude !== undefined &&
                     item.price !== null &&
-                    item.price !== 0;
-                
-                // For normalmap: only check coordinates
-                // For other maps: check all required fields
-                const shouldAddMarker = isNormalMap ? hasCoordinates : (hasCoordinates && hasRequiredFields);
-                
-                if (shouldAddMarker) {
+                    item.price !== 0
+                ) {
                     // Parse coordinates as numbers to avoid string concatenation issues
                     const longitude = parseFloat(item.longitude);
                     const latitude = parseFloat(item.latitude);
@@ -88,7 +78,7 @@ export const Mapbox = ({ data = [], type }) => ({
                         properties: {
                             url: item.url || '#',
                             featured_image: item.featured_image || '',
-                            title: item.title || 'Property',
+                            title: item.title || '',
                             price: Number(item.price) || 0,
                             address: item.address || '',
                             property_features: item.property_features || [],
@@ -140,34 +130,6 @@ export const Mapbox = ({ data = [], type }) => ({
 
                 markers.push(marker);
             }
-        };
-
-        const createSimpleMarker = () => {
-            if (geojson.features.length === 0) {
-                return;
-            }
-
-            // Create a simple marker for single property page
-            const feature = geojson.features[0];
-            const coordinates = feature.geometry.coordinates;
-
-            const el = document.createElement("div");
-            el.className = "marker";
-            el.dataset.variant = "property";
-
-            const size = 40;
-            el.style.width = `${size}px`;
-            el.style.height = `${size}px`;
-            el.style.backgroundColor = "transparent";
-            el.style.backgroundImage = `url(/svg/marker-icon.svg)`;
-            el.style.backgroundSize = "100%";
-            el.style.cursor = "pointer";
-
-            const marker = new mapboxgl.Marker(el)
-                .setLngLat(coordinates)
-                .addTo(map);
-
-            markers.push(marker);
         };
 
         const renderPropertyMarkers = () => {
@@ -638,12 +600,7 @@ export const Mapbox = ({ data = [], type }) => ({
             }
 
             if (geojson.features.length > 0) {
-                // For normalmap (single property page), use simple marker
-                if (type === 'normalmap') {
-                    createSimpleMarker();
-                } else {
-                    renderPropertyMarkers();
-                }
+                renderPropertyMarkers();
             }
         };
 
