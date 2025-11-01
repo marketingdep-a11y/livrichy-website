@@ -1,21 +1,17 @@
-{{ set href = url }}
+{{ set community_param = import_key }}
 
-{{ if ! href }}
-    {{ set community_param = import_key }}
+{{ if ! community_param }}
+    {{ set community_param = slug }}
+{{ /if }}
 
-    {{ if ! community_param }}
-        {{ set community_param = slug }}
-    {{ /if }}
+{{ if ! community_param }}
+    {{ set community_param = title }}
+{{ /if }}
 
-    {{ if ! community_param }}
-        {{ set community_param = title }}
-    {{ /if }}
-
-    {{ if community_param }}
-        {{ set href = '/properties?community=' ~ community_param }}
-    {{ else }}
-        {{ set href = '/properties' }}
-    {{ /if }}
+{{ if community_param }}
+    {{ set href = '/properties?community=' ~ community_param }}
+{{ else }}
+    {{ set href = '/properties' }}
 {{ /if }}
 
 <x-card ring="gray" as="a" direction="vertical" href="{{ href }}" aria-label="{{ title }}"
