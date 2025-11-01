@@ -1,10 +1,6 @@
-{{ 
-    set href = community_url 
-        ? community_url 
-        : (import_key ? '/properties?community=' ~ (import_key | url_encode) : (slug ? '/properties?community=' ~ (slug | url_encode) : '/properties'))
-}}
-
-<x-card ring="gray" as="a" href="{{ href }}" aria-label="{{ title }}" class="justify-start">
+<x-card ring="gray" as="a" 
+    href="{{ community_url ?? (import_key ? '/properties?community=' ~ (import_key | url_encode) : (slug ? '/properties?community=' ~ (slug | url_encode) : '/properties')) }}" 
+    aria-label="{{ title }}" class="justify-start">
     <div class="w-16 h-16 mr-4 overflow-hidden shrink-0 rounded-2xl">
         {{ if featured_image }}
             {{ partial:components/picture :image="featured_image" :fallback_url="featured_image" cover="true" }}
