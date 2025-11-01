@@ -30,9 +30,8 @@ class Communities extends Tags
             return $this->fallbackFromProperties($limit);
         }
 
-        // Return actual Entry objects, not arrays
-        // This allows Antlers to access all fields naturally
-        return $communities;
+        // Augment entries for Antlers - this makes all fields accessible in templates
+        return $communities->map(fn (EntryContract $entry) => $entry->toAugmentedArray());
     }
 
     private function mapCommunityEntry(EntryContract $entry): ?array
