@@ -34,16 +34,21 @@ class Communities extends Tags
         return $communities->map(function (EntryContract $entry) {
             $count = (int) $entry->get('listings_total', 0);
             $importKey = $entry->get('import_key');
+            $slug = $entry->slug();
+            
+            // Get featured_image as augmented value (Asset object) for Antlers
+            $featuredImageValue = $entry->augmentedValue('featured_image');
+            $featuredImage = $featuredImageValue ? $featuredImageValue->value() : null;
             
             return [
                 'id' => $entry->id(),
                 'title' => $entry->get('title'),
-                'slug' => $entry->slug(),
+                'slug' => $slug,
                 'import_key' => $importKey,
-                'featured_image' => $entry->get('featured_image'),
+                'featured_image' => $featuredImage,
                 'count' => $count,
                 'total_text' => $this->formatTotal($count),
-                'url' => url('/properties?community=' . urlencode($importKey ?: $entry->slug())),
+                'url' => '/properties?community=' . urlencode($importKey ?: $slug),
             ];
         });
     }

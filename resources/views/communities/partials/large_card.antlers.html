@@ -1,9 +1,12 @@
-{{ set community_param = import_key ?? slug ?? title }}
-
-{{ if community_param }}
-    {{ set href = '/properties?community=' ~ (community_param | url_encode) }}
+{{ if url }}
+    {{ set href = url }}
 {{ else }}
-    {{ set href = '/properties' }}
+    {{ set community_param = import_key ?? slug ?? title }}
+    {{ if community_param }}
+        {{ set href = '/properties?community=' ~ (community_param | url_encode) }}
+    {{ else }}
+        {{ set href = '/properties' }}
+    {{ /if }}
 {{ /if }}
 
 <x-card ring="gray" as="a" direction="vertical" href="{{ href }}" aria-label="{{ title }}"
