@@ -4,11 +4,11 @@
     <div class="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
         {{ if selected_communities }}
             {{ selected_communities }}
-                {{ partial:communities/partials/large_card }}
+                {{ partial:communities/partials/large_card :variant="variant" }}
             {{ /selected_communities }}
         {{ else }}
             {{ communities:top limit="3" }}
-                {{ partial:communities/partials/large_card }}
+                {{ partial:communities/partials/large_card :variant="variant" }}
             {{ /communities:top }}
         {{ /if }}
     </div>

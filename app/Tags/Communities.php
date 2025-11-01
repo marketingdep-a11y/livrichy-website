@@ -53,7 +53,7 @@ class Communities extends Tags
             $featuredImage = $this->getFallbackImage($importKey);
         }
 
-        return [
+        $result = [
             'id' => $importKey,
             'import_key' => $importKey,
             'title' => $title,
@@ -63,6 +63,10 @@ class Communities extends Tags
             'featured_image' => $featuredImage,
             'url' => $url,
         ];
+
+        \Log::info('Communities::top - mapped entry', $result);
+
+        return $result;
     }
 
     private function fallbackFromProperties(int $limit): Collection
