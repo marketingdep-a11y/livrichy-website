@@ -349,14 +349,31 @@ class GoogleSheetsAgentImporter
      */
     private function getGoogleClient(): Client
     {
-        $credentialsPath = config('services.google_sheets_agents.credentials_path');
+        $client = new Client();
 
-        if (blank($credentialsPath) || ! file_exists($credentialsPath)) {
-            throw new \InvalidArgumentException('Google API credentials file not found.');
+        // Try to use Base64 encoded credentials from environment variable (for production)
+        $credentialsBase64 = config('services.google_sheets_agents.credentials_base64');
+
+        if (! blank($credentialsBase64)) {
+            $credentialsJson = base64_decode($credentialsBase64);
+            $credentialsArray = json_decode($credentialsJson, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \InvalidArgumentException('Invalid Google credentials Base64 encoding.');
+            }
+
+            $client->setAuthConfig($credentialsArray);
+        } else {
+            // Fallback to file-based credentials (for local development)
+            $credentialsPath = config('services.google_sheets_agents.credentials_path');
+
+            if (blank($credentialsPath) || ! file_exists($credentialsPath)) {
+                throw new \InvalidArgumentException('Google API credentials not found. Set either GOOGLE_CREDENTIALS_BASE64 or provide credentials file.');
+            }
+
+            $client->setAuthConfig($credentialsPath);
         }
 
-        $client = new Client();
-        $client->setAuthConfig($credentialsPath);
         $client->addScope(Sheets::SPREADSHEETS_READONLY);
         $client->setApplicationName(config('app.name', 'Livrichy'));
 
