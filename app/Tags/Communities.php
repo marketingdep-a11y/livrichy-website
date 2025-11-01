@@ -21,17 +21,18 @@ class Communities extends Tags
             ->where('collection', 'communities')
             ->where('published', true)
             ->get()
-            ->map(fn (EntryContract $entry) => $this->mapCommunityEntry($entry))
-            ->filter();
+            ->filter(fn (EntryContract $entry) => $entry->get('listings_total') > 0)
+            ->sortByDesc(fn (EntryContract $entry) => (int) $entry->get('listings_total'))
+            ->take($limit)
+            ->values();
 
         if ($communities->isEmpty()) {
             return $this->fallbackFromProperties($limit);
         }
 
-        return $communities
-            ->sortByDesc('count')
-            ->take($limit)
-            ->values();
+        // Return actual Entry objects, not arrays
+        // This allows Antlers to access all fields naturally
+        return $communities;
     }
 
     private function mapCommunityEntry(EntryContract $entry): ?array
