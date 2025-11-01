@@ -51,6 +51,8 @@ php artisan import:google-sheets-agents
 
 Если всё настроено правильно, вы увидите отчет о синхронизации агентов.
 
+**Примечание:** Команда автоматически увеличивает memory_limit до 512M для работы с Google API.
+
 ## Как работает
 
 - **Локально**: система ищет файл `storage/app/google-credentials.json`

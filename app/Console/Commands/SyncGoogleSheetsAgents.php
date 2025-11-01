@@ -30,6 +30,9 @@ class SyncGoogleSheetsAgents extends Command
 
     public function handle(): int
     {
+        // Increase memory limit for Google API operations
+        ini_set('memory_limit', '512M');
+
         $this->info('Starting Google Sheets agents synchronization...');
 
         try {
