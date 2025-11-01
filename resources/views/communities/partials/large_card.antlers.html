@@ -1,7 +1,24 @@
+{{ if community_url }}
 <x-card ring="gray" as="a" direction="vertical" 
-    href="{{ community_url ?? (import_key ? '/properties?community=' ~ (import_key | url_encode) : (slug ? '/properties?community=' ~ (slug | url_encode) : '/properties')) }}" 
+    href="{{ community_url }}" 
     aria-label="{{ title }}"
     class="{ variant === 'communities_section_3' ?= 'relative overflow-hidden h-[515px]' } p-0">
+{{ elseif import_key }}
+<x-card ring="gray" as="a" direction="vertical" 
+    href="/properties?community={{ import_key | url_encode }}" 
+    aria-label="{{ title }}"
+    class="{ variant === 'communities_section_3' ?= 'relative overflow-hidden h-[515px]' } p-0">
+{{ elseif slug }}
+<x-card ring="gray" as="a" direction="vertical" 
+    href="/properties?community={{ slug | url_encode }}" 
+    aria-label="{{ title }}"
+    class="{ variant === 'communities_section_3' ?= 'relative overflow-hidden h-[515px]' } p-0">
+{{ else }}
+<x-card ring="gray" as="a" direction="vertical" 
+    href="/properties" 
+    aria-label="{{ title }}"
+    class="{ variant === 'communities_section_3' ?= 'relative overflow-hidden h-[515px]' } p-0">
+{{ /if }}
 
     {{ if variant === 'communities_section_3' }}
         <div class="absolute z-20 w-full h-full bg-linear-to-b from-transparent to-black"></div>
