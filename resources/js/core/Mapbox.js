@@ -46,7 +46,13 @@ export const Mapbox = ({ data = [], type }) => ({
         const contactjson = [];
 
         if (data.length > 0) {
+            console.log('🗺️ Mapbox Init - Full data received:', data);
+            console.log('🗺️ Map type:', type);
+            
             data.map((item) => {
+                console.log('---');
+                console.log('📍 Processing item:', item);
+                
                 // For normalmap (single property page), only require coordinates
                 // For listing maps, require all fields including price
                 const isNormalMap = type === 'normalmap';
@@ -54,6 +60,10 @@ export const Mapbox = ({ data = [], type }) => ({
                                       item.latitude !== undefined &&
                                       item.longitude !== '' && 
                                       item.latitude !== '';
+                
+                console.log('🗺️ Is normalmap:', isNormalMap);
+                console.log('📍 Coordinates:', item.longitude, item.latitude);
+                console.log('✅ Has coordinates:', hasCoordinates);
                 
                 // Strict validation for listing maps
                 const hasRequiredFields = item.price !== undefined &&
@@ -64,9 +74,13 @@ export const Mapbox = ({ data = [], type }) => ({
                     item.price !== null &&
                     item.price !== 0;
                 
+                console.log('📋 Has required fields:', hasRequiredFields);
+                
                 // For normalmap: only check coordinates
                 // For other maps: check all required fields
                 const shouldAddMarker = isNormalMap ? hasCoordinates : (hasCoordinates && hasRequiredFields);
+                
+                console.log('🎯 Should add marker:', shouldAddMarker);
                 
                 if (shouldAddMarker) {
                     // Parse coordinates as numbers to avoid string concatenation issues
