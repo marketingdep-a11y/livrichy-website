@@ -9,14 +9,14 @@
         {{ else }}
             {{ communities:top limit="3" }}
                 {{ partial:communities/partials/large_card 
-                    :variant="variant"
-                    :community_url="community_url"
-                    :title="title"
-                    :featured_image="featured_image"
-                    :import_key="import_key"
-                    :slug="slug"
-                    :count="count"
-                    :total_text="total_text" }}
+                    variant="{{ variant }}"
+                    community_url="{{ community_url }}"
+                    title="{{ title }}"
+                    import_key="{{ import_key }}"
+                    slug="{{ slug }}"
+                    count="{{ count }}"
+                    total_text="{{ total_text }}"
+                    :featured_image="featured_image" }}
             {{ /communities:top }}
         {{ /if }}
     </div>
