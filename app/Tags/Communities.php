@@ -46,6 +46,13 @@ class Communities extends Tags
         $count = (int) ($entry->get('listings_total') ?? 0);
         $url = $entry->url() ?? url('/properties?community=' . urlencode($importKey));
 
+        // Get featured_image from community, or fallback to first property photo
+        $featuredImage = $entry->get('featured_image');
+        
+        if (!$featuredImage) {
+            $featuredImage = $this->getFallbackImage($importKey);
+        }
+
         return [
             'id' => $importKey,
             'import_key' => $importKey,
@@ -53,7 +60,7 @@ class Communities extends Tags
             'slug' => $entry->slug(),
             'count' => $count,
             'total_text' => $this->formatTotal($count),
-            'featured_image' => $entry->get('featured_image'),
+            'featured_image' => $featuredImage,
             'url' => $url,
         ];
     }
@@ -107,5 +114,37 @@ class Communities extends Tags
         }
 
         return $count . ' ' . Str::plural('property', $count);
+    }
+
+    /**
+     * Get fallback image from first property in community
+     */
+    private function getFallbackImage(string $importKey): mixed
+    {
+        $property = Entry::query()
+            ->where('collection', 'properties')
+            ->where('published', true)
+            ->where('data->community', $importKey)
+            ->first();
+
+        if (!$property) {
+            return null;
+        }
+
+        // Try featured_image first
+        $image = $property->get('featured_image');
+        
+        if ($image) {
+            return $image;
+        }
+
+        // Fallback to first photo_link
+        $photoLinks = $property->get('photo_links');
+        
+        if (is_array($photoLinks) && !empty($photoLinks)) {
+            return $photoLinks[0];
+        }
+
+        return null;
     }
 }
