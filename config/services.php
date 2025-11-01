@@ -63,5 +63,11 @@ return [
         ))),
     ],
 
+    'google_sheets_agents' => [
+        'spreadsheet_id' => env('GOOGLE_SHEETS_AGENTS_SPREADSHEET_ID'),
+        'range' => env('GOOGLE_SHEETS_AGENTS_RANGE', 'Table1!A2:H'),
+        'credentials_path' => env('GOOGLE_SHEETS_AGENTS_CREDENTIALS_PATH', storage_path('app/google-credentials.json')),
+    ],
+
 
 ];

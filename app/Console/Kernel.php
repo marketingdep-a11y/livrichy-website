@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\FetchRemoteJson;
 use App\Console\Commands\SyncCrmAgents;
+use App\Console\Commands\SyncGoogleSheetsAgents;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -17,6 +18,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         FetchRemoteJson::class,
         SyncCrmAgents::class,
+        SyncGoogleSheetsAgents::class,
     ];
 
     /**
@@ -37,6 +39,13 @@ class Kernel extends ConsoleKernel
             ->onOneServer()
             ->runInBackground()
             ->description('Synchronise CRM agents from the remote endpoint.');
+
+        $schedule->command('import:google-sheets-agents')
+            ->weeklyOn(3, '14:00') // Wednesday at 14:00 UTC (18:00 UAE)
+            ->withoutOverlapping()
+            ->onOneServer()
+            ->runInBackground()
+            ->description('Synchronise agents from Google Sheets every Wednesday at 18:00 UAE time.');
     }
 
     /**
