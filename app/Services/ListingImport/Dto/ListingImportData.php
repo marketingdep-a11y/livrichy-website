@@ -25,6 +25,7 @@ class ListingImportData
         public readonly array $photoLinks,
         public readonly ?string $externalId,
         public readonly ?string $externalAgentId,
+        public readonly ?string $agentName,
         public readonly ?string $agentId,
         public readonly ?string $sourceUrl,
         public readonly ?string $propertyStatus,
@@ -70,7 +71,13 @@ class ListingImportData
         $sourceUrl = Normalizer::sanitizeUrl($payload['source_url'] ?? $payload['ufCrm13SourceUrl'] ?? null);
 
         $agentBlock = is_array($payload['agent'] ?? null) ? $payload['agent'] : [];
-        $externalAgentId = Normalizer::sanitizeString($agentBlock['external_id'] ?? $payload['external_agent_id'] ?? null);
+        $externalAgentId = Normalizer::sanitizeString(
+            $agentBlock['external_id'] 
+            ?? $payload['external_agent_id'] 
+            ?? $payload['ufCrm13AgentId'] 
+            ?? null
+        );
+        $agentName = Normalizer::sanitizeString($payload['ufCrm13AgentName'] ?? $agentBlock['name'] ?? null);
         $agentId = Normalizer::sanitizeString($agentBlock['statamic_id'] ?? $payload['agent_id'] ?? null);
 
         $propertyStatus = Normalizer::mapOfferingType($payload['ufCrm13OfferingType'] ?? null);
@@ -100,6 +107,7 @@ class ListingImportData
             $photoLinks,
             $externalId,
             $externalAgentId,
+            $agentName,
             $agentId,
             $sourceUrl,
             $propertyStatus,

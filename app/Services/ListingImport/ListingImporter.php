@@ -98,13 +98,25 @@ class ListingImporter
                 $entry->set($key, $value);
             }
 
-            // Resolve agent by external_agent_id if available
-            if ($dto->externalAgentId && !$dto->agentId) {
-                $agentId = $this->resolveAgentByExternalId($dto->externalAgentId);
+            // Resolve agent by name or external_agent_id if available
+            if (!$dto->agentId) {
+                $agentId = null;
+                
+                // Try to find by agent name first (more reliable)
+                if ($dto->agentName) {
+                    $agentId = $this->resolveAgentByName($dto->agentName);
+                }
+                
+                // Fallback to external_agent_id if name didn't work
+                if (!$agentId && $dto->externalAgentId) {
+                    $agentId = $this->resolveAgentByExternalId($dto->externalAgentId);
+                }
+                
                 if ($agentId) {
                     $entry->set('agent', $agentId);
                     Log::info('Agent linked to listing.', [
                         'external_id' => $externalId,
+                        'agent_name' => $dto->agentName,
                         'external_agent_id' => $dto->externalAgentId,
                         'agent_id' => $agentId,
                     ]);
@@ -225,5 +237,44 @@ class ListingImporter
             ->first();
 
         return $agent?->id();
+    }
+
+    /**
+     * Find agent by name (fuzzy matching) and return its Statamic ID
+     */
+    private function resolveAgentByName(string $agentName): ?string
+    {
+        // Try exact match first
+        $agent = Entry::query()
+            ->where('collection', 'agents')
+            ->where('data->title', $agentName)
+            ->first();
+
+        if ($agent) {
+            return $agent->id();
+        }
+
+        // Try case-insensitive partial match
+        $normalizedName = mb_strtolower(trim($agentName));
+        
+        $agents = Entry::query()
+            ->where('collection', 'agents')
+            ->get();
+
+        foreach ($agents as $agent) {
+            $agentTitle = mb_strtolower(trim($agent->get('title')));
+            
+            // Check if names match (case-insensitive)
+            if ($agentTitle === $normalizedName) {
+                return $agent->id();
+            }
+            
+            // Check if one contains the other (for "John Smith" vs "John")
+            if (str_contains($agentTitle, $normalizedName) || str_contains($normalizedName, $agentTitle)) {
+                return $agent->id();
+            }
+        }
+
+        return null;
     }
 }
