@@ -26,7 +26,9 @@
     {{ /if }}
 
     <div class="{{ variant === "communities_section_2" ? 'rounded-t-2xl overflow-hidden h-[350px]' : 'h-full' }}">
-        {{ partial:components/picture :image="featured_image" cover="true" }}
+        {{ if featured_image }}
+            {{ partial:components/picture :image="featured_image" :fallback_url="featured_image" cover="true" }}
+        {{ /if }}
     </div>
 
     <div class="{{ variant === 'communities_section_2' ? 'p-6 gap-y-2' : 'absolute bottom-8 left-6 z-40' }}">

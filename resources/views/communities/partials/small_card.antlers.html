@@ -20,7 +20,9 @@
 
 <x-card ring="gray" as="a" href="{{ href }}" aria-label="{{ title }}" class="justify-start">
     <div class="w-16 h-16 mr-4 overflow-hidden shrink-0 rounded-2xl">
-        {{ partial:components/picture :image="featured_image" cover="true" }}
+        {{ if featured_image }}
+            {{ partial:components/picture :image="featured_image" :fallback_url="featured_image" cover="true" }}
+        {{ /if }}
     </div>
     <div>
         <x-heading size="5" class="mb-1">{{ title | truncate(22, '...') }}</x-heading>
