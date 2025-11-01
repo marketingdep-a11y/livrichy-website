@@ -35,19 +35,31 @@ class CommunitySynchronizer
             /** @var EntryContract|null $entry */
             $entry = $existing->pull($normalizedKey);
 
+            $isNew = false;
+
             if ($entry === null) {
                 $entry = Entry::make()
                     ->collection('communities')
                     ->locale($siteHandle)
                     ->slug($this->generateUniqueSlug($name, $siteHandle));
 
+                $isNew = true;
                 $report['created']++;
             } else {
                 $report['updated']++;
             }
 
-            $entry->set('title', $name);
-            $entry->set('import_key', $name);
+            // For new entries: set all fields
+            // For existing entries: only update listings_total and import_key
+            // This preserves manual changes like custom title, featured_image, content, etc.
+            if ($isNew) {
+                $entry->set('title', $name);
+                $entry->set('import_key', $name);
+            } else {
+                // Only update import_key for matching, keep title as is
+                $entry->set('import_key', $name);
+            }
+
             $entry->set('listings_total', $count);
             $entry->published(true);
             $entry->save();
