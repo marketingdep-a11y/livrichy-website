@@ -8,15 +8,6 @@
             {{ /selected_communities }}
         {{ else }}
             {{ communities:top limit="3" }}
-<<<<<<< HEAD
-                {{# DEBUG: {{ dump }} #}}
-                <div style="display:none">
-                    URL: {{ url }}
-                    Featured: {{ featured_image }}
-                    Import: {{ import_key }}
-                </div>
-                {{ partial:communities/partials/large_card :variant="variant" }}
-=======
                 {{ partial:communities/partials/large_card 
                     :variant="variant"
                     :url="url"
@@ -26,7 +17,6 @@
                     :slug="slug"
                     :count="count"
                     :total_text="total_text" }}
->>>>>>> b2aeb5f6 (Fix featured_image and links in communities section)
             {{ /communities:top }}
         {{ /if }}
     </div>
